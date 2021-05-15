@@ -1,0 +1,10 @@
+
+tts/
+__pycache__/
+credentials/
+.idea/
+stream_sources/chyron.txt
+stream_sources/brb.txt
+*.log
+timers/
+event_logs/logs/

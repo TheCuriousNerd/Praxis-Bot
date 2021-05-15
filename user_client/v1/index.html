@@ -1,0 +1,349 @@
+<!--
+// Copyright (C) 2021
+
+// Authors:
+//  Name / Email / Website
+//      Twitter / Twitch / Youtube / Github
+
+// Authors:
+//   Alex Orid / inquiries@thecuriousnerd.com / TheCuriousNerd.com
+//      Twitter: @TheCuriousNerd / Twitch: TheCuriousNerd / Youtube: thecuriousnerd / Github: TheCuriousNerd
+
+// This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU Affero General Public License as
+//   published by the Free Software Foundation, either version 3 of the
+//   License, or (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+
+//   You should have received a copy of the GNU Affero General Public License
+//   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Praxis Bot Control Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+  </head>
+
+    <body>
+
+
+
+        <div class="row">
+            <div class="col s12 blue sticky ontop">
+              <ul class="tabs blue">
+                <li class="tab col s3"><a class="active" href="#Home" style="color: white;">Home</a></li>
+                <li class="tab col s3 hide"><a href="#Settings" style="color: white;">Settings</a></li>
+                <li class="tab col s3 "><a href="#About" style="color: white;">About</a></li>
+              </ul>
+            </div>
+        </div>
+
+        <div id="Home">
+            <div id="" class="row bodyarea" style="">
+                <div id="sidebar_area" class="col s12 m3 hide-on-small-and-down card" style="position: fixed;">
+                    <div style="" onclick="BotStatus()"><p id="BotStatus" class="card noselect" style="padding-left: 3px;padding-right: 3px;">Bot Status: ??</p></div>
+                <div class="row" style="padding-left: 3px;" style="">
+                    <a href="index.html"><div class="s12 card waves-effect waves-light btn-large colsInSideBar" style="background-color: #42A5F5;">
+                        <i class="material-icons">arrow_upward</i>
+                    </div></a>
+                    <div class="lineSeperator blue"></div>
+                    <a href="#Chyron"><div class="s12 card waves-effect waves-light btn-large colsInSideBar hide" style="background-color: #42A5F5;">
+                        <p>Chyron</p>
+                    </div></a>
+                    <a href="#Commands"><div class="s12 card waves-effect waves-light btn-large colsInSideBar" style="background-color: #42A5F5;">
+                        <p>Commands</p>
+                    </div></a>
+                    <a href="#Rewards"><div class="s12 card colsInSideBar waves-effect waves-light btn-large" style="background-color: #42A5F5;">
+                        <p>Rewards</p>
+                    </div></a>
+                    <a href="#Timers"><div class="s12 card colsInSideBar waves-effect waves-light btn-large hide" style="background-color: #42A5F5;">
+                        <p>Timers</p>
+                    </div></a>
+                    <a href="#TextSources"><div class="s12 card colsInSideBar waves-effect waves-light btn-large hide" style="background-color: #42A5F5;">
+                        <p>Text Sources</p>
+                    </div></a>
+                    <a href="#EventHistory"><div class="lineSeperator blue"></div>
+                    <div class="s12 card colsInSideBar waves-effect waves-light btn-large" style="background-color: #42A5F5;">
+                        <p>Event History</p>
+                    </div></a>
+                    <a href="#Services"><div class="s12 card colsInSideBar waves-effect waves-light btn-large hide" style="background-color: #42A5F5;">
+                        <p>Services</p>
+                    </div></a>
+                </div>
+            </div>
+            <div id="main_area" class="col s12 m9 right card">
+
+
+                <div id="Chyron" style="padding-top: 20px;"><div class="rowsInMain center card hide">
+                    <a class="btn-floating btn-large waves-effect waves-light blue right" style="margin-right: 10px;">
+                        <i class="material-icons">refresh</i>
+                    </a>
+                    <a class="btn-floating btn-large waves-effect waves-light green right" style="margin-right: 10px;">
+                        <i class="material-icons">add</i>
+                    </a>
+                    <h3>Chyron:</h3></div>
+                <div class="rowsInMain row card hide" style="margin-right: 20px;margin-left: 20px;margin-top: 30px;margin-bottom: 30px;">
+                    <div class="col s12 switch hide" style="top: -20px;position: relative;padding-left: 10px;"><label>Enabled:<input type="checkbox"><span class="lever"></span></label></div>
+                    <div class="col s4"><p>Section Name:</p>
+                        <div class="input-field inline" style="width: 80%;">
+                            <input id="section_name_inline" type="text" class="validate">
+                            <label for="section_name_inline">Section Name</label>
+                        </div>
+                    </div>
+                    <div class="col s4"><p>Title:</p>
+                        <div class="input-field inline" style="width: 80%;">
+                            <input id="title_inline" type="text" class="validate">
+                            <label for="title_inline">Title</label>
+                        </div>
+                    </div>
+                    <div class="col s4"><p>Content:</p>
+                        <div class="input-field inline" style="width: 80%;">
+                            <input id="content_inline" type="text" class="validate">
+                            <label for="content_inline">Text</label>
+                        </div>
+                    </div>
+                    <div style="position: absolute; right: 0; top: 0; width: 3em;" class="col s1 btn red waves-effect"><i class="material-icons">delete</i></div>
+                </div>
+
+
+
+                <div id="Commands" style="padding-top: 20px;"><div class="rowsInMain center card">
+                    <a onclick="updateCommandList()" class="btn-floating btn-large waves-effect waves-light blue right" style="margin-right: 10px;">
+                        <i class="material-icons">refresh</i>
+                    </a>
+                    <h3>Commands:</h3></div>
+                <div id="CommandRowWrapper">
+
+                </div>
+                </div>
+
+
+                <div id="Rewards" style="padding-top: 20px;"><div class="rowsInMain center card">
+                    <a onclick="updateRewardList()" class="btn-floating btn-large waves-effect waves-light blue right" style="margin-right: 10px;">
+                        <i class="material-icons">refresh</i>
+                    </a>
+                    <h3>Rewards:</h3></div>
+                <div id="RewardRowWrapper">
+
+                </div>
+                </div>
+
+
+
+                <div id="Timers" style="padding-top: 20px;"></div><div class="rowsInMain center card hide">
+                    <a class="btn-floating btn-large waves-effect waves-light red right hide-on-small-and-down" style="margin-right: 10px;">
+                        <i class="material-icons">add</i>
+                    </a><h3>Timers:</h3></div>
+                <div class="rowsInMain row card hide" style="margin-right: 20px;margin-left: 20px;margin-top: 30px;margin-bottom: 30px;">
+                    <div class="col s3"><p>Timer Name:</p></div>
+                    <div class="col s3"><p>Trigger:</p></div>
+                    <div class="col s3"><p>Trigger_EXEC:</p></div>
+                    <div class="col s "><p>O</p></div>
+                </div>
+
+
+
+                <div id="TextSources" style="padding-top: 20px;"></div><div class="rowsInMain center card hide">
+                    <a class="btn-floating btn-large waves-effect waves-light blue right" style="margin-right: 10px;">
+                        <i class="material-icons">refresh</i>
+                    </a>
+                    <h3>Text Sources:</h3></div>
+                <div class="rowsInMain row card hide" style="margin-right: 20px;margin-left: 20px;margin-top: 30px;margin-bottom: 30px;">
+                    <div class="col s4"><p>File Name:</p>
+                        <div class="input-field inline" style="width: 80%;">
+                            <input id="filename_inline" type="text" class="validate">
+                            <label for="filename_inline">Text</label>
+                        </div>
+                    </div>
+                    <div class="col s4"><p>Title:</p>
+                        <div class="input-field inline" style="width: 80%;">
+                            <input id="title_inline" type="text" class="validate">
+                            <label for="title_inline">Text</label>
+                        </div>
+                    </div>
+                    <div class="col s4"><p>Text:</p>
+                        <div class="input-field inline" style="width: 80%;">
+                            <input id="text_inline" type="text" class="validate">
+                            <label for="text_inline">Text</label>
+                        </div>
+                    </div>
+                    <div style="position: absolute; right: 0; top: 0; width: 3em;" class="col s1 btn red waves-effect"><i class="material-icons">delete</i></div>
+                </div>
+
+
+
+                <div id="EventHistory" style="padding-top: 20px;"></div><div class="rowsInMain center card">
+                    <a onclick="updateEventList()" class="btn-floating btn-large waves-effect waves-light blue right" style="margin-right: 10px;">
+                        <i class="material-icons">refresh</i>
+                    </a>
+                    <h3>Event History:</h3></div>
+
+                <div id="EventHistoryWrapper" class="EventHistoryWrapper">
+
+                </div>
+
+                <div id="Services" style="padding-top: 20px;"></div><div class="rowsInMain center card hide"><h3>Services:</h3></div>
+                    <div class="row hide">
+                        <div class="col s6 m3">
+                            <div class="card modulesCard">
+                                <div class="modulesCardWrap">
+                                    <h6 style="padding-top: 15px;">Commands</h6>
+                                    <a class="waves-effect waves-light btn modulesCardWrapButton">Enable</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6 m3">
+                            <div class="card modulesCard">
+                                <div class="modulesCardWrap">
+                                    <h6 style="padding-top: 15px;">Rewards</h6>
+                                    <a class="waves-effect waves-light btn modulesCardWrapButton">Enable</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6 m3">
+                            <div class="card modulesCard">
+                                <div class="modulesCardWrap">
+                                    <h6 style="padding-top: 15px;">RGB Lights</h6>
+                                    <a class="waves-effect waves-light btn modulesCardWrapButton">Enable</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6 m3">
+                            <div class="card modulesCard">
+                                <div class="modulesCardWrap">
+                                    <h6 style="padding-top: 15px;">Text Sources</h6>
+                                    <a class="waves-effect waves-light btn modulesCardWrapButton">Enable</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6 m3">
+                            <div class="card modulesCard">
+                                <div class="modulesCardWrap">
+                                    <h6 style="padding-top: 15px;">TTS</h6>
+                                    <a class="waves-effect waves-light btn modulesCardWrapButton">Enable</a>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="col s6 m3">
+                                <div class="card modulesCard">
+                                    <div class="modulesCardWrap">
+                                        <h6 style="padding-top: 15px;">OBS Web Socket</h6>
+                                        <a class="waves-effect waves-light btn modulesCardWrapButton">Enable</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    <div id="Settings"style="padding-top: 20px;">
+        <div class="card" >
+            <div class=""style="padding-top: 20px;">
+                <div class="row bodyarea container" style="background-color: rgb(221, 221, 221);">
+                    <div class="rowsInMain center card">
+                        <a class="btn-floating btn-large waves-effect waves-light blue right" style="position: absolute; right: 5px;">
+                            <i class="material-icons">refresh</i>
+                        </a>
+                        <h1>Settings</h1>
+                    </div>
+                    <div class="">
+                        <div class="col s12">
+                            <div class="card center" style="margin-top: 15px;margin-bottom: 15px; min-height: 3em; padding-top: 5px;padding-bottom: 5px;">
+                                <h3>Config</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="col s12">
+                            <div class="card center" style="margin-top: 15px;margin-bottom: 15px; min-height: 3em; padding-top: 15px;padding-bottom: 15px;">
+                                <p>test</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <div class="col s12">
+                            <div class="card center" style="margin-top: 15px;margin-bottom: 15px; min-height: 3em; padding-top: 5px;padding-bottom: 5px;">
+                                <h3>Credentials</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="col s12">
+                            <div class="card center" style="margin-top: 15px;margin-bottom: 15px; min-height: 3em; padding-top: 15px;padding-bottom: 15px;">
+                                <p>test</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="About" class="">
+        <div class="row bodyarea">
+            <div class="col s12 center">
+                <h1>Praxis Bot</h1>
+                <h3>Created by Alex Orid</h3><h4>The Curious Nerd</h4><br>
+                <h5>Check out the project on <a href="https://github.com/TheCuriousNerd/Praxis_Bot" target="_blank">Github</a></h5>
+                <h5>Need Help? Want to help out?<br><a href="https://discord.com/invite/sNTXWn4" target="_blank">Come visit my Discord</a></h5>
+                <br><p>This project is licensed under AGPL</p><br>
+                <p>Version:<br> A:0 D:1 O:0.8</p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="js/materialize.js"></script>
+
+        <!-- Load React. -->
+        <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+        <!--<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>-->
+        <!--<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>-->
+
+
+        <script src="webclient.js"></script>
+
+    </body>
+</html>

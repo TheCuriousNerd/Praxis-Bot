@@ -1,0 +1,1 @@
+slurList = ("fag", "faggot", "niga", "nigga", "nigger", "retard", "tard", "rtard", "coon", "dghdtrhrsy65eu665")

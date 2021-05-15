@@ -1,0 +1,157 @@
+body {
+    background-color: rgb(250, 250, 250);
+    padding: 0;
+    margin: 0;
+}
+
+div {
+    padding: 0;
+    margin: 0;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+#header{
+    background-color: cadetblue;
+    width: 100%;
+    display: flex;
+}
+
+.bodyarea{
+    background-color: rgb(250, 250, 250);
+    padding: 0;
+    padding-top: 3em;
+    margin: 0;
+    min-height: 90%;
+}
+
+#sidebar_area{
+    background-color: rgb(235, 235, 235);;
+    min-height: 100%;
+}
+
+#main_area{
+    background-color: rgb(221, 221, 221);
+    min-height: 100%;
+}
+
+.main_area{
+    background-color: rgb(221, 221, 221);
+    min-height: 100%;
+}
+
+.lineSeperator{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    height: 5px;
+    background-color: white;
+}
+
+.noPadding{
+    padding: 0;
+    margin: 0;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+.sticky_btm {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.ontop {
+    z-index: 1000;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+  }
+
+.headerItem{
+    padding: 1em;
+    background-color: steelblue;
+}
+
+.headerItem:hover{
+    background-color: gray;
+}
+
+.headerText{
+    text-align: center;
+    color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.colsInSideBar{
+    min-width: 100%;
+}
+
+.colsInSideBar:hover{
+    color: white;
+    font-weight: bold;
+    background-color: black;
+}
+
+.modulesCard{
+    min-height: 5em;
+    background-color: red;
+}
+
+.modulesCardWrap{
+    margin-left: 15px;
+    min-height: 10em;
+}
+.modulesCardWrapButton{
+    margin-top: 100px;
+}
+
+.rowsInMain{
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.EventHistoryWrapper{
+    overflow-y: scroll;
+    max-height: 60vh;
+    background-color: rgb(175, 213, 214);
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 20px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(105, 105, 105); 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(49, 49, 49); 
+  }

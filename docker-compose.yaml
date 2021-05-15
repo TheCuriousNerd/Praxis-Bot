@@ -1,0 +1,76 @@
+version: '3.7'
+services:
+  standalone_user_client:
+    image: standalone_user_client
+    volumes:
+      - "./:/Praxis/"
+    ports:
+      - 42055:42055
+    environment:
+      - ISDOCKER=cat
+  standalone_eventlog:
+    image: standalone_eventlog
+    volumes:
+      - "./:/Praxis/"
+    ports:
+      - 42008:42008
+    environment:
+      - ISDOCKER=cat
+  standalone_command:
+    image: standalone_command
+    volumes:
+      - "./:/Praxis/"
+    ports:
+      - 42010:42010
+    environment:
+      - ISDOCKER=cat
+  standalone_channelrewards:
+    image: standalone_channelrewards
+    volumes:
+      - "./:/Praxis/"
+    ports:
+      - 42069:42069
+    environment:
+      - ISDOCKER=cat
+  standalone_lights:
+    image: standalone_lights
+    volumes:
+      - "./:/Praxis/"
+    ports:
+      - 42042:42042
+    environment:
+      - ISDOCKER=cat
+  standalone_tts_core:
+    image: standalone_tts_core
+    volumes:
+      - "./:/Praxis/"
+    ports:
+      - 42064:42064
+    environment:
+      - ISDOCKER=cat
+  standalone_websource:
+    image: standalone_websource
+    volumes:
+      - "./:/Praxis/"
+    ports:
+      - 42088:42088
+    environment:
+      - ISDOCKER=cat
+  standalone_twitchscript:
+    image: standalone_twitchscript
+    volumes:
+      - "./:/Praxis/"
+    environment:
+      - ISDOCKER=cat
+  standalone_twitch_pubsub:
+    image: standalone_twitch_pubsub
+    volumes:
+      - "./:/Praxis/"
+    environment:
+      - ISDOCKER=cat
+  standalone_discordscript:
+    image: standalone_discordscript
+    volumes:
+      - "./:/Praxis/"
+    environment:
+      - ISDOCKER=cat
