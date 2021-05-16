@@ -1,4 +1,4 @@
-# The main repository of Praxis_Bot can be found at: <https://github.com/TheCuriousNerd/Praxis_Bot>.
+# The main repository of Praxis Bot can be found at: <https://github.com/TheCuriousNerd/Praxis-Bot>.
 # Copyright (C) 2021
 
 # Author Info Examples:
@@ -215,7 +215,7 @@ if __name__ == '__main__':
     creds = Credentials_Module()
     creds.load_credentials()
 
-    creds.find_Credential(DB_Credential, "praxis_bot")
-    creds.find_Credential(Twitch_Credential, "praxis_bot")
+    creds.find_Credential(DB_Credential, "Praxis-Bot")
+    creds.find_Credential(Twitch_Credential, "Praxis-Bot")
 
 

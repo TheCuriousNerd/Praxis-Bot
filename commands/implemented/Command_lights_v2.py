@@ -1,4 +1,4 @@
-# The main repository of Praxis_Bot can be found at: <https://github.com/TheCuriousNerd/Praxis_Bot>.
+# The main repository of Praxis Bot can be found at: <https://github.com/TheCuriousNerd/Praxis-Bot>.
 # Copyright (C) 2021
 
 # Author Info Examples:

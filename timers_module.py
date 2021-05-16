@@ -1,4 +1,4 @@
-# The main repository of Praxis_Bot can be found at: <https://github.com/TheCuriousNerd/Praxis_Bot>.
+# The main repository of Praxis Bot can be found at: <https://github.com/TheCuriousNerd/Praxis-Bot>.
 # Copyright (C) 2021
 
 # Author Info Examples:
@@ -95,10 +95,10 @@ class Timers_Module():
         current = split[len(split) - 1]
         if current == 'timers':
             return self.check_dir(cwd)
-        elif current == 'Praxis_Bot' or current == 'Praxis':
+        elif current == 'Praxis-Bot' or current == 'Praxis':
             return self.check_dir(os.path.join(cwd, "timers"))
         else:
-            print("could not find working directory for Praxis_Bot/timers")
+            print("could not find working directory for Praxis-Bot/timers")
             raise Exception
 
     def get_implementations_dir(self) -> str:

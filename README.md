@@ -1,6 +1,6 @@
 # Praxis Bot
 
-Praxis_Bot is software that focuses on improving communication and management between people, processes, and services. This bot aims to assist and enhance live streams, digital exhibits, chat rooms, and other countless spaces or venues.
+Praxis Bot is software that focuses on improving communication and management between people, processes, and services. This bot aims to assist and enhance live streams, digital exhibits, chat rooms, and other countless spaces or venues.
 
 The bot provides and assists with several things like custom commands, channel rewards, stream sources, digital or practical effects, and moderation support, especially across multiple platforms and systems simultaneously.
 
@@ -55,7 +55,7 @@ ___
 
 # User Web Client:
 
-Once Praxis_Bot is setup, to access the User Client visit `index.html` from `\user_client\v1\` in your browser.<br>
+Once Praxis Bot is setup, to access the User Client visit `index.html` from `\user_client\v1\` in your browser.<br>
 <br>
 ___
 
@@ -80,10 +80,10 @@ V5 Client ID = `https://twitchtokengenerator.com/`
 
 ### Twitch PubSub Credentials:
 
-pubsub_client_id = `https://dev.twitch.tv/console/apps` Set url to `http://localhost:17563`
-pubsub_secret = `^Look at Instructions Above^`
+pubsub_client_id = `https://dev.twitch.tv/console/apps` Set url to `http://localhost:17563`<br>
+pubsub_secret = `^Look at Instructions Above^`<br>
 
-pubsub_AccessToken = Generate by using: `python twitch_generate_credentials.py`
+pubsub_AccessToken = Generate by using: `python twitch_generate_credentials.py`<br>
 pubsub_RefreshToken = `^Look at Instructions Above^`<br>
 <br>
 
@@ -116,7 +116,7 @@ To load them, run `load_credentials()` from `Credentials_Module` in the `credent
 
 ___
 
-# Praxis_Bot Development and Technical Support:
+# Praxis Bot Development and Technical Support:
 
 If you want to get in on the action and join the conversations that affect this project's long-term development, create cool modules, or have questions join our discord!
 

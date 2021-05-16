@@ -1,4 +1,4 @@
-# The main repository of Praxis_Bot can be found at: <https://github.com/TheCuriousNerd/Praxis_Bot>.
+# The main repository of Praxis Bot can be found at: <https://github.com/TheCuriousNerd/Praxis-Bot>.
 # Copyright (C) 2021
 
 # Author Info Examples:
@@ -90,7 +90,7 @@ class Discord_Module(discord.Client):
         praxis_logger_obj.log(debugLogString)
 
         if not await self.isSenderBot(message):
-            # This will check for the praxis_bot-tts channel and will TTS stuff from there.
+            # This will check for the Praxis-Bot-tts channel and will TTS stuff from there.
             #await self.eval_triggeredEvents(message)
 
             await self.eval_commands(message)
