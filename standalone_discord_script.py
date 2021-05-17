@@ -59,7 +59,6 @@ class Discord_Module(discord.Client):
     def __init__(self):
         super().__init__()
         self.loop = asyncio.get_event_loop()
-        self.dbCredential: credentials.DB_Credential
         self.discordCredential: credentials.Discord_Credential
 
         self.cooldownModule:Cooldown_Module = Cooldown_Module()
@@ -256,7 +255,6 @@ if __name__ == "__main__":
 
     credentials_manager = credentials.Credentials_Module()
     credentials_manager.load_credentials()
-    testModule.dbCredential = credentials_manager.find_DB_Credential(config.credentialsNickname)
     testModule.discordCredential = credentials_manager.find_Discord_Credential(config.credentialsNickname)
 
     testModule.main()

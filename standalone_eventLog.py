@@ -177,45 +177,6 @@ def reRunEvent():
     return reRunEvent_handler(request.args['eventName'], sentTime, request.args['eventType'], request.args['eventSender'], request.args['eventData'])
 
 
-# @api.route('/api/v1/event_log/chyron/get')
-# def get_chyron():
-#     @after_this_request
-#     def add_header(response):
-#         response.headers.add('Access-Control-Allow-Origin', '*')
-#         return response
-#     return flask.make_response('Client Service: OK', 200)
-
-# @api.route('/api/v1/event_log/commands/get')
-# def get_commands():
-#     @after_this_request
-#     def add_header(response):
-#         response.headers.add('Access-Control-Allow-Origin', '*')
-#         return response
-#     return flask.make_response('Client Service: OK', 200)
-
-# @api.route('/api/v1/event_log/rewards/get')
-# def get_rewards():
-#     @after_this_request
-#     def add_header(response):
-#         response.headers.add('Access-Control-Allow-Origin', '*')
-#         return response
-#     return flask.make_response('Client Service: OK', 200)
-
-# @api.route('/api/v1/event_log/timers/get')
-# def get_timers():
-#     @after_this_request
-#     def add_header(response):
-#         response.headers.add('Access-Control-Allow-Origin', '*')
-#         return response
-#     return flask.make_response('Client Service: OK', 200)
-
-# @api.route('/api/v1/event_log/text_sources/get')
-# def get_text_sources():
-#     @after_this_request
-#     def add_header(response):
-#         response.headers.add('Access-Control-Allow-Origin', '*')
-#         return response
-#     return flask.make_response('Client Service: OK', 200)
 
 if __name__ == "__main__":
     init()

@@ -57,15 +57,6 @@ class Event_Log_Module():
         relative_path = fileName + ".json"
         real_file_path = os.path.join(script_dir, dir, relative_path)
 
-        # with open(real_file_path, 'w') as cred_w:
-        #     #data = json.load(event_log_obj)
-        #     dic = {}
-        #     dic['eventName'] = event_log_obj.eventName
-        #     dic['eventTime'] = str(event_log_obj.eventTime)
-        #     dic['eventType'] = str(event_log_obj.eventType)
-        #     dic['eventData'] = str(event_log_obj.eventData)
-        #     json.dump(dic, cred_w, indent=2)
-
         newList = []
         for event in self.Event_Log_List:
             newDic = {}

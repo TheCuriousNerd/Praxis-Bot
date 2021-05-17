@@ -217,8 +217,6 @@ if __name__ == "__main__":
 
     credentials_manager = credentials.Credentials_Module()
     credentials_manager.load_credentials()
-    #testModule.dbCredential = credentials_manager.find_DB_Credential(config.credentialsNickname)
-    #testModule.discordCredential = credentials_manager.find_Discord_Credential(config.credentialsNickname)
 
     testModule.main()
     #testModule.raveMode()

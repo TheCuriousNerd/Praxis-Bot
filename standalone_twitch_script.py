@@ -211,13 +211,6 @@ class Twitch_Module():
 
         self.eval_command(message)
         self.eval_tts(message)
-        #try:
-        #    is_actionable = self.is_command(command)
-        #    if is_actionable:
-        #        if self.cooldownModule.isCooldownActive("twitchChat") == False:
-        #                self.exec_command(message ,command, rest)
-        #except:
-        #    print("something went wrong with a command")
 
     def isChannel_inConfigList(self, selectedChannel, selectedList):
         # print(channel)
@@ -226,10 +219,6 @@ class Twitch_Module():
         for twitchChannel in selectedList:
             if twitchChannel == selectedChannel:
                 is_Self = True
-        # if is_Self:
-        #    print("Is Self")
-        # if not is_Self:
-        #    print("Is Not Self")
         return is_Self
 
 
@@ -239,7 +228,6 @@ if __name__ == "__main__":
     credentials_manager = credentials.Credentials_Module()
     credentials_manager.load_credentials()
     testModule.twitchCredential = credentials_manager.find_Twitch_Credential(config.credentialsNickname)
-    #testModule.dbCredential = credentials_manager.find_DB_Credential(config.credentialsNickname)
 
     for twitchChannel in config.autoJoin_TwitchChannels:
         testModule.join_channel(None, twitchChannel)
