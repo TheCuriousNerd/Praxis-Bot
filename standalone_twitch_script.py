@@ -71,7 +71,7 @@ class Twitch_Module():
             channel=channel_name,
             nickname=credential.username,
             oauth=credential.oauth,
-            #  LIBRARY UPDATE BROKE THE FOLLOWING LINE [FIX THIS]
+            # LIBRARY UPDATE BROKE THE FOLLOWING LINE [FIX THIS]
             # helix = twitch.Helix(credential.helix, use_cache=True)
         )
         self.chat.subscribe(self.twitch_chat)
