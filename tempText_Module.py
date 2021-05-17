@@ -118,9 +118,6 @@ if __name__ == "__main__":
     testModule = tempText_Module()
     testModule.main()
 
-    #testModule.addItem("test","title: ", "content content content")
-    #testModule.tempText_stringUpdater()
-
     testItem = tempTextItem("testy","title: ", "content content content")
     testModule.makeItem(testItem)
 
