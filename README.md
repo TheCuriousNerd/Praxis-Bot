@@ -11,7 +11,7 @@ ___
 # Requirements:
 - Docker (For the Standalone Containers)
 - Python (Min Version > 3.7 for TTS Speaker)<br>
-(After install remember to use: `pip install -r requirements.txt` )
+*(After install remember to use: `pip install -r requirements.txt`)*
 
 <br>
 
@@ -48,8 +48,9 @@ To receive audio from standalone_tt_core.py launch standalone_tts_speaker.py.
 
 or
 
-windows: `praxis-tts-speaker.bat` (Modify this to match the correct directory! Or no work for YOU!!!)<br>
+windows: `praxis-tts-speaker.bat`<br>
 linux: `praxis-tts-speaker.sh`<br>
+*(Modify these to match the correct directory! Or no work for YOU!!!)*<br>
 <br>
 ___
 
@@ -120,9 +121,9 @@ ___
 
 If you want to get in on the action and join the conversations that affect this project's long-term development, create cool modules, or have questions join our discord!
 
-`https://discord.com/invite/sNTXWn4`
+Server Link: [The Curious Nerd Discord Server](https://discord.com/invite/sNTXWn4)
 
-To preview the bot you can check it out on my stream `thecuriousnerd.tv` This project is used heavily on my stream and is often worked upon during them.
+To preview the bot you can check it out on my stream [thecuriousnerd.tv](https://thecuriousnerd.tv) This project is used heavily on my stream and is often worked upon during them.
 
 </br>
 
