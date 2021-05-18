@@ -23,7 +23,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import config
-import utilities_script as utilities
+import bot_functions.utilities_script as utilities
 import os
 
 class tempText_Module():

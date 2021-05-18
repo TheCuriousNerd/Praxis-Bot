@@ -26,7 +26,7 @@ from datetime import datetime
 import random
 import os
 import json
-import utilities_script as utility
+import bot_functions.utilities_script as utility
 
 from os import listdir
 from os.path import isfile, join

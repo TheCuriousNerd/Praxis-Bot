@@ -27,7 +27,7 @@ import phue
 from phue import Bridge
 
 import random
-import utilities_script as utilities
+import bot_functions.utilities_script as utilities
 
 import credentials
 import config
@@ -36,8 +36,8 @@ import flask
 from flask import request
 
 import os
-import praxis_logging
-praxis_logger_obj = praxis_logging.praxis_logger()
+import bot_functions.praxis_logging
+praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 

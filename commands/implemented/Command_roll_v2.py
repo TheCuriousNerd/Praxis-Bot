@@ -27,7 +27,7 @@ from abc import ABCMeta
 from commands.command_base import AbstractCommand
 
 import random
-import utilities_script as utility
+import bot_functions.utilities_script as utility
 
 class Command_roll_v2(AbstractCommand, metaclass=ABCMeta):
     """

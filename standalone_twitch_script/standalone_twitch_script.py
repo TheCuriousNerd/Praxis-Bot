@@ -33,13 +33,13 @@ import twitch.chat
 
 import config as config
 import credentials
-from cooldowns import Cooldown_Module
+from bot_functions.cooldowns import Cooldown_Module
 import commands.command_base
-import utilities_script as utility
+import bot_functions.utilities_script as utility
 
 import os
-import praxis_logging
-praxis_logger_obj = praxis_logging.praxis_logger()
+import bot_functions.praxis_logging
+praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 

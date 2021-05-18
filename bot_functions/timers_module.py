@@ -24,10 +24,10 @@
 
 import os
 import json
-from praxis_logging import praxis_logger
+from bot_functions.praxis_logging import praxis_logger
 import time
 import datetime
-import utilities_script as utility
+import bot_functions.utilities_script as utility
 import importlib
 import importlib.util
 import sys

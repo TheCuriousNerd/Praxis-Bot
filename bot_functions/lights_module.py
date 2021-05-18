@@ -27,7 +27,7 @@ import phue
 from phue import Bridge
 
 import random
-import utilities_script as utilities
+import bot_functions.utilities_script as utilities
 
 import credentials
 import config

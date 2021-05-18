@@ -35,7 +35,7 @@ from pprint import pprint
 from uuid import UUID
 
 import json
-import utilities_script as utility
+import bot_functions.utilities_script as utility
 import os
 
 class Twitch_Credential_Maker():

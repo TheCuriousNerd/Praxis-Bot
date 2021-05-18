@@ -26,7 +26,7 @@ from abc import ABCMeta
 
 from commands.command_base import AbstractCommand
 
-import utilities_script as utility
+import bot_functions.utilities_script as utility
 
 class Command_test_v2(AbstractCommand, metaclass=ABCMeta):
     """

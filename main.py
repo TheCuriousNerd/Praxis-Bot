@@ -34,7 +34,7 @@ import test_module
 
 import user_module
 
-import utilities_script as utility
+import bot_functions.utilities_script as utility
 import config as config
 
 import credentials

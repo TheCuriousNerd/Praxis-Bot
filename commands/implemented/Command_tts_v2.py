@@ -37,8 +37,8 @@ import config
 import discord
 
 import os
-import praxis_logging
-praxis_logger_obj = praxis_logging.praxis_logger()
+import bot_functions.praxis_logging
+praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
@@ -111,7 +111,7 @@ class Command_tts_v2(AbstractCommand, metaclass=ABCMeta):
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
-            #data = loads(resp.text)
+            data = loads(resp.text)
             msg = data['message']
             if msg is not None:
                 return msg

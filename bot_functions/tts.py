@@ -30,7 +30,7 @@ import requests
 from gtts import gTTS
 from playsound import playsound
 
-import utilities_script as utility
+import bot_functions.utilities_script as utility
 import config
 
 

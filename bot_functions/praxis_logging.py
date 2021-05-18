@@ -23,13 +23,13 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-import utilities_script
+import bot_functions.utilities_script
 
 class praxis_logger():
     def init(self, name):
         super().__init__()
         self.logName = "logs/" + name + ".log"
-        utilities_script.get_dir("logs")
+        bot_functions.utilities_script.get_dir("logs")
         logging.basicConfig(filename=self.logName, level=logging.DEBUG)
         logging.info('Application running!')
 

@@ -24,7 +24,7 @@
 
 import random
 import re
-import utilities_script as utility
+import bot_functions.utilities_script as utility
 from json import loads
 from urllib.parse import urlencode
 
@@ -47,11 +47,11 @@ import discord.message
 import discord.channel
 import discord.abc
 
-from cooldowns import Cooldown_Module
+from bot_functions.cooldowns import Cooldown_Module
 
 import os
-import praxis_logging
-praxis_logger_obj = praxis_logging.praxis_logger()
+import bot_functions.praxis_logging
+praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
