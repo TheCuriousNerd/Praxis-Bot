@@ -1,5 +1,8 @@
 FROM python:3.7.10-alpine3.12
 
+#TODO: Remove user root if you solve permissions issues.
+USER root 
+
 WORKDIR /Praxis
 
 COPY /bot_functions_test /PraxisStreamTest/
