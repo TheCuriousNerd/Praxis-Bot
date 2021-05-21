@@ -24,7 +24,7 @@
 
 import random
 import re
-import bot_functions.utilities_script as utility
+from ..bot_functions import utilities_script as utility
 from json import loads
 from urllib.parse import urlencode
 
@@ -34,24 +34,24 @@ from discord import message
 from discord.client import Client
 import asyncio
 
-import config
+from .. import config
 
-import commands.command_base
-import commands.loader as command_loader
-from commands.command_base import AbstractCommand
+from ..commands import command_base
+from ..commands import loader as command_loader
+from ..commands.command_base import AbstractCommand
 
-import credentials
+from .. import credentials
 
 import discord
 import discord.message
 import discord.channel
 import discord.abc
 
-from bot_functions.cooldowns import Cooldown_Module
+from ..bot_functions.cooldowns import Cooldown_Module
 
 import os
-import bot_functions.praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+from ..bot_functions import praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
@@ -128,20 +128,20 @@ class Discord_Module(discord.Client):
     async def is_command(self, word: str) -> bool:
         # todo need to url-escape word
         clean_param = urlencode({'name': word})
-        url = "http://standalone_command:42010/api/v1/command?%s" % clean_param
+        url = "http://standalone_command:12310/api/v1/command?%s" % clean_param
         resp = requests.get(url)
         return resp.status_code == 200
 
     async def exec_command(self, realMessage: discord.Message, command: str, rest: str):
         # todo need to url-escape command and rest
         params = urlencode(
-            {'command_source': commands.command_base.AbstractCommand.CommandSource.Discord,
+            {'command_source': command_base.AbstractCommand.CommandSource.Discord,
             'user_name': realMessage.author.mention,
             'command_name': command,
             'rest': rest,
             'bonus_data': realMessage})
 
-        url = "http://standalone_command:42010/api/v1/exec_command?%s" % params
+        url = "http://standalone_command:12310/api/v1/exec_command?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -203,7 +203,7 @@ class Discord_Module(discord.Client):
     async def exec_tts_sender(self, username, message):
         params = urlencode({'tts_sender': username, 'tts_text': message})
         #standalone_tts_core
-        url = "http://standalone_tts_core:42064/api/v1/tts/send_text?%s" % params
+        url = "http://standalone_tts_core:12364/api/v1/tts/send_text?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -233,7 +233,7 @@ class Discord_Module(discord.Client):
             'event_time': eventTime,
             'event_type': eventType,
             'event_data': eventData})
-        url = "http://standalone_eventlog:42008/api/v1/event_log/add_event?%s" % params
+        url = "http://standalone_eventlog:12308/api/v1/event_log/add_event?%s" % params
         resp = requests.get(url)
 
         if resp.status_code == 200:

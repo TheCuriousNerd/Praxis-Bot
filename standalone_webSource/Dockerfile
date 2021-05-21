@@ -8,4 +8,4 @@ RUN pip3 install -r requirements_sa_command.txt
 
 COPY . .
 
-CMD [ "python3", "standalone_websource.py"]
+CMD [ "python3", "./standalone_webSource/standalone_websource.py"]

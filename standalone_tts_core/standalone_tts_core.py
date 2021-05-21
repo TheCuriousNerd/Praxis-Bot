@@ -31,8 +31,8 @@ from urllib.parse import urlencode
 import requests
 
 import os
-import bot_functions.praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+from ..bot_functions import praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
@@ -75,4 +75,4 @@ def tts_send_text():
 if __name__ == '__main__':
     #send_text("","Blah Blah Blah")
     #init()
-    api.run(host='0.0.0.0', port=42064)
+    api.run(host='0.0.0.0', port=12364)

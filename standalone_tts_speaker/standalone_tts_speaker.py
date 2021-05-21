@@ -25,14 +25,14 @@
 import flask
 from flask import request
 
-import bot_functions.tts as tts
+from ..bot_functions import tts as tts
 
 import config
-import bot_functions.utilities_script as utility
+from ..bot_functions import utilities_script as utility
 
 import os
-import bot_functions.praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+from ..bot_functions import praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 

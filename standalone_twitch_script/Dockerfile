@@ -8,4 +8,4 @@ RUN pip3 install -r requirements_sa_twitch.txt
 
 COPY . .
 
-CMD [ "python3", "standalone_twitch_script.py"]
+CMD [ "python3", "./standalone_twitch_script/standalone_twitch_script.py"]

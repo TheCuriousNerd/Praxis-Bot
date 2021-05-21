@@ -25,11 +25,11 @@
 import flask
 from flask import request
 
-import bot_functions.obsWebSocket as obsWebSocket
+from ..bot_functions import obsWebSocket as obsWebSocket
 
 import os
-import bot_functions.praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+from ..bot_functions import praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
@@ -66,4 +66,4 @@ def makeRequest():
 
 if __name__ == "__main__":
     init()
-    api.run(host='0.0.0.0', port=42010)
+    api.run(host='0.0.0.0', port=12310)

@@ -1,75 +1,75 @@
 version: '3.7'
 services:
-  standalone_user_client:
-    image: standalone_user_client
+  test_standalone_user_client:
+    image: test_standalone_user_client
     volumes:
       - "./:/Praxis/"
     ports:
-      - 42055:42055
+      - 12355:12355
     environment:
       - ISDOCKER=cat
-  standalone_eventlog:
-    image: standalone_eventlog
+  test_standalone_eventlog:
+    image: test_standalone_eventlog
     volumes:
       - "./:/Praxis/"
     ports:
-      - 42008:42008
+      - 12308:12308
     environment:
       - ISDOCKER=cat
-  standalone_command:
-    image: standalone_command
+  test_standalone_command:
+    image: test_standalone_command
     volumes:
       - "./:/Praxis/"
     ports:
-      - 42010:42010
+      - 12310:12310
     environment:
       - ISDOCKER=cat
-  standalone_channelrewards:
-    image: standalone_channelrewards
+  test_standalone_channelrewards:
+    image: test_standalone_channelrewards
     volumes:
       - "./:/Praxis/"
     ports:
-      - 42069:42069
+      - 12369:12369
     environment:
       - ISDOCKER=cat
-  standalone_lights:
-    image: standalone_lights
+  test_standalone_lights:
+    image: test_standalone_lights
     volumes:
       - "./:/Praxis/"
     ports:
-      - 42042:42042
+      - 12342:12342
     environment:
       - ISDOCKER=cat
-  standalone_tts_core:
-    image: standalone_tts_core
+  test_standalone_tts_core:
+    image: test_standalone_tts_core
     volumes:
       - "./:/Praxis/"
     ports:
-      - 42064:42064
+      - 12364:12364
     environment:
       - ISDOCKER=cat
-  standalone_websource:
-    image: standalone_websource
+  test_standalone_websource:
+    image: test_standalone_websource
     volumes:
       - "./:/Praxis/"
     ports:
-      - 42088:42088
+      - 12388:12388
     environment:
       - ISDOCKER=cat
-  standalone_twitchscript:
-    image: standalone_twitchscript
+  test_standalone_twitchscript:
+    image: test_standalone_twitchscript
     volumes:
       - "./:/Praxis/"
     environment:
       - ISDOCKER=cat
-  standalone_twitch_pubsub:
-    image: standalone_twitch_pubsub
+  test_standalone_twitch_pubsub:
+    image: test_standalone_twitch_pubsub
     volumes:
       - "./:/Praxis/"
     environment:
       - ISDOCKER=cat
-  standalone_discordscript:
-    image: standalone_discordscript
+  test_standalone_discordscript:
+    image: test_standalone_discordscript
     volumes:
       - "./:/Praxis/"
     environment:

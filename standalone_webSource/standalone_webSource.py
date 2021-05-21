@@ -24,27 +24,27 @@
 
 from enum import Enum
 from os import F_OK
-import bot_functions.tempText_Module as tempText_Module
+from ..bot_functions import tempText_Module as tempText_Module
 import time
-import config as config
+from .. import config as config
 
 from flask import Flask
 
 import credentials
 
-import commands.loader as command_loader
-from commands.command_base import AbstractCommand
+from ..commands import loader as command_loader
+from ..commands.command_base import AbstractCommand
 
-from bot_functions.cooldowns import Cooldown_Module
+from ..bot_functions.cooldowns import Cooldown_Module
 
-import bot_functions.utilities_script as utility
+from ..bot_functions import utilities_script as utility
 
-import bot_functions.chyron_module as chyron_module
-import bot_functions.timers_module as timers_module
+from ..bot_functions import chyron_module as chyron_module
+from ..bot_functions import timers_module as timers_module
 
 import os
-import bot_functions.praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+from ..bot_functions import praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
@@ -87,4 +87,4 @@ def textSource_timerTime(timer_name):
 
 if __name__ == "__main__":
     init()
-    api.run(host="0.0.0.0", port = 42088)
+    api.run(host="0.0.0.0", port = 12388)

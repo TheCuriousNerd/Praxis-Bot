@@ -8,4 +8,4 @@ RUN pip3 install -r requirements_sa_discord.txt
 
 COPY . .
 
-CMD [ "python3", "standalone_discord_script.py"]
+CMD [ "python3", "./standalone_discord_script/standalone_discord_script.py"]

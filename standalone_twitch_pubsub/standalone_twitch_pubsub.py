@@ -42,11 +42,11 @@ from twitchAPI.oauth import UserAuthenticator
 from pprint import pprint
 from uuid import UUID
 
-from bot_functions.cooldowns import Cooldown_Module
+from ..bot_functions.cooldowns import Cooldown_Module
 
 import os
-import bot_functions.praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+from ..bot_functions import praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
@@ -195,7 +195,7 @@ class Twitch_Pubsub():
         clean_param = urlencode({'reward_name': rewardName, 'reward_type':rewardType})
         print(rewardName, rewardType)
         #standalone_channelrewards
-        url = "http://standalone_channelrewards:42069/api/v1/reward?%s" % clean_param
+        url = "http://standalone_channelrewards:12369/api/v1/reward?%s" % clean_param
         resp = requests.get(url)
         return resp.status_code == 200
 
@@ -210,7 +210,7 @@ class Twitch_Pubsub():
             'bonus_data': realMessage})
 
         #standalone_channelrewards
-        url = "http://standalone_channelrewards:42069/api/v1/exec_reward?%s" % params
+        url = "http://standalone_channelrewards:12369/api/v1/exec_reward?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -231,7 +231,7 @@ class Twitch_Pubsub():
             'event_type': eventType,
             'eventSender': eventSender,
             'event_data': eventData})
-        url = "http://standalone_eventlog:42008/api/v1/event_log/add_event?%s" % params
+        url = "http://standalone_eventlog:12308/api/v1/event_log/add_event?%s" % params
         resp = requests.get(url)
 
         if resp.status_code == 200:

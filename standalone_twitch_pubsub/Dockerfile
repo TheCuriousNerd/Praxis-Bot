@@ -8,4 +8,4 @@ RUN pip3 install -r requirements_sa_twitch_pubsub.txt
 
 COPY . .
 
-CMD [ "python3", "standalone_twitch_pubsub.py"]
+CMD [ "python3", "./standalone_twitch_pubsub/standalone_twitch_pubsub.py"]

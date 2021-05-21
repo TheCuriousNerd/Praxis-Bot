@@ -24,9 +24,9 @@
 
 from enum import Enum
 from os import F_OK
-import tempText_Module
+from ..bot_functions  import tempText_Module as tempText_Module
 import time
-import config as config
+from .. import config as config
 
 from datetime import datetime
 import re
@@ -40,20 +40,20 @@ from flask import Flask, request, after_this_request
 
 import credentials
 
-import commands.loader as command_loader
-from commands.command_base import AbstractCommand
+from ..commands import loader as command_loader
+from ..commands.command_base import AbstractCommand
 
-from cooldowns import Cooldown_Module
+from ..bot_functions.cooldowns import Cooldown_Module
 
-import utilities_script as utility
+from ..bot_functions import utilities_script as utility
 
-import chyron_module
-import timers_module
+from ..bot_functions import chyron_module as chyron_module
+from ..bot_functions import timers_module as timers_module
 
 import random
 
 import os
-import praxis_logging
+from ..bot_functions import praxis_logging as praxis_logging
 praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
@@ -70,19 +70,19 @@ def handle_request_get(requestName, requestType, requestData):
 
     if requestType == "list":
         if requestName == "Chyron":
-            response = request_get_list("XXXXXXXXX", "42010")
+            response = request_get_list("XXXXXXXXX", "12310")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "Commands":
-            response = request_get_list("standalone_command", "42010")
+            response = request_get_list("standalone_command", "12310")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "Rewards":
-            response = request_get_list("standalone_channelrewards", "42069")
+            response = request_get_list("standalone_channelrewards", "12369")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "Timers":
-            response = request_get_list("XXXXXXXXX", "42010")
+            response = request_get_list("XXXXXXXXX", "12310")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "TextSources":
-            response = request_get_list("XXXXXXXXX", "42010")
+            response = request_get_list("XXXXXXXXX", "12310")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "EventHistory":
             params = urlencode(
@@ -115,7 +115,7 @@ def request_get_list(serviceName, servicePort):
 
 def request_get_eventlist(params):
     try:
-        url = "http://standalone_eventlog:42008/api/v1/event_log/get_events?%s" % params
+        url = "http://standalone_eventlog:12308/api/v1/event_log/get_events?%s" % params
         resp = requests.get(url)
 
         if resp.status_code == 200:
@@ -139,7 +139,7 @@ def request_reRunEvent(eventName, eventTime, eventType, eventSender, eventData):
             'eventType': eventType,
             'eventSender': eventSender,
             'eventData': eventData})
-        url = "http://standalone_eventlog:42008/api/v1/event_log/reRunEvent?%s" % params
+        url = "http://standalone_eventlog:12308/api/v1/event_log/reRunEvent?%s" % params
         resp = requests.get(url)
 
         if resp.status_code == 200:
@@ -226,4 +226,4 @@ def EventLog_reRunEvent():
 
 if __name__ == "__main__":
     init()
-    api.run(host="0.0.0.0", port = 42055)
+    api.run(host="0.0.0.0", port = 12355)

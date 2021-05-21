@@ -8,4 +8,4 @@ RUN pip3 install -r requirements_sa_command.txt
 
 COPY . .
 
-CMD [ "python3", "standalone_user_client.py"]
+CMD [ "python3", "./standalone_user_client/standalone_user_client.py"]

@@ -8,4 +8,4 @@ RUN pip3 install -r requirements_sa_command.txt
 
 COPY . .
 
-CMD [ "python3", "standalone_lights.py"]
+CMD [ "python3", "./standalone_lights/standalone_lights.py"]

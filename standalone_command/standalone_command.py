@@ -26,8 +26,8 @@ import json
 import flask
 from flask import Flask, request, after_this_request
 
-import commands.loader as command_loader
-from commands.command_base import AbstractCommand
+from ..commands import loader as command_loader
+from ..commands.command_base import AbstractCommand
 
 from json import loads
 from urllib.parse import urlencode
@@ -37,8 +37,8 @@ import requests
 import base64
 
 import os
-import bot_functions.praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+from ..bot_functions import praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
@@ -142,4 +142,4 @@ def get_list():
 
 if __name__ == '__main__':
     init()
-    api.run(host='0.0.0.0', port=42010)
+    api.run(host='0.0.0.0', port=12310)
