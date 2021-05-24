@@ -4,7 +4,7 @@ WORKDIR /Praxis
 
 RUN mkdir /Praxis/standalone_channelrewards
 RUN mkdir /Praxis/standalone_channelrewards/bot_functions
-COPY /bot_functions_test /Praxis/standalone_channelrewards/bot_functions
+COPY /bot_functions /Praxis/standalone_channelrewards/bot_functions
 COPY config.py /Praxis/standalone_channelrewards
 COPY badwords.py /Praxis/standalone_channelrewards
 
