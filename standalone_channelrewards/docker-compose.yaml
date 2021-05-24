@@ -2,8 +2,6 @@ version: '3.7'
 services:
   test_standalone_channelrewards:
     image: test_standalone_channelrewards
-    volumes:
-      - "./:/Praxis/"
     ports:
       - 12369:12369
     environment:
