@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  test_standalone_eventlog:
+    image: test_standalone_eventlog
+    ports:
+      - 12308:12308
+    environment:
+      - ISDOCKER=cat

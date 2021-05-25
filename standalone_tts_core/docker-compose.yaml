@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  test_standalone_tts_core:
+    image: test_standalone_tts_core
+    ports:
+      - 12364:12364
+    environment:
+      - ISDOCKER=cat

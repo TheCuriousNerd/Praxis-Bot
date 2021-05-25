@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  test_standalone_websource:
+    image: test_standalone_websource
+    ports:
+      - 12388:12388
+    environment:
+      - ISDOCKER=cat

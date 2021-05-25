@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  test_standalone_user_client:
+    image: test_standalone_user_client
+    ports:
+      - 12355:12355
+    environment:
+      - ISDOCKER=cat

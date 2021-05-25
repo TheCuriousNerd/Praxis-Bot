@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  test_standalone_command:
+    image: test_standalone_command
+    ports:
+      - 12310:12310
+    environment:
+      - ISDOCKER=cat

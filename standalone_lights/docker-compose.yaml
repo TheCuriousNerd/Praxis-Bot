@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  test_standalone_lights:
+    image: test_standalone_lights
+    ports:
+      - 12342:12342
+    environment:
+      - ISDOCKER=cat

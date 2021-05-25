@@ -24,7 +24,7 @@
 
 import random
 import re
-from ..bot_functions import utilities_script as utility
+import bot_functions.utilities_script as utility
 from json import loads
 from urllib.parse import urlencode
 
@@ -34,23 +34,23 @@ from discord import message
 from discord.client import Client
 import asyncio
 
-from .. import config
+import config
 
-from ..commands import command_base
-from ..commands import loader as command_loader
-from ..commands.command_base import AbstractCommand
+from commands import command_base
+from commands import loader as command_loader
+from commands.command_base import AbstractCommand
 
-from .. import credentials
+import credentials
 
 import discord
 import discord.message
 import discord.channel
 import discord.abc
 
-from ..bot_functions.cooldowns import Cooldown_Module
+from bot_functions.cooldowns import Cooldown_Module
 
 import os
-from ..bot_functions import praxis_logging as praxis_logging
+import bot_functions.praxis_logging as praxis_logging
 praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))

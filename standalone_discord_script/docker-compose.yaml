@@ -1,0 +1,6 @@
+version: '3.7'
+services:
+  test_standalone_discord_script:
+    image: test_standalone_discord_script
+    environment:
+      - ISDOCKER=cat

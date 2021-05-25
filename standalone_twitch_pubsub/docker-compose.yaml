@@ -1,0 +1,6 @@
+version: '3.7'
+services:
+  test_standalone_twitch_pubsub:
+    image: test_standalone_twitch_pubsub
+    environment:
+      - ISDOCKER=cat
