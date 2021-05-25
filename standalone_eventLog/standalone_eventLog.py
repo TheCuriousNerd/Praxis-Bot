@@ -27,15 +27,12 @@ from enum import Enum
 from os import F_OK
 import bot_functions.tempText_Module
 import time
-from .. import config as config
+import config as config
 
 import flask
 from flask import Flask, request, after_this_request
 
 import credentials
-
-from commands import loader as command_loader
-from commands.command_base import AbstractCommand
 
 from bot_functions.cooldowns import Cooldown_Module
 
@@ -180,4 +177,4 @@ def reRunEvent():
 
 if __name__ == "__main__":
     init()
-    api.run(host="0.0.0.0", port = 12308)
+    api.run(host="0.0.0.0", port = 42008)

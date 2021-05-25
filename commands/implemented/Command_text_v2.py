@@ -24,7 +24,7 @@
 
 from abc import ABCMeta
 
-from ..commands.command_base import AbstractCommand
+from commands.command_base import AbstractCommand
 
 from json import loads
 from urllib.parse import urlencode
@@ -32,11 +32,11 @@ import requests
 
 import config
 
-from ..bot_functions import tempText_Module as tempText_Module
+from bot_functions import tempText_Module as tempText_Module
 
 import os
-from ..bot_functions import praxis_logging as praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+import bot_functions.praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
@@ -131,7 +131,7 @@ class Command_Text_v2(AbstractCommand, metaclass=ABCMeta):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
         #standalone_lights
-        url = "http://standalone_lights:12342/api/v1/exec_lights?%s" % params
+        url = "http://standalone_lights:42042/api/v1/exec_lights?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)

@@ -75,4 +75,4 @@ def tts_send_text():
 if __name__ == '__main__':
     #send_text("","Blah Blah Blah")
     #init()
-    api.run(host='0.0.0.0', port=12364)
+    api.run(host='0.0.0.0', port=42064)

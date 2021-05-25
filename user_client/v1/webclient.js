@@ -22,7 +22,7 @@
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-refresh = () => response = fetch('http://127.0.0.1:12355/')
+refresh = () => response = fetch('http://127.0.0.1:42055/')
 .then((response) => {
     return response.text();
 })
@@ -47,7 +47,7 @@ async function setValue(request_type, command, isEnabled) {
         'is_enabled': isEnabled
     }
     let params = "?command_name="+encodeURIComponent(newCommandState.command_name)+"&"+"is_enabled="+encodeURIComponent(newCommandState.is_enabled);
-        let targetURL = "http://127.0.0.1:12355/api/v1/user_client/set"+params;
+        let targetURL = "http://127.0.0.1:42055/api/v1/user_client/set"+params;
         //console.log(targetURL)
         let a = await fetch_GetList(targetURL);
         //console.log("return: "+a);
@@ -68,7 +68,7 @@ GetList = async (listType) => {
             'request_type': "list"
         }
         let params = "?request_name="+encodeURIComponent(ListRequestOBJ.request_name)+"&"+"request_type="+encodeURIComponent(ListRequestOBJ.request_type);
-        let targetURL = "http://127.0.0.1:12355/api/v1/user_client/get"+params;
+        let targetURL = "http://127.0.0.1:42055/api/v1/user_client/get"+params;
         //console.log(targetURL)
         let a = await fetch_GetList(targetURL);
         //console.log("return: "+a);
@@ -165,7 +165,7 @@ GetEventList = async () => {
         let params = "?request_name="+encodeURIComponent(ListRequestOBJ.request_name)
         +"&"+"request_type="+encodeURIComponent(ListRequestOBJ.request_type)
         +"&"+"request_data="+encodeURIComponent(ListRequestOBJ.request_data);
-        let targetURL = "http://127.0.0.1:12355/api/v1/user_client/get"+params;
+        let targetURL = "http://127.0.0.1:42055/api/v1/user_client/get"+params;
         //console.log(targetURL)
         let a = await fetch_GetList(targetURL);
         //console.log("return: "+a);
@@ -273,7 +273,7 @@ RerunEvent_OBJ = async (eventToRun) => {
         "&"+"eventType="+encodeURIComponent(eventToRun['eventType'])+
         "&"+"eventSender="+encodeURIComponent(eventToRun['eventSender'])+
         "&"+"eventData="+encodeURIComponent(eventToRun['eventData']);
-        let targetURL = "http://127.0.0.1:12355/api/v1/user_client/event_log/reRunEvent"+params;
+        let targetURL = "http://127.0.0.1:42055/api/v1/user_client/event_log/reRunEvent"+params;
         //console.log(targetURL)
         let a = await fetch_RerunEvent(targetURL);
         //console.log("return: "+a);

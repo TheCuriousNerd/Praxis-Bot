@@ -24,7 +24,7 @@
 
 from abc import ABCMeta
 
-from ..commands.command_base import AbstractCommand
+from commands.command_base import AbstractCommand
 
 from json import loads
 from urllib.parse import urlencode
@@ -32,47 +32,37 @@ import requests
 
 import config
 
-from ..bot_functions import chyron_module as chyron_module
-
 import os
-from ..bot_functions import praxis_logging as praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+import bot_functions.praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
-class Command_chyron_v2(AbstractCommand, metaclass=ABCMeta):
+class Command_lights_v2(AbstractCommand, metaclass=ABCMeta):
     """
-    this is the test command.
+    this is the lights command.
     """
-    command = "!chyron"
+    command = "!lights"
 
     def __init__(self):
-        super().__init__(Command_chyron_v2.command, n_args=1, command_type=AbstractCommand.CommandType.Ver2)
-        self.help = ["The chyron string can be generated and updated with this command.",
-        "\nExample:","chyron update \"RIGHTNOW\""]
+        super().__init__(Command_lights_v2.command, n_args=1, command_type=AbstractCommand.CommandType.Ver2)
+        self.help = ["This command allows you to modify the lights via the Lights_Module.",
+        "\nExample:","lights \"SCENE\"","lights \"COLOR\"","lights \"R\" \"G\" \"B\"","lights \"1\" \"0.5\" \"0\""]
         self.isCommandEnabled = True
 
     def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
-        returnString = "trying to update chyron..."
-        praxis_logger_obj.log("\n [" + user + "] Command>: " + command + " " + rest)
+        returnString = ""
+        praxis_logger_obj.log("\n Command>: " + command + rest)
+        isTwitch = False
 
-        for name in config.adminUsers_List:
-            print(name)
-            tempName = user.lower()
-            if name == tempName:
-
-                try:
-                    returnString = user + " has updated the chyron!"
-                    chyron_ = chyron_module.Chyron_Module()
-
-                    chyron_.main(rest)
-                    chyron_.chyron_stringUpdater()
-                    chyron_.updateChyronFile()
-                except:
-                    returnString = user + " has attempted to update the chyron but an error may have occurred!"
-                #returnString = chyron_.chyron_computedString
-            else:
-                returnString = user + " has attempted to update the chyron but an error may have occurred further on!!!"
+        if "Twitch_ZZZ" in source: #temp changed for steam change back later
+            for name in config.allowedCommandsList_TwitchPowerUsers:
+                print(name)
+                tempName = user.lower()
+                if name == tempName:
+                    returnString = self.send_Lights_Command(user, 16, command, rest)
+        else:
+            returnString = self.send_Lights_Command(user, 16, command, rest)
 
 
         return returnString
@@ -81,7 +71,7 @@ class Command_chyron_v2(AbstractCommand, metaclass=ABCMeta):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
         #standalone_lights
-        url = "http://standalone_lights:12342/api/v1/exec_lights?%s" % params
+        url = "http://standalone_lights:42042/api/v1/exec_lights?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)

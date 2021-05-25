@@ -40,9 +40,6 @@ from flask import Flask, request, after_this_request
 
 import credentials
 
-from commands import loader as command_loader
-from commands.command_base import AbstractCommand
-
 from bot_functions.cooldowns import Cooldown_Module
 
 import bot_functions.utilities_script as utility
@@ -70,19 +67,19 @@ def handle_request_get(requestName, requestType, requestData):
 
     if requestType == "list":
         if requestName == "Chyron":
-            response = request_get_list("XXXXXXXXX", "12310")
+            response = request_get_list("XXXXXXXXX", "42010")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "Commands":
-            response = request_get_list("standalone_command", "12310")
+            response = request_get_list("standalone_command", "42010")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "Rewards":
-            response = request_get_list("standalone_channelrewards", "12369")
+            response = request_get_list("standalone_channelrewards", "42069")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "Timers":
-            response = request_get_list("XXXXXXXXX", "12310")
+            response = request_get_list("XXXXXXXXX", "42010")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "TextSources":
-            response = request_get_list("XXXXXXXXX", "12310")
+            response = request_get_list("XXXXXXXXX", "42010")
             return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
         if requestName == "EventHistory":
             params = urlencode(
@@ -115,7 +112,7 @@ def request_get_list(serviceName, servicePort):
 
 def request_get_eventlist(params):
     try:
-        url = "http://standalone_eventlog:12308/api/v1/event_log/get_events?%s" % params
+        url = "http://standalone_eventlog:42008/api/v1/event_log/get_events?%s" % params
         resp = requests.get(url)
 
         if resp.status_code == 200:
@@ -139,7 +136,7 @@ def request_reRunEvent(eventName, eventTime, eventType, eventSender, eventData):
             'eventType': eventType,
             'eventSender': eventSender,
             'eventData': eventData})
-        url = "http://standalone_eventlog:12308/api/v1/event_log/reRunEvent?%s" % params
+        url = "http://standalone_eventlog:42008/api/v1/event_log/reRunEvent?%s" % params
         resp = requests.get(url)
 
         if resp.status_code == 200:
@@ -226,4 +223,4 @@ def EventLog_reRunEvent():
 
 if __name__ == "__main__":
     init()
-    api.run(host="0.0.0.0", port = 12355)
+    api.run(host="0.0.0.0", port = 42055)

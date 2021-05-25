@@ -34,15 +34,15 @@ import threading
 
 import random
 
-class ChannelReward_Hydration(AbstractChannelRewards, metaclass=ABCMeta):
+class ChannelReward_Workout_Pushups(AbstractChannelRewards, metaclass=ABCMeta):
     """
-    this is the hydration reward.
+    this is the Do 20 push-ups reward.
     """
-    ChannelRewardName = "Hydrate"
+    ChannelRewardName = "Do 20 push-ups"
 
     def __init__(self):
-        super().__init__(ChannelReward_Hydration.ChannelRewardName, n_args=1, ChannelRewardType=AbstractChannelRewards.ChannelRewardsType.channelPoints)
-        self.help = ["This is a hydration channel point reward."]
+        super().__init__(ChannelReward_Workout_Pushups.ChannelRewardName, n_args=1, ChannelRewardType=AbstractChannelRewards.ChannelRewardsType.channelPoints)
+        self.help = ["This is a Do 20 push-ups channel point reward."]
         self.isChannelRewardEnabled = True
         self.threads = []
 
@@ -50,27 +50,17 @@ class ChannelReward_Hydration(AbstractChannelRewards, metaclass=ABCMeta):
 
         #print("sending:",user, 16, "!lights hydration")
         try:
-            try:
-                if self.is_ChannelReward_enabled:
-                    thread_ = threading.Thread(target=self.send_Lights_Command, args=(user, 16, "!lights hydration", ""))
-                    thread_.daemon = True
-                    self.threads.append(thread_)
-                    thread_.start()
-            except:
-                if self.is_ChannelReward_enabled:
-                    thread_ = threading.Thread(target=self.send_TTS, args=("", "Silly Nerd Fix The Lights Module"))
-                    thread_.daemon = True
-                    self.threads.append(thread_)
-                    thread_.start()
-            try:
-                if self.is_ChannelReward_enabled:
-                    prompt_ = self.get_Phrase(rewardPrompt)
-                    thread_ = threading.Thread(target=self.send_TTS, args=(user, prompt_))
-                    thread_.daemon = True
-                    self.threads.append(thread_)
-                    thread_.start()
-            except:
-                pass
+            #if self.is_ChannelReward_enabled:
+            #    thread_ = threading.Thread(target=self.send_Lights_Command, args=(user, 16, "!lights hydration", ""))
+            #    thread_.daemon = True
+            #    self.threads.append(thread_)
+            #    thread_.start()
+            if self.is_ChannelReward_enabled:
+                prompt_ = self.get_Phrase(" wants The Curious Nerd, to do 20 pushups")
+                thread_ = threading.Thread(target=self.send_TTS, args=("", user + prompt_))
+                thread_.daemon = True
+                self.threads.append(thread_)
+                thread_.start()
         except:
             pass
 
@@ -80,7 +70,7 @@ class ChannelReward_Hydration(AbstractChannelRewards, metaclass=ABCMeta):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
         #standalone_lights
-        url = "http://standalone_lights:12342/api/v1/exec_lights?%s" % params
+        url = "http://standalone_lights:42042/api/v1/exec_lights?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -96,7 +86,7 @@ class ChannelReward_Hydration(AbstractChannelRewards, metaclass=ABCMeta):
     def send_TTS(self, username, message):
         params = urlencode({'tts_sender': username, 'tts_text': message})
         #standalone_tts_core
-        url = "http://standalone_tts_core:12364/api/v1/tts/send_text?%s" % params
+        url = "http://standalone_tts_core:42064/api/v1/tts/send_text?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -110,7 +100,7 @@ class ChannelReward_Hydration(AbstractChannelRewards, metaclass=ABCMeta):
             pass
 
     def get_Phrase(self, defaultRewardPrompt,
-    phrases = ["I demand you drink at once!", "I reccomend you drink some water oowu!", "Get a bucket and a mop cuz you need hydration!", "Hi, I think you look dehydrated, so go get some water!", "Thirsty streamer needs some water!"]):
+    phrases = [" demands that The Curious Nerd, to do 20 pushups "]):
 
         phrases.append(defaultRewardPrompt)
         totalPhrases = len(phrases) - 1

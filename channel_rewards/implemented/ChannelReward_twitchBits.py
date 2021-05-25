@@ -34,15 +34,15 @@ import threading
 
 import random
 
-class ChannelReward_Workout_Situps(AbstractChannelRewards, metaclass=ABCMeta):
+class ChannelReward_TwitchBits(AbstractChannelRewards, metaclass=ABCMeta):
     """
-    this is the Do 20 sit-ups reward.
+    this is the hydration reward.
     """
-    ChannelRewardName = "Do 20 sit-ups"
+    ChannelRewardName = "TwitchBits"
 
     def __init__(self):
-        super().__init__(ChannelReward_Workout_Situps.ChannelRewardName, n_args=1, ChannelRewardType=AbstractChannelRewards.ChannelRewardsType.channelPoints)
-        self.help = ["This is a Do 20 sit-ups channel point reward."]
+        super().__init__(ChannelReward_TwitchBits.ChannelRewardName, n_args=1, ChannelRewardType=AbstractChannelRewards.ChannelRewardsType.twitch_bits)
+        self.help = ["This is a TwitchBits reward."]
         self.isChannelRewardEnabled = True
         self.threads = []
 
@@ -51,13 +51,12 @@ class ChannelReward_Workout_Situps(AbstractChannelRewards, metaclass=ABCMeta):
         #print("sending:",user, 16, "!lights hydration")
         try:
             #if self.is_ChannelReward_enabled:
-            #    thread_ = threading.Thread(target=self.send_Lights_Command, args=(user, 16, "!lights hydration", ""))
-            #    thread_.daemon = True
-            #    self.threads.append(thread_)
-            #    thread_.start()
+                #thread_ = threading.Thread(target=self.send_Lights_Command, args=(user, 16, "!lights hydration", ""))
+                #thread_.daemon = True
+                #self.threads.append(thread_)
+                #thread_.start()
             if self.is_ChannelReward_enabled:
-                prompt_ = self.get_Phrase(" wants The Curious Nerd, to do 20 sit-ups")
-                thread_ = threading.Thread(target=self.send_TTS, args=("", user + prompt_))
+                thread_ = threading.Thread(target=self.send_TTS, args=("", user + " showered the stream with " + userInput + " bits and says: " + rewardPrompt))
                 thread_.daemon = True
                 self.threads.append(thread_)
                 thread_.start()
@@ -70,7 +69,7 @@ class ChannelReward_Workout_Situps(AbstractChannelRewards, metaclass=ABCMeta):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
         #standalone_lights
-        url = "http://standalone_lights:12342/api/v1/exec_lights?%s" % params
+        url = "http://standalone_lights:42042/api/v1/exec_lights?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -86,7 +85,7 @@ class ChannelReward_Workout_Situps(AbstractChannelRewards, metaclass=ABCMeta):
     def send_TTS(self, username, message):
         params = urlencode({'tts_sender': username, 'tts_text': message})
         #standalone_tts_core
-        url = "http://standalone_tts_core:12364/api/v1/tts/send_text?%s" % params
+        url = "http://standalone_tts_core:42064/api/v1/tts/send_text?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -99,9 +98,22 @@ class ChannelReward_Workout_Situps(AbstractChannelRewards, metaclass=ABCMeta):
             # todo handle failed requests
             pass
 
-    def get_Phrase(self, defaultRewardPrompt,
-    phrases = [" demands that The Curious Nerd, to do 20 sit-ups "]):
+    def get_bitsAmount(self, dataToParse:dict):
+        try:
+            getData = str(dataToParse['data']['message']['data']['bits_used'])
+        except:
+            getData = "Error"
+        return getData
 
+    def get_bitsMessage(self, dataToParse:dict):
+        try:
+            getData = str(dataToParse['data']['message']['data']['chat_message'])
+        except:
+            getData = "Error"
+        return getData
+
+    def get_Phrase(self, defaultRewardPrompt,
+    phrases = [""]):
         phrases.append(defaultRewardPrompt)
         totalPhrases = len(phrases) - 1
         targetPhrase = phrases[random.randint(0,totalPhrases)]

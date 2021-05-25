@@ -1,6 +1,11 @@
 version: '3.7'
 services:
-  test_standalone_twitch_script:
-    image: test_standalone_twitch_script
+  standalone_twitch_script:
+    image: standalone_twitch_script
     environment:
       - ISDOCKER=cat
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot

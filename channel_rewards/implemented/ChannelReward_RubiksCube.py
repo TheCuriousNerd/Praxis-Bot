@@ -24,90 +24,54 @@
 
 from abc import ABCMeta
 
-from ..commands.command_base import AbstractCommand
+from channel_rewards.channelRewards_base import AbstractChannelRewards
 
 from json import loads
 from urllib.parse import urlencode
-from urllib.parse import parse_qs
 import requests
-import re
 
-import config
+import threading
 
-import discord
+import random
 
-import os
-from ..bot_functions import praxis_logging as praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
-praxis_logger_obj.init(os.path.basename(__file__))
-praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
-
-class Command_tts_v2(AbstractCommand, metaclass=ABCMeta):
+class ChannelReward_RubiksCube(AbstractChannelRewards, metaclass=ABCMeta):
     """
-    this is the tts command.
+    this is the hydration reward.
     """
-    command = "!tts"
+    ChannelRewardName = "Solve a Rubiks Cube"
 
     def __init__(self):
-        super().__init__(Command_tts_v2.command, n_args=1, command_type=AbstractCommand.CommandType.Ver2)
-        self.help = ["This command allows you to do tts.",
-        "\nExample:","tts \"TEXT\""]
-        self.isCommandEnabled = True
+        super().__init__(ChannelReward_RubiksCube.ChannelRewardName, n_args=1, ChannelRewardType=AbstractChannelRewards.ChannelRewardsType.channelPoints)
+        self.help = ["This is a rubiks cube reward."]
+        self.isChannelRewardEnabled = True
+        self.threads = []
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user:str = "User",  command = "", rest = "", bonusData = None):
-        returnString = user + " sent a tts command!"
-        praxis_logger_obj.log("\n Command>: " + command + rest)
+    def do_ChannelReward(self, source = AbstractChannelRewards.ChannelRewardsSource.default, user = "User",  rewardName = "", rewardPrompt = "", userInput = "", bonusData = None):
 
+        #self.send_Lights_Command(user, 16, "!lights rubikscube", "")
 
-        if "Twitch" in source:
-            for name in config.allowedTTS_List:
-                print(name)
-                tempName = user.lower()
-                if name == tempName:
-                    self.send_TTS(user, rest)
-        elif "Discord" in source:
-            for name in config.allowedTTS_List:
-                print(name)
+        try:
+            if self.is_ChannelReward_enabled:
+                thread_ = threading.Thread(target=self.send_Lights_Command, args=(user, 16, "!lights rubikscube", ""))
+                thread_.daemon = True
+                self.threads.append(thread_)
+                thread_.start()
+            if self.is_ChannelReward_enabled:
+                prompt_ = self.get_Phrase(rewardPrompt)
+                thread_ = threading.Thread(target=self.send_TTS, args=(user, prompt_))
+                thread_.daemon = True
+                self.threads.append(thread_)
+                thread_.start()
+        except:
+            pass
 
-                tempNick = self.contains_value("(?<=nick=')[^']+", bonusData)
-
-                tempName = user.lower()
-                if name == tempName:
-                    self.send_TTS(tempNick, rest)
-        else:
-            returnString = self.send_TTS(user, rest)
-
-
-
-        #for name in config.allowedCommandsList_TwitchPowerUsers:
-            #print(name)
-            #tempName = user.lower()
-            #if name == tempName:
-                #self.send_TTS(user, rest)
-
-        return returnString
+        return None
 
     def send_Lights_Command(self, username, light_group, command, rest):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
         #standalone_lights
-        url = "http://standalone_lights:12342/api/v1/exec_lights?%s" % params
-        resp = requests.get(url)
-        if resp.status_code == 200:
-            print("Got the following message: %s" % resp.text)
-            data = loads(resp.text)
-            msg = data['message']
-            if msg is not None:
-                return msg
-                # todo send to logger and other relevent services
-        else:
-            # todo handle failed requests
-            return None
-
-    def send_TTS(self, username, message):
-        params = urlencode({'tts_sender': username, 'tts_text': message})
-        #standalone_tts_core
-        url = "http://standalone_tts_core:12364/api/v1/tts/send_text?%s" % params
+        url = "http://standalone_lights:42042/api/v1/exec_lights?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -120,9 +84,29 @@ class Command_tts_v2(AbstractCommand, metaclass=ABCMeta):
             # todo handle failed requests
             pass
 
-    def contains_value(self, search: str, data:str):
-        contains = re.search(search, data)
-        return contains.group(0)
+    def send_TTS(self, username, message):
+        params = urlencode({'tts_sender': username, 'tts_text': message})
+        #standalone_tts_core
+        url = "http://standalone_tts_core:42064/api/v1/tts/send_text?%s" % params
+        resp = requests.get(url)
+        if resp.status_code == 200:
+            print("Got the following message: %s" % resp.text)
+            data = loads(resp.text)
+            msg = data['message']
+            if msg is not None:
+                return msg
+                # todo send to logger and other relevent services
+        else:
+            # todo handle failed requests
+            pass
+
+    def get_Phrase(self, defaultRewardPrompt,
+    phrases = [" thinks its time to solve a cube "]):
+
+        phrases.append(defaultRewardPrompt)
+        totalPhrases = len(phrases) - 1
+        targetPhrase = phrases[random.randint(0,totalPhrases)]
+        return targetPhrase
 
     def get_help(self):
         return self.help

@@ -23,7 +23,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import config
-from ..bot_functions import utilities_script as utilities
+from bot_functions import utilities_script as utilities
 import os
 
 class Chyron_Module():

@@ -1,76 +1,126 @@
 version: '3.7'
 services:
-  test_standalone_user_client:
-    image: test_standalone_user_client
+  standalone_user_client:
+    image: standalone_user_client
     volumes:
       - "./:/Praxis/"
     ports:
-      - 12355:12355
+      - 42055:42055
     environment:
       - ISDOCKER=cat
-  test_standalone_eventlog:
-    image: test_standalone_eventlog
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
+  standalone_eventlog:
+    image: standalone_eventlog
     volumes:
       - "./:/Praxis/"
     ports:
-      - 12308:12308
+      - 42008:42008
     environment:
       - ISDOCKER=cat
-  test_standalone_command:
-    image: test_standalone_command
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
+  standalone_command:
+    image: standalone_command
     volumes:
       - "./:/Praxis/"
     ports:
-      - 12310:12310
+      - 42010:42010
     environment:
       - ISDOCKER=cat
-  test_standalone_channelrewards:
-    image: test_standalone_channelrewards
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
+  standalone_channelrewards:
+    image: standalone_channelrewards
     volumes:
       - "./:/Praxis/"
     ports:
-      - 12369:12369
+      - 42069:42069
     environment:
       - ISDOCKER=cat
-  test_standalone_lights:
-    image: test_standalone_lights
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
+  standalone_lights:
+    image: standalone_lights
     volumes:
       - "./:/Praxis/"
     ports:
-      - 12342:12342
+      - 42042:42042
     environment:
       - ISDOCKER=cat
-  test_standalone_tts_core:
-    image: test_standalone_tts_core
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
+  standalone_tts_core:
+    image: standalone_tts_core
     volumes:
       - "./:/Praxis/"
     ports:
-      - 12364:12364
+      - 42064:42064
     environment:
       - ISDOCKER=cat
-  test_standalone_websource:
-    image: test_standalone_websource
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
+  standalone_websource:
+    image: standalone_websource
     volumes:
       - "./:/Praxis/"
     ports:
-      - 12388:12388
+      - 42088:42088
     environment:
       - ISDOCKER=cat
-  test_standalone_twitchscript:
-    image: test_standalone_twitchscript
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
+  standalone_twitchscript:
+    image: standalone_twitchscript
     volumes:
       - "./:/Praxis/"
     environment:
       - ISDOCKER=cat
-  test_standalone_twitch_pubsub:
-    image: test_standalone_twitch_pubsub
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
+  standalone_twitch_pubsub:
+    image: standalone_twitch_pubsub
     volumes:
       - "./:/Praxis/"
     environment:
       - ISDOCKER=cat
-  test_standalone_discordscript:
-    image: test_standalone_discordscript
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
+  standalone_discordscript:
+    image: standalone_discordscript
     volumes:
       - "./:/Praxis/"
     environment:
       - ISDOCKER=cat
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot

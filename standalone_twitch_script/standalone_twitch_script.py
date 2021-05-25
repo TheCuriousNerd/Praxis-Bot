@@ -116,7 +116,7 @@ class Twitch_Module():
     def is_command(self, word: str) -> bool:
         # todo need to url-escape word
         clean_param = urlencode({'name': word})
-        url = "http://standalone_command:12310/api/v1/command?%s" % clean_param
+        url = "http://standalone_command:42010/api/v1/command?%s" % clean_param
         resp = requests.get(url)
         return resp.status_code == 200
 
@@ -129,7 +129,7 @@ class Twitch_Module():
             'rest': rest,
             'bonus_data': realMessage})
         #standalone_command
-        url = "http://standalone_command:12310/api/v1/exec_command?%s" % params
+        url = "http://standalone_command:42010/api/v1/exec_command?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -169,7 +169,7 @@ class Twitch_Module():
             'event_type': eventType,
             'eventSender': eventSender,
             'event_data': rest})
-        url = "http://standalone_eventlog:12308/api/v1/event_log/add_event?%s" % params
+        url = "http://standalone_eventlog:42008/api/v1/event_log/add_event?%s" % params
         resp = requests.get(url)
 
         if resp.status_code == 200:
@@ -186,7 +186,7 @@ class Twitch_Module():
     def exec_tts_sender(self, username, message):
         params = urlencode({'tts_sender': username, 'tts_text': message})
         #standalone_tts_core
-        url = "http://localhost:12364/api/v1/tts/send_text?%s" % params
+        url = "http://localhost:42064/api/v1/tts/send_text?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)

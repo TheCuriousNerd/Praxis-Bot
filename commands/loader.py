@@ -31,7 +31,7 @@ import os
 import sys
 from typing import Dict
 
-from ..commands.command_base import AbstractCommand
+from commands.command_base import AbstractCommand
 
 
 #New

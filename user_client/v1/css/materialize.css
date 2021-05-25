@@ -4561,7 +4561,7 @@ small {
   }
 }
 
-@media only screen and (min-width: 123px) {
+@media only screen and (min-width: 420px) {
   .flow-text {
     font-size: 1.248rem;
   }

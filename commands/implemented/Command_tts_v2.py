@@ -24,46 +24,66 @@
 
 from abc import ABCMeta
 
-from ..commands.command_base import AbstractCommand
+from commands.command_base import AbstractCommand
 
 from json import loads
 from urllib.parse import urlencode
+from urllib.parse import parse_qs
 import requests
+import re
 
 import config
 
+import discord
+
 import os
-from ..bot_functions import praxis_logging as praxis_logging
-praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
+import bot_functions.praxis_logging as praxis_logging
+praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
-class Command_lights_v2(AbstractCommand, metaclass=ABCMeta):
+class Command_tts_v2(AbstractCommand, metaclass=ABCMeta):
     """
-    this is the lights command.
+    this is the tts command.
     """
-    command = "!lights"
+    command = "!tts"
 
     def __init__(self):
-        super().__init__(Command_lights_v2.command, n_args=1, command_type=AbstractCommand.CommandType.Ver2)
-        self.help = ["This command allows you to modify the lights via the Lights_Module.",
-        "\nExample:","lights \"SCENE\"","lights \"COLOR\"","lights \"R\" \"G\" \"B\"","lights \"1\" \"0.5\" \"0\""]
+        super().__init__(Command_tts_v2.command, n_args=1, command_type=AbstractCommand.CommandType.Ver2)
+        self.help = ["This command allows you to do tts.",
+        "\nExample:","tts \"TEXT\""]
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
-        returnString = ""
+    def do_command(self, source = AbstractCommand.CommandSource.default, user:str = "User",  command = "", rest = "", bonusData = None):
+        returnString = user + " sent a tts command!"
         praxis_logger_obj.log("\n Command>: " + command + rest)
-        isTwitch = False
 
-        if "Twitch_ZZZ" in source: #temp changed for steam change back later
-            for name in config.allowedCommandsList_TwitchPowerUsers:
+
+        if "Twitch" in source:
+            for name in config.allowedTTS_List:
                 print(name)
                 tempName = user.lower()
                 if name == tempName:
-                    returnString = self.send_Lights_Command(user, 16, command, rest)
-        else:
-            returnString = self.send_Lights_Command(user, 16, command, rest)
+                    self.send_TTS(user, rest)
+        elif "Discord" in source:
+            for name in config.allowedTTS_List:
+                print(name)
 
+                tempNick = self.contains_value("(?<=nick=')[^']+", bonusData)
+
+                tempName = user.lower()
+                if name == tempName:
+                    self.send_TTS(tempNick, rest)
+        else:
+            returnString = self.send_TTS(user, rest)
+
+
+
+        #for name in config.allowedCommandsList_TwitchPowerUsers:
+            #print(name)
+            #tempName = user.lower()
+            #if name == tempName:
+                #self.send_TTS(user, rest)
 
         return returnString
 
@@ -71,7 +91,7 @@ class Command_lights_v2(AbstractCommand, metaclass=ABCMeta):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
         #standalone_lights
-        url = "http://standalone_lights:12342/api/v1/exec_lights?%s" % params
+        url = "http://standalone_lights:42042/api/v1/exec_lights?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -83,6 +103,26 @@ class Command_lights_v2(AbstractCommand, metaclass=ABCMeta):
         else:
             # todo handle failed requests
             return None
+
+    def send_TTS(self, username, message):
+        params = urlencode({'tts_sender': username, 'tts_text': message})
+        #standalone_tts_core
+        url = "http://standalone_tts_core:42064/api/v1/tts/send_text?%s" % params
+        resp = requests.get(url)
+        if resp.status_code == 200:
+            print("Got the following message: %s" % resp.text)
+            data = loads(resp.text)
+            msg = data['message']
+            if msg is not None:
+                return msg
+                # todo send to logger and other relevent services
+        else:
+            # todo handle failed requests
+            pass
+
+    def contains_value(self, search: str, data:str):
+        contains = re.search(search, data)
+        return contains.group(0)
 
     def get_help(self):
         return self.help

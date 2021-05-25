@@ -32,9 +32,6 @@ from flask import Flask
 
 import credentials
 
-from commands import loader as command_loader
-from commands.command_base import AbstractCommand
-
 from bot_functions.cooldowns import Cooldown_Module
 
 import bot_functions.utilities_script as utility
@@ -87,4 +84,4 @@ def textSource_timerTime(timer_name):
 
 if __name__ == "__main__":
     init()
-    api.run(host="0.0.0.0", port = 12388)
+    api.run(host="0.0.0.0", port = 42088)

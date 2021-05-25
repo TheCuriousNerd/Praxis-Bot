@@ -24,7 +24,7 @@
 
 import credentials
 
-from .. import config as config
+import config as config
 
 import pandas as pd
 from sqlalchemy import create_engine

@@ -70,7 +70,7 @@ class ChannelReward_TwitchSubs(AbstractChannelRewards, metaclass=ABCMeta):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
         #standalone_lights
-        url = "http://standalone_lights:12342/api/v1/exec_lights?%s" % params
+        url = "http://standalone_lights:42042/api/v1/exec_lights?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -86,7 +86,7 @@ class ChannelReward_TwitchSubs(AbstractChannelRewards, metaclass=ABCMeta):
     def send_TTS(self, username, message):
         params = urlencode({'tts_sender': username, 'tts_text': message})
         #standalone_tts_core
-        url = "http://standalone_tts_core:12364/api/v1/tts/send_text?%s" % params
+        url = "http://standalone_tts_core:42064/api/v1/tts/send_text?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)

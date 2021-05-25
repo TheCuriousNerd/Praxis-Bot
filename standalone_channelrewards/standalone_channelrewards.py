@@ -182,4 +182,4 @@ def get_list():
 
 if __name__ == '__main__':
     init()
-    api.run(host='0.0.0.0', port=12369)
+    api.run(host='0.0.0.0', port=42069)

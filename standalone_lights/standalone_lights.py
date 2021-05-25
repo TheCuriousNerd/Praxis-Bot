@@ -326,5 +326,5 @@ def exec_lights():
 
 if __name__ == "__main__":
     init()
-    api.run(host='0.0.0.0', port=12342)
+    api.run(host='0.0.0.0', port=42042)
     #testModule.raveMode()

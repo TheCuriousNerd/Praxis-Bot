@@ -24,29 +24,29 @@
 
 from enum import Enum
 from os import F_OK
-from ..bot_functions import tempText_Module as tempText_Module
+from bot_functions import tempText_Module as tempText_Module
 import time
-from .. import config as config
+import config as config
 
 import flask
 from flask import Flask, request, after_this_request
 
-from .. import credentials
+import credentials
 
-from ..commands import loader as command_loader
-from ..commands.command_base import AbstractCommand
+from commands import loader as command_loader
+from commands.command_base import AbstractCommand
 
-from ..bot_functions.cooldowns import Cooldown_Module
+from bot_functions.cooldowns import Cooldown_Module
 
-from ..bot_functions import utilities_script as utility
+from bot_functions import utilities_script as utility
 
-from ..bot_functions import chyron_module as chyron_module
-from ..bot_functions import timers_module as timers_module
+from bot_functions import chyron_module as chyron_module
+from bot_functions import timers_module as timers_module
 
 import random
 
 import os
-from ..bot_functions import praxis_logging as praxis_logging as praxis_logging
+import bot_functions.praxis_logging as praxis_logging as praxis_logging
 praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
@@ -72,4 +72,4 @@ def bot_StatusIcon():
 
 if __name__ == "__main__":
     init()
-    api.run(host="0.0.0.0", port = 12363)
+    api.run(host="0.0.0.0", port = 42063)

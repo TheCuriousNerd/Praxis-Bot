@@ -128,7 +128,7 @@ class Discord_Module(discord.Client):
     async def is_command(self, word: str) -> bool:
         # todo need to url-escape word
         clean_param = urlencode({'name': word})
-        url = "http://standalone_command:12310/api/v1/command?%s" % clean_param
+        url = "http://standalone_command:42010/api/v1/command?%s" % clean_param
         resp = requests.get(url)
         return resp.status_code == 200
 
@@ -141,7 +141,7 @@ class Discord_Module(discord.Client):
             'rest': rest,
             'bonus_data': realMessage})
 
-        url = "http://standalone_command:12310/api/v1/exec_command?%s" % params
+        url = "http://standalone_command:42010/api/v1/exec_command?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -203,7 +203,7 @@ class Discord_Module(discord.Client):
     async def exec_tts_sender(self, username, message):
         params = urlencode({'tts_sender': username, 'tts_text': message})
         #standalone_tts_core
-        url = "http://standalone_tts_core:12364/api/v1/tts/send_text?%s" % params
+        url = "http://standalone_tts_core:42064/api/v1/tts/send_text?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -233,7 +233,7 @@ class Discord_Module(discord.Client):
             'event_time': eventTime,
             'event_type': eventType,
             'event_data': eventData})
-        url = "http://standalone_eventlog:12308/api/v1/event_log/add_event?%s" % params
+        url = "http://standalone_eventlog:42008/api/v1/event_log/add_event?%s" % params
         resp = requests.get(url)
 
         if resp.status_code == 200:

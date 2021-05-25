@@ -5,6 +5,6 @@ docker build --file ./standalone_channelrewards/Dockerfile --tag test_standalone
 docker build --file ./standalone_lights/Dockerfile --tag test_standalone_lights .
 docker build --file ./standalone_tts_core/Dockerfile --tag test_standalone_tts_core .
 docker build --file ./standalone_websource/Dockerfile --tag test_standalone_websource .
-docker build --file ./standalone_discord_script/Dockerfile --tag test_standalone_discordscript .
-docker build --file ./standalone_twitch_script/Dockerfile --tag test_standalone_twitchscript .
+docker build --file ./standalone_discord_script/Dockerfile --tag test_standalone_discord_script .
+docker build --file ./standalone_twitch_script/Dockerfile --tag test_standalone_twitch_script .
 docker build --file ./standalone_twitch_pubsub/Dockerfile --tag test_standalone_twitch_pubsub .

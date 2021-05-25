@@ -34,34 +34,43 @@ import threading
 
 import random
 
-class ChannelReward_RubiksCube(AbstractChannelRewards, metaclass=ABCMeta):
+class ChannelReward_Hydration(AbstractChannelRewards, metaclass=ABCMeta):
     """
     this is the hydration reward.
     """
-    ChannelRewardName = "Solve a Rubiks Cube"
+    ChannelRewardName = "Hydrate"
 
     def __init__(self):
-        super().__init__(ChannelReward_RubiksCube.ChannelRewardName, n_args=1, ChannelRewardType=AbstractChannelRewards.ChannelRewardsType.channelPoints)
-        self.help = ["This is a rubiks cube reward."]
+        super().__init__(ChannelReward_Hydration.ChannelRewardName, n_args=1, ChannelRewardType=AbstractChannelRewards.ChannelRewardsType.channelPoints)
+        self.help = ["This is a hydration channel point reward."]
         self.isChannelRewardEnabled = True
         self.threads = []
 
     def do_ChannelReward(self, source = AbstractChannelRewards.ChannelRewardsSource.default, user = "User",  rewardName = "", rewardPrompt = "", userInput = "", bonusData = None):
 
-        #self.send_Lights_Command(user, 16, "!lights rubikscube", "")
-
+        #print("sending:",user, 16, "!lights hydration")
         try:
-            if self.is_ChannelReward_enabled:
-                thread_ = threading.Thread(target=self.send_Lights_Command, args=(user, 16, "!lights rubikscube", ""))
-                thread_.daemon = True
-                self.threads.append(thread_)
-                thread_.start()
-            if self.is_ChannelReward_enabled:
-                prompt_ = self.get_Phrase(rewardPrompt)
-                thread_ = threading.Thread(target=self.send_TTS, args=(user, prompt_))
-                thread_.daemon = True
-                self.threads.append(thread_)
-                thread_.start()
+            try:
+                if self.is_ChannelReward_enabled:
+                    thread_ = threading.Thread(target=self.send_Lights_Command, args=(user, 16, "!lights hydration", ""))
+                    thread_.daemon = True
+                    self.threads.append(thread_)
+                    thread_.start()
+            except:
+                if self.is_ChannelReward_enabled:
+                    thread_ = threading.Thread(target=self.send_TTS, args=("", "Silly Nerd Fix The Lights Module"))
+                    thread_.daemon = True
+                    self.threads.append(thread_)
+                    thread_.start()
+            try:
+                if self.is_ChannelReward_enabled:
+                    prompt_ = self.get_Phrase(rewardPrompt)
+                    thread_ = threading.Thread(target=self.send_TTS, args=(user, prompt_))
+                    thread_.daemon = True
+                    self.threads.append(thread_)
+                    thread_.start()
+            except:
+                pass
         except:
             pass
 
@@ -71,7 +80,7 @@ class ChannelReward_RubiksCube(AbstractChannelRewards, metaclass=ABCMeta):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
         #standalone_lights
-        url = "http://standalone_lights:12342/api/v1/exec_lights?%s" % params
+        url = "http://standalone_lights:42042/api/v1/exec_lights?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -87,7 +96,7 @@ class ChannelReward_RubiksCube(AbstractChannelRewards, metaclass=ABCMeta):
     def send_TTS(self, username, message):
         params = urlencode({'tts_sender': username, 'tts_text': message})
         #standalone_tts_core
-        url = "http://standalone_tts_core:12364/api/v1/tts/send_text?%s" % params
+        url = "http://standalone_tts_core:42064/api/v1/tts/send_text?%s" % params
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -101,7 +110,7 @@ class ChannelReward_RubiksCube(AbstractChannelRewards, metaclass=ABCMeta):
             pass
 
     def get_Phrase(self, defaultRewardPrompt,
-    phrases = [" thinks its time to solve a cube "]):
+    phrases = ["I demand you drink at once!", "I reccomend you drink some water oowu!", "Get a bucket and a mop cuz you need hydration!", "Hi, I think you look dehydrated, so go get some water!", "Thirsty streamer needs some water!"]):
 
         phrases.append(defaultRewardPrompt)
         totalPhrases = len(phrases) - 1

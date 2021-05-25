@@ -22,11 +22,11 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from ..commands.command_base import AbstractCommand
+from commands.command_base import AbstractCommand
 from enum import Enum
-from .. import config as config
+import config as config
 
-from ..commands import loader as command_loader
+from commands import loader as command_loader
 
 import credentials
 
