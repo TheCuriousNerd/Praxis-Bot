@@ -24,7 +24,7 @@ To install Docker for windows visit: https://www.docker.com/get-started
 
 ## Image Setup:
 
-Use the following command in the terminal to setup all the images.
+Use the following command in the terminal to setup all the images after you make the credentials.
 
 Windows: `setup.bat`<br>
 Linux: `setup.sh`
