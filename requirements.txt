@@ -1,3 +1,4 @@
+BadWordObfuscator
 pynput
 twitch-python
 twitchAPI

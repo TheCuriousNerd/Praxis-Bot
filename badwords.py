@@ -1,1 +1,5 @@
-slurList = ("fag", "faggot", "niga", "nigga", "nigger", "retard", "tard", "rtard", "coon", "dghdtrhrsy65eu665")
+import BadWordObfuscator
+
+#slurList = ("dghdtrhrsy65eu665")
+BadWordObfuscator.Obfuscator.load_slurListDefault()
+slurList = BadWordObfuscator.Obfuscator.slurList

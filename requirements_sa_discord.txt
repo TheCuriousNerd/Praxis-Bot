@@ -1,3 +1,4 @@
+BadWordObfuscator
 discord.py
 psutil
 art
