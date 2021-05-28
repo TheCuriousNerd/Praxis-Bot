@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  standalone_websource:
+    image: standalone_websource
+    ports:
+      - 42088:42088
+    environment:
+      - ISDOCKER=cat
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot

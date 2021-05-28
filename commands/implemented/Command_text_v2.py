@@ -32,10 +32,10 @@ import requests
 
 import config
 
-import tempText_Module
+from bot_functions import tempText_Module as tempText_Module
 
 import os
-import praxis_logging
+import bot_functions.praxis_logging as praxis_logging
 praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))

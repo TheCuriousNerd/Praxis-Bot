@@ -25,10 +25,10 @@
 import flask
 from flask import request
 
-from bot_functions import tts as tts
+from json import loads
+from urllib.parse import urlencode
 
-import config
-from bot_functions import utilities_script as utility
+import requests
 
 import os
 import bot_functions.praxis_logging as praxis_logging
@@ -43,50 +43,36 @@ api.config["DEBUG"] = False
 def init():
     praxis_logger_obj.log("init stuff")
 
-def isTTS_URL_Check(message):
-    isNotBlocked = True
-    is_ttsEnabled = config.is_tts_Speaker_Enabled
-    is_tts_URL_Allowed = not config.is_tts_URL_Blocked
-    has_URL = False
-    if utility.contains_url(message):
-            has_URL = True
+def send_text(tts_sender, tts_text):
 
-    if is_tts_URL_Allowed:
-        if has_URL:
-            has_URL = False
-    if has_URL:
-        isNotBlocked = False
-    if not is_ttsEnabled:
-        isNotBlocked = False
+    #Play Text
+    params = urlencode({'tts_sender': tts_sender, 'tts_text': tts_text})
 
-    return not isNotBlocked
+    url = "http://192.168.191.208:40085/api/v1/tts/speech?%s" % params
+    resp = requests.get(url)
+    if resp.status_code == 200:
+            print("Got the following message: %s" % resp.text)
+            #data = loads(resp.text)
+            #msg = data['message']
+            #if msg is not None:
+                #pass
+            #else:
+            # todo handle failed requests
+                #pass
 
-def try_TTS(tts_sender, tts_text):
-    text_to_say: str = "%s says, %s" % (tts_sender, tts_text)
-
-    #tts.tts(str(text_to_say))
-    #tts.tts(str(tts_text))
-    if tts_sender == "":
-        text_to_say = tts_text
-
-    if isTTS_URL_Check(tts_text):
-        if not utility.contains_slur(tts_sender):
-            if not utility.contains_slur(text_to_say):
-                tts.tts(str(text_to_say))
-
+    #return None
     return flask.make_response('', 200)
 
-@api.route('/api/v1/tts/speech', methods=['GET'])
-def tts_speech():
+@api.route('/api/v1/tts/send_text', methods=['GET'])
+def tts_send_text():
     if 'tts_sender' not in request.args:
         tts_sender = ""
-    else:
-        tts_sender = request.args['tts_sender']
     if 'tts_text' not in request.args:
         return flask.make_response('{\"text\":"Argument \'tts_text\' not in request"}', 400)
 
-    return try_TTS(tts_sender, request.args['tts_text'])
+    return send_text(request.args['tts_sender'], request.args['tts_text'])
 
 if __name__ == '__main__':
+    #send_text("","Blah Blah Blah")
     #init()
-    api.run(host='0.0.0.0', port=40085)
+    api.run(host='0.0.0.0', port=42064)

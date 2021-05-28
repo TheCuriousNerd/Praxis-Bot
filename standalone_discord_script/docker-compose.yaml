@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  standalone_discord_script:
+    image: standalone_discord_script
+    environment:
+      - ISDOCKER=cat
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot

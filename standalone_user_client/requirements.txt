@@ -1,0 +1,14 @@
+pynput
+twitch-python
+twitchAPI
+SQLAlchemy
+pandas
+numpy
+gTTS
+playsound
+discord.py
+psutil
+art
+phue
+flask
+requests

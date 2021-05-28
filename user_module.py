@@ -25,16 +25,16 @@
 from enum import Enum
 import time
 import config as config
-import tts
+from bot_functions import tts as tts
 
 import credentials
 
-import commands.loader as command_loader
+from commands import loader as command_loader
 from commands.command_base import AbstractCommand
 
-from cooldowns import Cooldown_Module
+from bot_functions.cooldowns import Cooldown_Module
 
-import utilities_script as utility
+from bot_functions import utilities_script as utility
 
 class User_Module():
     def __init__(self):

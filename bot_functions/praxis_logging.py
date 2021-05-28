@@ -2,8 +2,8 @@
 # Copyright (C) 2021
 
 # Author Info Examples:
-#   Name / Email / Website
-#       Twitter / Twitch / Youtube / Github
+# Name / Email / Website
+# Twitter / Twitch / Youtube
 
 # Authors:
 #   Alex Orid / inquiries@thecuriousnerd.com / TheCuriousNerd.com
@@ -22,28 +22,17 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from abc import ABCMeta
+import logging
+import bot_functions.utilities_script
 
-from commands.command_base import AbstractCommand
+class praxis_logger():
+    def init(self, name):
+        super().__init__()
+        self.logName = "logs/" + name + ".log"
+        bot_functions.utilities_script.get_dir("logs")
+        logging.basicConfig(filename=self.logName, level=logging.DEBUG)
+        logging.info('Application running!')
 
-from bot_functions import utilities_script as utility
-
-class Command_test_v2(AbstractCommand, metaclass=ABCMeta):
-    """
-    this is the test command.
-    """
-    command = "testerino"
-
-    def __init__(self):
-        super().__init__(Command_test_v2.command, n_args=1, command_type=AbstractCommand.CommandType.Ver2)
-        self.help = ["This is a test command.",
-        "\nExample:","testerino"]
-        self.isCommandEnabled = True
-
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
-        returnString = user + " sent: [ " + command + " ] with: " + rest
-        #print(returnString)
-        return returnString
-
-    def get_help(self):
-        return self.help
+    def log(self, msg):
+        print(self.logName, msg)
+        logging.info(msg)
