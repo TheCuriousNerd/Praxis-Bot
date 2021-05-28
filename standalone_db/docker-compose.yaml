@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  standalone_db:
+    image: standalone_db
+    environment:
+      - ISDOCKER=cat
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot
