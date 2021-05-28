@@ -2,6 +2,9 @@
 cd "standalone_user_client"
 docker-compose down
 cd ".."
+cd "standalone_db"
+docker-compose down
+cd ".."
 cd "standalone_eventLog"
 docker-compose down
 cd ".."
