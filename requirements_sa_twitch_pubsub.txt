@@ -1,3 +1,4 @@
+BadWordObfuscator
 twitchAPI
 psutil
 art
