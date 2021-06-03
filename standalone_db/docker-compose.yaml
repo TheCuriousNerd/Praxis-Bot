@@ -9,7 +9,7 @@ services:
       - ISDOCKER=cat
       - POSTGRES_DB=PRAXIS_BOT_DB
       - POSTGRES_USER=PRAXIS_BOT
-      - POSTGRES_PASSWORD=#Praxis#Praxis#Praxis
+      - POSTGRES_PASSWORD=PraxisPraxisPraxis
       - PGDATA=/db_data
     volumes:
       - "./db_data:/Praxis/standalone_db/db_data"
