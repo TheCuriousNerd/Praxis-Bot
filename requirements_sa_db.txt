@@ -1,0 +1,4 @@
+BadWordObfuscator
+flask
+requests
+windyquery

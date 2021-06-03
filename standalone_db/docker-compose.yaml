@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   standalone_db:
-    image: standalone_db
+    image: postgres:13.3-alpine
     restart: always
     environment:
       - ISDOCKER=cat
@@ -11,6 +11,17 @@ services:
       - PGDATA=/standalone_db/db_data
     volumes:
       - "./standalone_db/db_data:/Praxis/standalone_db/db_data"
+    networks:
+      - praxisbot
+  standalone_db_manager:
+    image: standalone_db
+    restart: always
+    environment:
+      - ISDOCKER=cat
+      - POSTGRES_DB=PRAXIS_BOT_DB
+      - POSTGRES_USER=PRAXIS_BOT
+      - POSTGRES_PASSWORD=#Praxis#Praxis#Praxis
+      - PGDATA=/standalone_db/db_data
     networks:
       - praxisbot
 networks:

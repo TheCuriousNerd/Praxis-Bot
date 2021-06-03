@@ -1,6 +1,5 @@
-FROM python:3.10.0a7-alpine3.13
-FROM postgres:13.3-alpine
 
+FROM python:3.10.0a7-alpine3.13
 
 WORKDIR /Praxis
 
@@ -20,7 +19,7 @@ RUN mkdir /Praxis/commands
 COPY /channel_rewards /Praxis/standalone_db/channel_rewards
 COPY /commands /Praxis/standalone_db/commands
 
-COPY requirements.txt requirements.txt
+COPY requirements_sa_db.txt requirements.txt
 RUN apk add --update gcc libc-dev linux-headers && rm -rf /var/cache/apk/*
 RUN pip3 install -r requirements.txt
 
