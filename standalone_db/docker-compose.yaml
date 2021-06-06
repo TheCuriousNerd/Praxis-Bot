@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  standalone_db:
+  standalone_db_main:
     image: postgres:12.7-alpine
     restart: always
     ports:

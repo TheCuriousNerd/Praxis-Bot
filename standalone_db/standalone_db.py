@@ -3,16 +3,17 @@ import asyncio
 from windyquery import DB
 
 db:DB = DB()
-asyncio.new_event_loop().run_until_complete(db.connect('PRAXIS_BOT_DB', {
-    'host' : 'standalone_db',
+
+
+def init():
+    print("test")
+    asyncio.new_event_loop().run_until_complete(db.connect('PRAXIS_BOT_DB', {
+    'host' : 'standalone_db_main',
     'port' : '5432',
     'database' : 'PRAXIS_BOT_DB',
     'username' : 'PRAXIS_BOT',
     'password' : 'PraxisPraxisPraxis',
 }, default=True))
-
-def init():
-    print("test")
 
 
 async def maintest(db:DB):
