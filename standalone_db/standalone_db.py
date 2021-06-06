@@ -52,7 +52,9 @@ def maintest(db:DB):
     )
 
     users = db.table('users').select('id', 'name')
+
     print(type(users))
+    print(users[0]['name'])
 
 if __name__ == "__main__":
     init()
