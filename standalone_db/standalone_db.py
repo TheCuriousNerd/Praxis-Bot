@@ -21,7 +21,6 @@ def init():
 
 
 def maintest(db:DB):
-    # SELECT id, name FROM users
     db.schema('TABLE users').create(
     'id            serial PRIMARY KEY',
     'group_id      integer references groups (id) ON DELETE CASCADE',
@@ -33,16 +32,6 @@ def maintest(db:DB):
     'payday        integer not null',
     'CONSTRAINT unique_email UNIQUE(group_id, email)',
     'check(payday > 0 and payday < 8)'
-    )
-
-    # CREATE TABLE accounts LIKE users
-    db.schema('TABLE accounts').create(
-        'like users'
-    )
-
-    # CREATE TABLE IF NOT EXISTS accounts LIKE users
-    db.schema('TABLE IF NOT EXISTS accounts').create(
-        'like users'
     )
 
     db.table('users').insert(
@@ -60,37 +49,20 @@ def maintest(db:DB):
 
 
 async def Async_maintest_worker(db:DB):
-    # SELECT id, name FROM users
-    db.schema('TABLE users').create(
+    await db.schema('TABLE users').create(
     'id            serial PRIMARY KEY',
     'group_id      integer references groups (id) ON DELETE CASCADE',
     'created_at    timestamp not null DEFAULT NOW()',
-    'email         text not null unique',
-    'name          text not null',
-    'is_admin      boolean not null default false',
-    'address       jsonb',
-    'payday        integer not null',
-    'CONSTRAINT unique_email UNIQUE(group_id, email)',
-    'check(payday > 0 and payday < 8)'
+    'name          text not null'
     )
 
-    # CREATE TABLE accounts LIKE users
-    db.schema('TABLE accounts').create(
-        'like users'
-    )
-
-    # CREATE TABLE IF NOT EXISTS accounts LIKE users
-    db.schema('TABLE IF NOT EXISTS accounts').create(
-        'like users'
-    )
-
-    db.table('users').insert(
+    await db.table('users').insert(
     {'id': 1, 'name': 'Tom'},
     {'id': 2, 'name': 'Jerry'},
     {'id': 3, 'name': 'DEFAULT'}
     )
 
-    users = db.table('users').select('id', 'name')
+    users = await db.table('users').select('id', 'name')
 
     print(type(users))
     print(users)
