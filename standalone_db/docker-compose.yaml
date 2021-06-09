@@ -10,7 +10,7 @@ services:
       - POSTGRES_DB=PRAXIS_BOT_DB
       - POSTGRES_USER=PRAXIS_BOT
       - POSTGRES_PASSWORD=PraxisPraxisPraxis
-      - PGDATA=/db_data
+      - PGDATA=/Praxis/standalone_db/db_data
     volumes:
       - "./db_data:/Praxis/standalone_db/db_data"
     networks:

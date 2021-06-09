@@ -1,5 +1,5 @@
 
-FROM python:3.7-alpine3.12
+FROM python:3.7-stretch
 
 WORKDIR /Praxis
 
@@ -20,7 +20,6 @@ COPY /channel_rewards /Praxis/standalone_db/channel_rewards
 COPY /commands /Praxis/standalone_db/commands
 
 COPY requirements_sa_db.txt requirements.txt
-RUN apk add --update gcc libc-dev linux-headers && rm -rf /var/cache/apk/*
 RUN pip3 install -r requirements.txt
 
 

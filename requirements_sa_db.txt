@@ -1,4 +1,5 @@
 BadWordObfuscator
 flask
 requests
-windyquery
+psycopg2
+SQLAlchemy

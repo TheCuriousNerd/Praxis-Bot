@@ -2,99 +2,67 @@ import asyncio
 
 import time
 
-from windyquery import DB
+import flask
+import sqlalchemy as db
 
-db:DB = DB()
+user = "PRAXIS_BOT"
+password = "PraxisPraxisPraxis"
+hostName = "standalone_db_main"
+databaseName = "PRAXIS_BOT_DB"
+connectionString ="postgresql://%s:%s@%s/%s" % (user, password, hostName, databaseName)
+
+dbConnection = None
+
+def test_init():
+    global dbConnection
+    dbConnection = db.create_engine(connectionString)
+
+    try:
+        dbConnection.execute(
+            'DROP TABLE users'
+        )
+    except:
+        print("Couldn't Drop it")
+
+    try:
+        dbConnection.execute(
+        'CREATE TABLE users ('
+        'id SERIAL, '
+        'name TEXT);'
+    )
+    except:
+        print("Couldn't Make it")
+
+    try:
+        dbConnection.execute(
+            'DELETE FROM users WHERE id = 1;'
+        )
+    except:
+        pass
 
 
-def init():
-    print("Letting DB setup")
-    time.sleep(5)
-    print("Initiating Connection")
-    asyncio.new_event_loop().run_until_complete(db.connect('PRAXIS_BOT_DB', {
-    'host' : 'standalone_db_main',
-    'port' : '5432',
-    'database' : 'PRAXIS_BOT_DB',
-    'username' : 'PRAXIS_BOT',
-    'password' : 'PraxisPraxisPraxis',
-}, default=True))
-    print("db: " , db)
-
-
-def maintest(db:DB):
-    async def make_table():
-        db.schema('TABLE users').create(
-            'id            serial PRIMARY KEY',
-            'group_id      integer references groups (id) ON DELETE CASCADE',
-            'created_at    timestamp not null DEFAULT NOW()',
-            'email         text not null unique',
-            'name         text not null',
-            'is_admin      boolean not null default false',
-            'address       jsonb',
-            'payday        integer not null',
-            'CONSTRAINT unique_email UNIQUE(group_id, email)',
-            'check(payday > 0 and payday < 8)'
+    try:
+        for x in range(10):
+            dbConnection.execute(
+            'INSERT INTO users '
+            '(name) '
+            'VALUES (\'Test Name\');'
             )
+    except:
+        pass
 
-    async def add_users():
-        db.table('users').insert(
-            {'id': 1, 'name': 'Tom'},
-            {'id': 2, 'name': 'Jerry'},
-            {'id': 3, 'name': 'DEFAULT'}
-            )
-    async def get_user():
-        result = db.table('users').select('id', 'name')
-        return result
+    try:
+        results = dbConnection.execute(
+            'SELECT * FROM '
+            'users;'
+        )
 
-    asyncio.get_event_loop().run_until_complete(make_table())
-    asyncio.get_event_loop().run_until_complete(add_users())
+        for item in results:
+            print(item)
+    except:
+        pass
 
-    users = asyncio.get_event_loop().run_until_complete(get_user())
-
-
-    print(type(users))
-    print(users)
-    print(users.table('users'))
-    print(users[0]['name'])
-
-
-def Async_maintest(db:DB):
-    async def make_table():
-        await db.schema('TABLE users').create(
-            'id            serial PRIMARY KEY',
-            'group_id      integer references groups (id) ON DELETE CASCADE',
-            'created_at    timestamp not null DEFAULT NOW()',
-            'email         text not null unique',
-            'name         text not null',
-            'is_admin      boolean not null default false',
-            'address       jsonb',
-            'payday        integer not null',
-            'CONSTRAINT unique_email UNIQUE(group_id, email)',
-            'check(payday > 0 and payday < 8)'
-            )
-
-    async def add_users():
-        await db.table('users').insert(
-            {'id': 1, 'name': 'Tom'},
-            {'id': 2, 'name': 'Jerry'},
-            {'id': 3, 'name': 'DEFAULT'}
-            )
-    async def get_user():
-        result = await db.table('users').select('id', 'name')
-        return result
-
-    asyncio.get_event_loop().run_until_complete(make_table())
-    asyncio.get_event_loop().run_until_complete(add_users())
-
-    users = asyncio.get_event_loop().run_until_complete(get_user())
-
-
-    print(type(users))
-    print(users)
-    print(users.table('users'))
-    print(users[0]['name'])
 
 if __name__ == "__main__":
-    init()
-    #Async_maintest(db)
-    maintest(db)
+    time.sleep(5)
+    test_init()
