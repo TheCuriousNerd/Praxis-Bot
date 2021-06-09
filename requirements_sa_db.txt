@@ -1,5 +1,7 @@
 BadWordObfuscator
 flask
 requests
+psutil
+art
 psycopg2
 SQLAlchemy
