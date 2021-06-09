@@ -59,7 +59,7 @@ class Command_chyron_v2(AbstractCommand, metaclass=ABCMeta):
         for name in config.adminUsers_List:
             print(name)
             tempName = user.lower()
-            if name == tempName:
+            if name in tempName:
 
                 try:
                     returnString = user + " has updated the chyron!"
@@ -71,8 +71,8 @@ class Command_chyron_v2(AbstractCommand, metaclass=ABCMeta):
                 except:
                     returnString = user + " has attempted to update the chyron but an error may have occurred!"
                 #returnString = chyron_.chyron_computedString
-            else:
-                returnString = user + " has attempted to update the chyron but an error may have occurred further on!!!"
+            #else:
+            #    returnString = user + " has attempted to update the chyron but an error may have occurred further on!!!"
 
 
         return returnString
