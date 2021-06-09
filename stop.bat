@@ -31,3 +31,4 @@ docker-compose down
 cd ".."
 cd "standalone_twitch_pubsub"
 docker-compose down
+cd ".."
