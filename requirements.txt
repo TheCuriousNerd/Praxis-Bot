@@ -13,3 +13,4 @@ art
 phue
 flask
 requests
+windyquery

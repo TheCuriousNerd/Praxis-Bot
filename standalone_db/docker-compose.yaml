@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  standalone_db_main:
+    image: postgres:13.3-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - ISDOCKER=cat
+      - POSTGRES_DB=PRAXIS_BOT_DB
+      - POSTGRES_USER=PRAXIS_BOT
+      - POSTGRES_PASSWORD=PraxisPraxisPraxis
+      - PGDATA=/Praxis/standalone_db/db_data
+    volumes:
+      - "./db_data:/Praxis/standalone_db/db_data"
+    networks:
+      - praxisbot
+  standalone_db_manager:
+    image: standalone_db
+    ports:
+      - 42002:42002
+    environment:
+      - ISDOCKER=cat
+    networks:
+      - praxisbot
+networks:
+  praxisbot:
+    name: praxisbot

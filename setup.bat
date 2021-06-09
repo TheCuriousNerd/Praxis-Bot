@@ -1,5 +1,6 @@
 # powershell
 start docker build --file ./standalone_user_client/Dockerfile --tag standalone_user_client .
+start docker build --file ./standalone_db/Dockerfile --tag standalone_db .
 start docker build --file ./standalone_eventLog/Dockerfile --tag standalone_eventlog .
 start docker build --file ./standalone_channelrewards/Dockerfile --tag standalone_channelrewards .
 start docker build --file ./standalone_command/Dockerfile --tag standalone_command .

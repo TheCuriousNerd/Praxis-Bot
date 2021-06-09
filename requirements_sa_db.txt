@@ -1,0 +1,5 @@
+BadWordObfuscator
+flask
+requests
+psycopg2
+SQLAlchemy

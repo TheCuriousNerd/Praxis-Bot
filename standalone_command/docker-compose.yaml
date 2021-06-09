@@ -8,6 +8,8 @@ services:
       - ISDOCKER=cat
     networks:
       - praxisbot
+    volumes:
+      - "../stream_sources:/Praxis/stream_sources/"
 networks:
   praxisbot:
     name: praxisbot

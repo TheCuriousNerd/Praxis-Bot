@@ -62,10 +62,11 @@ class tempText_Module():
     def update_tempTextFiles(self):
         dir = utilities.get_dir("stream_sources")
         script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
+        script_dir = ""
 
         for key in self.tempText_items:
             item = self.tempText_items[key]
-            relative_path = "stream_sources/" + item.itemName + ".txt"
+            relative_path = "../Praxis/stream_sources/" + item.itemName + ".txt"
             real_file_path = os.path.join(script_dir, relative_path)
 
             file = open(real_file_path, "wb")
@@ -76,7 +77,8 @@ class tempText_Module():
     def getTempTextFile(self, key):
         dir = utilities.get_dir("stream_sources")
         script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-        relative_path = "stream_sources/" + key + ".txt"
+        script_dir = ""
+        relative_path = "../Praxis/stream_sources/" + key + ".txt"
         real_file_path = os.path.join(script_dir, relative_path)
 
         file = open(real_file_path, "rb")

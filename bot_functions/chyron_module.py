@@ -85,7 +85,8 @@ class Chyron_Module():
     def updateChyronFile(self):
         dir = utilities.get_dir("stream_sources")
         script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-        relative_path = "stream_sources/chyron.txt"
+        script_dir = ""
+        relative_path = "../Praxis/stream_sources/chyron.txt"
         real_file_path = os.path.join(script_dir, relative_path)
 
         file = open(real_file_path, "wb")
@@ -96,7 +97,8 @@ class Chyron_Module():
     def getChyronFile(self):
         dir = utilities.get_dir("stream_sources")
         script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-        relative_path = "stream_sources/chyron.txt"
+        script_dir = ""
+        relative_path = "../Praxis/stream_sources/chyron.txt"
         real_file_path = os.path.join(script_dir, relative_path)
 
         file = open(real_file_path, "rb")

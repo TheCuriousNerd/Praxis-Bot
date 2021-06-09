@@ -8,3 +8,4 @@ stream_sources/brb.txt
 *.log
 timers/
 event_logs/logs/
+standalone_db/db_data/
