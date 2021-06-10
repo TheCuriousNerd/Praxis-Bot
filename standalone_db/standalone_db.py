@@ -156,7 +156,7 @@ def get_data():
     result = does_basic_key_exist(request.args['key_name'])
     return flask.make_response("{\"message\":\"%s\"}" % result, 200, {"Content-Type": "application/json"})
 
-@api.route('/api/v1/set_data/', methods=['GET'])
+@api.route('/api/v1/set_data/basic_key_vars', methods=['GET'])
 def set_data():
     if 'key_name' not in request.args:
         return flask.make_response('{\"text\":"Argument \'key_name\' not in request"}', 400)
