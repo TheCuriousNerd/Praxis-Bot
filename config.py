@@ -102,5 +102,5 @@ currentSpeaker = Speaker.GOOGLE_TEXT_TO_SPEECH
 slurList = badwords.slurList
 
 praxisVersion_Alpha = "0 " #Build
-praxisVersion_Delta = "1 " #Minor
-praxisVersion_Omega = "0.8 " #Major
+praxisVersion_Delta = "0 " #Minor
+praxisVersion_Omega = "1 " #Major

@@ -27,7 +27,10 @@ import asyncio
 import time
 
 import flask
+from flask import Flask, request, after_this_request
 import sqlalchemy as db
+
+import requests
 
 import os
 import bot_functions.praxis_logging as praxis_logging
@@ -146,15 +149,21 @@ def set_basic_data(key, var):
     except:
         return 'Insertion Failed'
 
-@api.route('/api/v1/get_data/<key_name>', methods=['GET'])
-def get_data(key_name):
-    result = does_basic_key_exist(key_name)
-    return flask.make_response(str(result), 200)
+@api.route('/api/v1/get_data/basic_key_vars', methods=['GET'])
+def get_data():
+    if 'key_name' not in request.args:
+        return flask.make_response('{\"text\":"Argument \'key_name\' not in request"}', 400)
+    result = does_basic_key_exist(request.args['key_name'])
+    return flask.make_response("{\"message\":\"%s\"}" % result, 200, {"Content-Type": "application/json"})
 
-@api.route('/api/v1/set_data/<key_name>/<var_string>', methods=['GET'])
-def set_data(key_name, var_string):
-    result = set_basic_data(key_name, var_string)
-    return flask.make_response(str(result), 200)
+@api.route('/api/v1/set_data/', methods=['GET'])
+def set_data():
+    if 'key_name' not in request.args:
+        return flask.make_response('{\"text\":"Argument \'key_name\' not in request"}', 400)
+    if 'var_string' not in request.args:
+        return flask.make_response('{\"text\":"Argument \'var_string\' not in request"}', 400)
+    result = set_basic_data(request.args['key_name'], request.args['var_string'])
+    return flask.make_response("{\"message\":\"%s\"}" % result, 200, {"Content-Type": "application/json"})
 
 @api.route('/', methods=['GET'])
 def command_check():
