@@ -10,6 +10,7 @@ services:
       - praxisbot
     volumes:
       - "../stream_sources:/Praxis/stream_sources/"
+      - "../logs:/Praxis/logs"
 networks:
   praxisbot:
     name: praxisbot

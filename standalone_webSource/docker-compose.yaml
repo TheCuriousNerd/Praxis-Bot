@@ -8,6 +8,8 @@ services:
       - ISDOCKER=cat
     networks:
       - praxisbot
+    volumes:
+      - "../logs:/Praxis/logs"
 networks:
   praxisbot:
     name: praxisbot

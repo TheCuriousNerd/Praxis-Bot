@@ -13,6 +13,7 @@ services:
       - PGDATA=/Praxis/standalone_db/db_data
     volumes:
       - "./db_data:/Praxis/standalone_db/db_data"
+      - "../logs:/Praxis/logs"
     networks:
       - praxisbot
   standalone_db_manager:
@@ -23,6 +24,8 @@ services:
       - ISDOCKER=cat
     networks:
       - praxisbot
+    volumes:
+      - "../logs:/Praxis/logs"
 networks:
   praxisbot:
     name: praxisbot
