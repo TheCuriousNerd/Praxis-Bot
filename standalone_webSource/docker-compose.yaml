@@ -3,7 +3,7 @@ services:
   standalone_websource:
     image: standalone_websource
     ports:
-      - 42088:42088
+      - 42012:42012
     environment:
       - ISDOCKER=cat
     networks:

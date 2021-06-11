@@ -84,4 +84,4 @@ def textSource_timerTime(timer_name):
 
 if __name__ == "__main__":
     init()
-    api.run(host="0.0.0.0", port = 42088)
+    api.run(host="0.0.0.0", port = 42012)

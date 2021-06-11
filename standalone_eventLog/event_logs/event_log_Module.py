@@ -52,10 +52,11 @@ class Event_Log_Module():
         self.load_HistoricLogs()
 
     def makeFile(self, fileName):
-        dir = utility.get_dir("event_logs/logs")
+        dir = utility.get_dir("logs/event_logs")
         script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-        relative_path = fileName + ".json"
-        real_file_path = os.path.join(script_dir, dir, relative_path)
+        script_dir = ""
+        relative_path = "../Praxis/logs/event_logs/" + fileName + ".json"
+        real_file_path = os.path.join(script_dir, relative_path)
 
         newList = []
         for event in self.Event_Log_List:
@@ -70,10 +71,11 @@ class Event_Log_Module():
             json.dump(newList, logFile, indent=2)
 
     def readFile(self, fileName):
-        dir = utility.get_dir("event_logs/logs")
+        dir = utility.get_dir("logs/event_logs")
         script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-        relative_path = fileName + ".json"
-        real_file_path = os.path.join(script_dir, dir, relative_path)
+        script_dir = ""
+        relative_path = "../Praxis/logs/event_logs/" + fileName + ".json"
+        real_file_path = os.path.join(script_dir, relative_path)
 
         newList = []
         with open(real_file_path, 'r') as eventlog_:
@@ -90,22 +92,23 @@ class Event_Log_Module():
         return newList
 
     def deleteFile(self, fileName):
-        dir = utility.get_dir("event_logs/logs")
+        dir = utility.get_dir("logs/event_logs")
         script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-        relative_path = fileName + ".json"
-        real_file_path = os.path.join(script_dir, dir, relative_path)
+        script_dir = ""
+        relative_path = "../Praxis/logs/event_logs/" + fileName + ".json"
+        real_file_path = os.path.join(script_dir, relative_path)
         os.remove(real_file_path)
 
     def get_base_dir(self) -> str:
         cwd = os.getcwd()
         split = os.path.split(cwd)
         current = split[len(split) - 1]
-        if current == 'event_logs/logs':
+        if current == 'logs/event_logs':
             return self.check_dir(cwd)
         elif current == 'Praxis-Bot' or current == 'Praxis':
-            return self.check_dir(os.path.join(cwd, "event_logs/logs"))
+            return self.check_dir(os.path.join(cwd, "logs/event_logs"))
         else:
-            print("could not find working directory for Praxis-Bot/event_logs/logs")
+            print("could not find working directory for Praxis-Bot/logs/event_logs")
             raise Exception
 
     def get_implementations_dir(self) -> str:
