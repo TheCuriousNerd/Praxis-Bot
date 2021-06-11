@@ -32,17 +32,25 @@ import sqlalchemy as db
 
 import requests
 
+import credentials
+
+import config
+
 import os
 import bot_functions.praxis_logging as praxis_logging
 praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
-user = "PRAXIS_BOT"
-password = "PraxisPraxisPraxis"
-hostName = "standalone_db_main"
-databaseName = "PRAXIS_BOT_DB"
-connectionString ="postgresql://%s:%s@%s/%s" % (user, password, hostName, databaseName)
+credentials_manager = credentials.Credentials_Module()
+credentials_manager.load_credentials()
+dbCert: credentials.DB_Credential = credentials_manager.find_Credential(credentials.DB_Credential, config.credentialsNickname)
+
+user = dbCert.username
+password = dbCert.password
+hostName = dbCert.ipAddress
+databaseName = dbCert.databaseName
+connectionString = "postgresql://%s:%s@%s/%s" % (user, password, hostName, databaseName)
 
 dbConnection = None
 

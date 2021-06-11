@@ -58,7 +58,6 @@ class Discord_Credential():
         self.token = token
 
 class DB_Credential():
-    # engine = "mysql+mysqlconnector://root:password@localhost:3306/DatabaseName"
     def __init__(self, nickname, username, password, ipAddress, port, databaseName, engine_url):
         #super().__init__()
         self.nickname = nickname
@@ -70,7 +69,7 @@ class DB_Credential():
         self.engine_url = engine_url
 
     def create_engine_url(self):
-        new_engine_url = "mysql+mysqlconnector://" + self.username + ":" + self.password + "@" + self.ipAddress + ":" + self.port + "/" + self.databaseName
+        new_engine_url = "postgresql://%s:%s@%s/%s" % (self.username, self.password, self.ipAddress, self.databaseName)
         self.engine_url = new_engine_url
         return new_engine_url
 

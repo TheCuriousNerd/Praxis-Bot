@@ -97,10 +97,10 @@ pubsub_RefreshToken = `^Look at Instructions Above^`<br>
 <br>
 
 ## For Database Credentials:
-Will be replaced soon.<br>The current `db.py` file is not being used for now.<br>
-~~Nickname = `Anything You Want` *(Must match ***credentialsNickname*** in config)*~~
 
-~~Engine = `"mysql+mysqlconnector://root:password@localhost:3306/DatabaseName"`~~<br>
+Nickname = `Anything You Want` *(Must match ***credentialsNickname*** in config)*
+
+Engine Example = `"postgresql://user:password@ipAddress/DB_NAME_HERE"`<br>
 <br>
 
 ## For Discord Credentials:
