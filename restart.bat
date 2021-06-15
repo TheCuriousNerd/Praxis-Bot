@@ -1,35 +1,13 @@
-# powershell
+echo "Restarting Praxis Bot Services..."
 
-cd "standalone_user_client"
-docker-compose restart
-cd ".."
-cd "standalone_db"
-docker-compose restart
-cd ".."
-cd "standalone_eventLog"
-docker-compose restart
-cd ".."
-cd "standalone_command"
-docker-compose restart
-cd ".."
-cd "standalone_channelrewards"
-docker-compose restart
-cd ".."
-cd "standalone_lights"
-docker-compose restart
-cd ".."
-cd "standalone_tts_core"
-docker-compose restart
-cd ".."
-cd "standalone_websource"
-docker-compose restart
-cd ".."
-cd "standalone_discord_script"
-docker-compose restart
-cd ".."
-cd "standalone_twitch_script"
-docker-compose restart
-cd ".."
-cd "standalone_twitch_pubsub"
-docker-compose restart
-cd ".."
+start powershell cd "standalone_user_client" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_db" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_eventLog" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_command" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_channelrewards" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_lights" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_tts_core" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_websource" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_discord_script" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_twitch_script" ; docker-compose restart ; cd ".."
+start powershell cd "standalone_twitch_pubsub" ; docker-compose restart ; cd ".."
