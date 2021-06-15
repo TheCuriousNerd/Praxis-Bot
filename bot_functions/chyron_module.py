@@ -40,15 +40,15 @@ class Chyron_Module():
         self.addItem(
             "WeekDays",
             "► Weekdays:   ",
-            "Daily Dev Streams starting around 12pm Noon EST")
+            "Daily Dev Streams starting around 12:30pm EST")
         self.addItem(
             "FriSat",
             "► Friday & Saturday:   ",
-            "FFxiv (Express Delivery Raid Team) @ 7pm EST")
+            "FFxiv (Express Delivery Raid Team) Fri @ 8pm EST   &   Sat @ 7pm EST")
         self.addItem(
             "Commands",
             "► Commands:   ",
-            "!animal,   !climateclock,   !discord,   !lights,   !roll")
+            "!animal,   !climateclock,   !discord,   !github,   !lights,   !roll")
         #self.addItem(
         #    "Website",
         #    "► Want to read about my various projects?  visit:   ",
@@ -59,7 +59,7 @@ class Chyron_Module():
             "If you like what you see and want more, hit the follow button to see more!")
         self.addItem(
             "Discord",
-            "► Need help with Praxis Bot or one of our other projects? (or for memes) Join our discord!  Type:  \" !d \"  in chat to get the link or visit:   ",
+            "► Need help with Praxis Bot or with some other project? Join our discord!  Type:  \" !d \"  in chat to get the link or visit:   ",
             "discord.io/thecuriousnerd")
 
     def chyron_stringUpdater(self):
