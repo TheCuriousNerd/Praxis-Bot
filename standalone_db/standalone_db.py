@@ -111,13 +111,13 @@ def test_init():
 def init():
     global dbConnection
     dbConnection = db.create_engine(connectionString)
-    try:
-        dbConnection.execute(
-            'DROP TABLE basic_key_vars'
-        )
-        praxis_logger_obj.log("[Dropped]: (basic_key_vars)")
-    except:
-        praxis_logger_obj.log("[Couldn't Drop it]: (basic_key_vars)")
+    # try:
+    #     dbConnection.execute(
+    #         'DROP TABLE basic_key_vars'
+    #     )
+    #     praxis_logger_obj.log("[Dropped]: (basic_key_vars)")
+    # except:
+    #     praxis_logger_obj.log("[Couldn't Drop it]: (basic_key_vars)")
     try:
         dbConnection.execute(
         'CREATE TABLE basic_key_vars ('
