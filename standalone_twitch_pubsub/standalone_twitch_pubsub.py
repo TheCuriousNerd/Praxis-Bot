@@ -75,7 +75,7 @@ class Twitch_Pubsub():
         self.twitch.authenticate_app(self.target_scope)
         for scope_ in self.target_scope:
             print(scope_)
-        auth = UserAuthenticator(self.twitch, self.target_scope, force_verify=True)
+        auth = UserAuthenticator(self.twitch, self.target_scope, force_verify=config.FORCE_Verify_Credentials)
         token, refresh_token = auth.authenticate()
 
         if token is not None: print("found token")

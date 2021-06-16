@@ -27,6 +27,8 @@ import badwords as badwords
 
 credentialsNickname = "praxis_bot"
 
+FORCE_Verify_Credentials = False
+
 test_module: bool = False
 user_module: bool = True
 
