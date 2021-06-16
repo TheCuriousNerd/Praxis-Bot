@@ -103,6 +103,6 @@ currentSpeaker = Speaker.GOOGLE_TEXT_TO_SPEECH
 #Misc Configs
 slurList = badwords.slurList
 
-praxisVersion_Alpha = "0 " #Build
+praxisVersion_Alpha = "2 " #Build
 praxisVersion_Delta = "0 " #Minor
 praxisVersion_Omega = "1 " #Major
