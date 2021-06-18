@@ -8,11 +8,8 @@ services:
       - 42055:42055
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+
+
   standalone_eventlog:
     image: standalone_eventlog
     volumes:
@@ -21,11 +18,8 @@ networks:
       - 42008:42008
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+
+
   standalone_command:
     image: standalone_command
     volumes:
@@ -34,11 +28,8 @@ networks:
       - 42010:42010
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+
+
   standalone_channelrewards:
     image: standalone_channelrewards
     volumes:
@@ -47,11 +38,8 @@ networks:
       - 42069:42069
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+
+
   standalone_lights:
     image: standalone_lights
     volumes:
@@ -60,11 +48,8 @@ networks:
       - 42042:42042
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+
+
   standalone_tts_core:
     image: standalone_tts_core
     volumes:
@@ -73,11 +58,8 @@ networks:
       - 42064:42064
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+
+
   standalone_websource:
     image: standalone_websource
     volumes:
@@ -86,41 +68,28 @@ networks:
       - 42012:42012
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+
+
   standalone_twitchscript:
     image: standalone_twitchscript
     volumes:
       - "./:/Praxis/"
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+
+
   standalone_twitch_pubsub:
     image: standalone_twitch_pubsub
     volumes:
       - "./:/Praxis/"
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+
+
   standalone_discordscript:
     image: standalone_discordscript
     volumes:
       - "./:/Praxis/"
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
-networks:
-  praxisbot:
-    name: praxisbot
+

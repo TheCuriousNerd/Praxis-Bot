@@ -6,10 +6,5 @@ services:
       - 42012:42012
     environment:
       - ISDOCKER=cat
-    networks:
-      - praxisbot
     volumes:
       - "../logs:/Praxis/logs"
-networks:
-  praxisbot:
-    name: praxisbot
