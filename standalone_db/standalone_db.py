@@ -129,7 +129,7 @@ def init():
     except:
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (basic_key_vars)")
 
-def does_basic_key_exist(key):
+def get_basic_data(key):
     global dbConnection
     try:
         returns = ""
@@ -161,7 +161,7 @@ def set_basic_data(key, var):
 def get_data():
     if 'key_name' not in request.args:
         return flask.make_response('{\"text\":"Argument \'key_name\' not in request"}', 400)
-    result = does_basic_key_exist(request.args['key_name'])
+    result = get_basic_data(request.args['key_name'])
     return flask.make_response("{\"message\":\"%s\"}" % result, 200, {"Content-Type": "application/json"})
 
 @api.route('/api/v1/set_data/basic_key_vars', methods=['GET'])
