@@ -14,11 +14,18 @@ services:
     volumes:
       - "./db_data:/Praxis/standalone_db/db_data"
       - "../logs:/Praxis/logs"
+    networks:
+      - praxisbot
   standalone_db_manager:
     image: standalone_db
     ports:
       - 42002:42002
     environment:
       - ISDOCKER=cat
+    networks:
+      - praxisbot
     volumes:
       - "../logs:/Praxis/logs"
+networks:
+  praxisbot:
+    name: praxisbot
