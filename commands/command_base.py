@@ -39,11 +39,11 @@ class AbstractCommand(metaclass=ABCMeta):
     """
 
     class CommandType(Enum):
-        NONE = auto()
-        Praxis = auto()
-        TWITCH = auto()
-        DISCORD = auto()
         Ver2 = auto()
+        Ver3 = auto()
+
+    class CommandFunction_Ver(Enum):
+        ONE = auto()
 
     class CommandSource(Enum):
         default = 0
