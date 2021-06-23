@@ -22,6 +22,7 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import sys
 import credentials
 
 import config
@@ -79,6 +80,13 @@ class Twitch_Credential_Maker():
 
 if __name__ == "__main__":
     testModule = Twitch_Credential_Maker()
+    scriptArgs = sys.argv
+
+    skipQuestion = False
+    if len(scriptArgs) != 0:
+        for arg_ in scriptArgs:
+            if arg_ == "autostart":
+                skipQuestion = True
 
     credentials_manager = credentials.Credentials_Module()
     credentials_manager.load_credentials()
@@ -87,9 +95,14 @@ if __name__ == "__main__":
     #pprint(testModule.twitch.get_users(logins=['thecuriousnerd']))
 
     token, refreshToken = testModule.get_tokens()
-    print("Update credentials file? (y/n)")
-    response = input()
-    if "y" in response.lower():
+
+    if not skipQuestion:
+        print("Update credentials file? (y/n)")
+        response = input()
+        if "y" in response.lower():
+            testModule.updateCredentialsFile(token, refreshToken)
+        print("Ready to close")
+        input()
+    else:
         testModule.updateCredentialsFile(token, refreshToken)
-    print("Ready to close")
-    input()
+        print("Updated Twitch Credentials")
