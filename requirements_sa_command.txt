@@ -6,3 +6,4 @@ psutil
 phue
 art
 requests
+pyparsing
