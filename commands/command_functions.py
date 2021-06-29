@@ -1,6 +1,11 @@
 from abc import ABCMeta, abstractmethod
 from enum import Enum, auto
 
+from json import loads
+from urllib.parse import urlencode
+import requests
+from bot_functions import utilities_db as db_utility
+
 class AbstractCommandFunction(metaclass=ABCMeta):
     class FunctionType(Enum):
         NONE = auto()
@@ -40,9 +45,19 @@ class AbstractCommandFunction(metaclass=ABCMeta):
         pass
 
 class Function_Helpers():
-    from json import loads
-    from urllib.parse import urlencode
-    import requests
+
+    def get_Command_returnString(self, command):
+        try:
+            db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+            dbResults = db_obj.execQuery(
+                'SELECT * FROM '
+                'command_responses_v0;')
+            db_obj.closeConnection()
+            for i in dbResults:
+                return i[2]
+            #return dbResults
+        except:
+            return "UNABLE TO FIND RESPONSE"
 
     def send_Lights_Command(self, username, light_group, command, rest):
         # todo need to url-escape command and rest

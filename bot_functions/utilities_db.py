@@ -33,7 +33,8 @@ class Praxis_DB_Connection():
         self.credentials_manager.load_credentials()
         self.dbCert: credentials.DB_Credential = self.credentials_manager.find_Credential(credentials.DB_Credential, config.credentialsNickname)
 
-        self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, self.dbCert.ipAddress, self.dbCert.databaseName)
+        #self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, self.dbCert.ipAddress, self.dbCert.databaseName)
+        self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, "localhost", self.dbCert.databaseName)
 
         self.dbConnection = None
         if autoConnect == True:
@@ -45,9 +46,23 @@ class Praxis_DB_Connection():
     def closeConnection(self):
         self.dbConnection = None
 
+    def doesTableExist(self, tableName):
+        try:
+            query = "SELECT to_regclass('%s');" % tableName
+            result = self.dbConnection.execute(query)
+            for r in result:
+                if r[0] == tableName:
+                    return True
+            return False
+
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return False
+
     def execQuery(self, query):
         try:
-            return self.dbConnection.execute(query)
+            results = self.dbConnection.execute(query)
+            return results
         except:
             print("[Praxis_DB_Connection] query error")
             return None
