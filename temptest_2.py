@@ -1,7 +1,7 @@
 import pyparsing
 
 def init():
-    stringToTest = "This is a $(test) command @(user)"
+    stringToTest = "This is a $(testFunction) $(testFunction #(0)) command @(user)"
     #stringToTest = "$(test$(test$(test)))$(test)$(test)"
     print(searchForFunctions1(stringToTest))
 
@@ -37,7 +37,7 @@ def test_function2(input):
 
 def searchForFunctions1(input):
         input = "$(%s)" % input
-        #parserContent = pyparsing.Word(pyparsing.alphanums)
+        parserContent = pyparsing.Word(pyparsing.alphanums) | ' '
         parser = pyparsing.nestedExpr('$(', ')')
         testResult_ = parser.parseString(input)
         testResult = testResult_.asList()
