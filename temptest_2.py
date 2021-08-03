@@ -10,7 +10,7 @@ class TokenType(Enum):
 def init():
     stringToTest = "This is a $(testFunction) $(testFunction $(#0)) command $(@user)"
     #stringToTest = "This is a $(testFunction1 $(testFunction2 $(testFunction3 $(testFunction4)))) test for nested functions"
-    stringToTest = "This is a $(testFunction 1) $(12345 $(abcdef 123 #4 5 6)) $(123abc $(123123123123)) $(testFunction $(#0)) command $(@user)"
+    #stringToTest = "This is a $(testFunction 1) $(12345 $(abcdef 123 #4 5 6)) $(123abc $(123123123123)) $(testFunction $(#0)) command $(@user)"
 
     print("Before:")
     print(stringToTest)
@@ -116,8 +116,9 @@ def processString(
                             print(str(data) + " is something else")
 
 
-                elif type(inputData_) == str:
+                elif (len(inputData_) == 1) and (type(inputData_[0]) == str):
                     print(inputData_ + " is a str__")
+                    print("EDGE CASE?! -DEBUG TO STUDY MORE")
 
                     if "#" in inputData_:
                         selectedToken = TokenType.ARGUMENT
