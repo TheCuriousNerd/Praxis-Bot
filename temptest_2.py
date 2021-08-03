@@ -11,12 +11,13 @@ def init():
     stringToTest = "This is a $(testFunction) $(testFunction $(#0)) command $(@user)"
     #stringToTest = "This is a $(testFunction1 $(testFunction2 $(testFunction3 $(testFunction4)))) test for nested functions"
     #stringToTest = "This is a $(testFunction 1) $(12345 $(abcdef 123 #4 5 6)) $(123abc $(123123123123)) $(testFunction $(#0)) command $(@user)"
+    argzToTest = ["UBER_TESTERINO"]
+    test2 = "This is a $(testerino $(#0))"
 
-    print("Before:")
-    print(stringToTest)
-    result = stringFunctionParser(stringToTest)
-    print("\nAfter:")
-    print(result)
+
+    #result = stringFunctionParser(stringToTest)
+    result2 = stringFunctionParser(test2, argzToTest)
+
 
 
 def stringFunctionParser(
@@ -25,7 +26,14 @@ def stringFunctionParser(
         ):
     curStr = input
 
+    print("Before:")
+    print(input)
+
     curStr = processString(input, arguments)
+
+    print("\nAfter:")
+    print(curStr)
+    print("-----------------------------")
 
     return curStr
 
@@ -45,79 +53,45 @@ def processString(
     results = searchPrep(input)
     print(results)
 
-    print("cur test:")
+    print("\nv0 test:")
     for result in results[0]:
         if type(result) == list:
             print("\n{Token FOUND}:")
             print(result)
             #print(len(result))
 
-
-            # def processLoop(inputData):
-            #     for iD in inputData:
-            #         if type(iD) == list:
-            #             if len(inputData) > 1:
-            #                 for r in inputData:
-            #                     if type(r) == list:
-            #                         print("list found")
-            #                         #print(r)
-            #                         processLoop(r)
-            #                     selectedToken = TokenType.NONE
-            #                     if "#" in r[0]:
-            #                         selectedToken = TokenType.ARGUMENT
-            #                         print(processToken(r[0], arguments, selectedToken))
-            #                     elif "@" in r[0]:
-            #                         selectedToken = TokenType.VARIABLE
-            #                         print(processToken(r[0], arguments, selectedToken))
-            #                     else:
-            #                         selectedToken = TokenType.FUNCTION
-            #                         print(processToken(r, arguments, selectedToken))
-            #             else:
-            #                 selectedToken = TokenType.NONE
-            #                 if "#" in iD[0]:
-            #                     selectedToken = TokenType.ARGUMENT
-            #                     print(processToken(iD[0], arguments, selectedToken))
-            #                 elif "@" in iD[0]:
-            #                     selectedToken = TokenType.VARIABLE
-            #                     print(processToken(iD[0], arguments, selectedToken))
-            #                 else:
-            #                     selectedToken = TokenType.FUNCTION
-            #                     print(processToken(iD[0], arguments, selectedToken))
-            #         elif type(iD) == str:
-            #             print(iD + " is a str")
-            #         else:
-            #             print(iD + " is not a list")
-            #     return inputData
-
-            #output = processLoop(result)
-
-            def processLoop(inputData_):
+            def processLoop(inputData_, input):
+                global currentString
+                currentString = input
                 if type(inputData_) == list:
-                    print(str(inputData_) + " is a list__")
+                    print(str(inputData_) + " is a token")
                     for data in inputData_:
 
                         if type(data) == list:
                             print(str(data) + " is a list")
-                            processLoop(data)
+                            processLoop(data, currentString)
 
                         elif type(data) == str:
                             print(data + " is a str")
 
                             if "#" in data:
                                 selectedToken = TokenType.ARGUMENT
-                                print(processToken(data, arguments, selectedToken))
+                                currentString = processToken(currentString, data, arguments, selectedToken)
+                                print(currentString)
                             elif "@" in data:
                                 selectedToken = TokenType.VARIABLE
-                                print(processToken(data, arguments, selectedToken))
+                                currentString = processToken(currentString, data, arguments, selectedToken)
+                                print(currentString)
                             else:
                                 selectedToken = TokenType.FUNCTION
-                                print(processToken(data, arguments, selectedToken))
+                                currentString = processToken(currentString, data, arguments, selectedToken)
+                                print(currentString)
                         else:
                             print(str(data) + " is something else")
 
 
-                elif (len(inputData_) == 1) and (type(inputData_[0]) == str):
-                    print(inputData_ + " is a str__")
+                elif type(inputData_[0]) == str:
+                    print(inputData_ + " is a edge case str__")
                     print("EDGE CASE?! -DEBUG TO STUDY MORE")
 
                     if "#" in inputData_:
@@ -132,48 +106,53 @@ def processString(
 
                 else:
                     print(inputData_ + " is something else__")
+                return currentString
 
-            output = processLoop(result)
+            output = processLoop(result, input)
 
-            # if len(results) > 1:
-            #     for r in results:
-            #         selectedToken = TokenType.NONE
-            #         if "#" in r[0]:
-            #             selectedToken = TokenType.ARGUMENT
-            #             print(processToken(r[0], arguments, selectedToken))
-            #         elif "@" in r[0]:
-            #             selectedToken = TokenType.VARIABLE
-            #             print(processToken(r[0], arguments, selectedToken))
-            #         else:
-            #             selectedToken = TokenType.FUNCTION
-            #             print(processToken(r, arguments, selectedToken))
-            # else:
-            #     selectedToken = TokenType.NONE
-            #     if "#" in results[0]:
-            #         selectedToken = TokenType.ARGUMENT
-            #         print(processToken(results[0], arguments, selectedToken))
-            #     elif "@" in results[0]:
-            #         selectedToken = TokenType.VARIABLE
-            #         print(processToken(results[0], arguments, selectedToken))
-            #     else:
-            #         selectedToken = TokenType.FUNCTION
-            #         print(processToken(results[0], arguments, selectedToken))
-        #else:
-            #print(result)
+    return output
 
-
-    return input
-
-def processToken(input, arguments, targetToken):
-    returnString = ""
+def processToken(input:str, data, arguments, targetToken):
+    returnString = input
     print("running a thing!")
-    print(str(input) + " is about to run!")
+    print(str(data) + " is about to run!")
+
+    #print(input)
+    #print(data)
+    #print(arguments)
+    #print(targetToken)
+
+
+    def handleInput_Argument(index, arg, returnString:str):
+        token1 = "$(#" + str(index) + ")"
+        token2 = "#" + str(index)
+        returnString = returnString.replace(token1, arg)
+        returnString = returnString.replace(token2, arg)
+        return returnString
+
+    def handleInput_Variable():
+        pass
+
+    def handleInput_Function():
+        pass
+
+
     if targetToken == TokenType.ARGUMENT:
         print("{RUNNING a ARGUMENT}")
+        argIndex = 0
+        for argz in arguments:
+            print(argz)
+            print(" ")
+            returnString = handleInput_Argument(argIndex, argz, returnString)
+            argIndex = argIndex + 1
     elif targetToken == TokenType.VARIABLE:
         print("{RUNNING a VARIABLE}")
     elif targetToken == TokenType.FUNCTION:
         print("{RUNNING a FUNCTION}")
+        if data == "testerino":
+            pass
+            #return "test 123abc\n"
+
     return returnString
 
 def searchPrep(input):
