@@ -21,7 +21,7 @@ class AbstractCommandFunction(metaclass=ABCMeta):
         ):
         self.functionName = functionName
         self.n_args = n_args
-        self.functionType = functionType
+        self.functionType = functionType #Effectively Function Version
         self.helpText = helpText
 
     # no touch!

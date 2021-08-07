@@ -19,9 +19,6 @@ class Token_Processor():
     def setup(self):
         pass
 
-    def loadFunctions(self):
-        pass
-
     def parseTokenResponse(self, commandRawInput, commandReponse):
         commandArguments = utility.get_args(commandRawInput)
         #This removes the command from the arguments
@@ -247,7 +244,7 @@ if __name__ == '__main__':
     testModule = Token_Processor()
 
     commandName = "!testerino"
-    commandRawInput = "!testerino MODULE_TEST"
+    commandRawInput = "!testerino MODULE_TEST ABC123"
     commandReponse = lookupCommandReponse(commandName)
 
     testModule.setup()

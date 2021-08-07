@@ -9,6 +9,7 @@ from commands.command_base import AbstractCommand
 from commands.command_functions import AbstractCommandFunction, Function_Helpers
 
 from bot_functions import utilities_script as utility
+from bot_functions import token_processor
 
 import pyparsing
 
@@ -37,26 +38,31 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
 
         # Look up command in DB and get return strings.
         command_returnString = Function_Helpers.get_Command_returnString(command)
-        command_returnStringProcessed = ""
+        #command_returnStringProcessed = ""
         # example return string: "@(user) sent a message"
         # example return string: "@(user) rolled $(roll #(0))"
 
 
         # Proccess strings
         fullCommand = command + " " + rest # This creates the full command string.
-        commandArguments = utility.get_args(rest)
+        #commandArguments = utility.get_args(rest)
 
-        functionsList = self.searchForFunctions(command_returnString) # Generates a list of functions to run in a specific order. Inner to Outer Most
+        #functionsList = self.searchForFunctions(command_returnString) # Generates a list of functions to run in a specific order. Inner to Outer Most
 
-        for function in functionsList:
-            if function[2] == True: # If function contains a function
-                pass
-            else:
-                self.run_function(user, function, fullCommand)
+        #for function in functionsList:
+            #if function[2] == True: # If function contains a function
+                #pass
+            #else:
+                #self.run_function(user, function, fullCommand)
 
-        returnString = user + " sent: [ " + command + " ] with: " + rest
+        #returnString = user + " sent: [ " + command + " ] with: " + rest
         #print(returnString)
 
+
+        tokenWorker = token_processor.Token_Processor()
+        tokenWorker.loadedFunctions = self.loadedFunctions
+        tokenWorker_Results = tokenWorker.parseTokenResponse(fullCommand, command_returnString)
+        returnString = tokenWorker_Results
 
         return returnString
 
