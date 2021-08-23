@@ -3,3 +3,4 @@ twitch-python
 psutil
 art
 requests
+SQLAlchemy

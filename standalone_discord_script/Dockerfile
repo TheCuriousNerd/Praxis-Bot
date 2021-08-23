@@ -1,4 +1,4 @@
-FROM python:3.10.0a7-alpine3.13
+FROM python:3.7-stretch
 
 WORKDIR /Praxis
 
@@ -18,7 +18,6 @@ COPY /channel_rewards /Praxis/standalone_discord_script/channel_rewards
 COPY /commands /Praxis/standalone_discord_script/commands
 
 COPY requirements_sa_discord.txt requirements_sa_discord.txt
-RUN apk add --update gcc libc-dev linux-headers && rm -rf /var/cache/apk/*
 RUN pip3 install -r requirements_sa_discord.txt
 
 COPY . .

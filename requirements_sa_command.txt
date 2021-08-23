@@ -1,4 +1,5 @@
 BadWordObfuscator
+SQLAlchemy
 twitch-python
 discord.py
 flask

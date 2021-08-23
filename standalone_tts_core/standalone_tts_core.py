@@ -48,7 +48,7 @@ def send_text(tts_sender, tts_text):
     #Play Text
     params = urlencode({'tts_sender': tts_sender, 'tts_text': tts_text})
 
-    url = "http://192.168.191.208:40085/api/v1/tts/speech?%s" % params
+    url = "http://192.168.191.126:40085/api/v1/tts/speech?%s" % params
     resp = requests.get(url)
     if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)

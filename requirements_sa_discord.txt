@@ -2,4 +2,5 @@ BadWordObfuscator
 discord.py
 psutil
 art
+SQLAlchemy
 requests
