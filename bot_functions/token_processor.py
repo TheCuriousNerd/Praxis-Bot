@@ -2,7 +2,7 @@ from enum import Enum, auto
 import pyparsing
 
 from bot_functions import utilities_script as utility
-
+from commands.command_functions import AbstractCommandFunction, Function_Helpers
 
 class TokenType(Enum):
     NONE = auto()
@@ -19,11 +19,12 @@ class Token_Processor():
     def setup(self):
         pass
 
-    def parseTokenResponse(self, commandRawInput, commandReponse):
+    #Commands will call this function to parse tokens in the response string.
+    def parseTokenResponse(self, userData, commandRawInput, command_returnString):
         commandArguments = utility.get_args(commandRawInput)
         #This removes the command from the arguments
         commandArguments.pop(0)
-        response = self.stringFunctionParser(commandReponse, commandArguments)
+        response = self.stringFunctionParser(command_returnString, commandArguments, userData)
         return response
 
 
@@ -62,15 +63,6 @@ class Token_Processor():
         #print(input + "\n has arg or vars: " + str(results))
         return results
 
-    #Remove this later
-    def stringFunctionParser(self,
-        input:str = "",
-        arguments:list = []
-        ):
-        curStr = input
-        curStr = self.processString(input, arguments)
-        return curStr
-    #========
 
     def stringCleanup(
         self,
@@ -82,9 +74,10 @@ class Token_Processor():
             results = results + i + " "
         return input
 
-    def processString(self,
+    def stringFunctionParser(self,
             input:str = "",
-            arguments:list = []
+            arguments:list = [],
+            userData = ""
             ):
         results = self.searchPrep(input)
 
@@ -115,11 +108,11 @@ class Token_Processor():
 
                                 if "#" in data:
                                     selectedToken = TokenType.ARGUMENT
-                                    currentString = self.processToken(currentString, data, arguments, selectedToken)
+                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData)
                                     #print(currentString)
                                 elif "@" in data:
                                     selectedToken = TokenType.VARIABLE
-                                    currentString = self.processToken(currentString, data, arguments, selectedToken)
+                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData)
                                     #print(currentString)
                                 else:
                                     selectedToken = TokenType.FUNCTION
@@ -127,7 +120,7 @@ class Token_Processor():
                                     NoArgzNoVars = self.hasArgzOrVars(input)
                                     if NoArgzNoVars == False:
                                         #print("FUNCTION Time" + str(inputData_))
-                                        currentString = self.processToken(currentString, inputData_[0], inputData_, selectedToken)
+                                        currentString = self.processToken(currentString, inputData_[0], inputData_, selectedToken, userData)
                                         #print(currentString)
                                         break
                             else:
@@ -168,7 +161,7 @@ class Token_Processor():
         return output
 
 
-    def processToken(self, input:str, data, arguments, targetToken):
+    def processToken(self, input:str, data, arguments, targetToken, userData):
         returnString = input
         #print("running a thing!")
         #print(str(data) + " is about to run!\n")
@@ -191,24 +184,34 @@ class Token_Processor():
             pass
 
         def handleInput_Function(functionName, arg, returnString:str):
-            #print("testFunction:")
-            #print(str(arg))
-            #print(returnString)
+            print("\nAbout to run function:")
+            print(functionName)
+            print(arg)
+            print(returnString)
+
+            def modifyReturnString(
+                searchString_Prefix = "$(",
+                searchString_Suffix = ")",
+                newString = ""
+                ):
+                searchString = searchString_Prefix
+                for a in arg:
+                    searchString = searchString + a + " "
+                searchString = searchString[:-1]
+                searchString = searchString + searchString_Suffix
+                modifiedString = returnString.replace(searchString, newString)
+                return modifiedString
+
             if functionName == "testerino":
-                #print("-testerino- Detected")
-                searchString = "$("
                 computedResult = ""
                 for a in arg:
                     if a is not arg[0]:
                         computedResult = computedResult + a + " "
-                    searchString = searchString + a + " "
+                returnString = modifyReturnString(newString = computedResult)
 
-                searchString = searchString[:-1]
-                searchString = searchString + ")"
-                #print(searchString)
-                #print(computedResult)
-                computedResult = computedResult[:-1]
-                returnString = returnString.replace(searchString, computedResult)
+            if self.does_function_exist(functionName):
+                functionResults = self.run_function(userData, functionName, arg)
+                returnString = modifyReturnString(newString = functionResults)
 
             return returnString
 
@@ -229,14 +232,30 @@ class Token_Processor():
 
         return returnString
 
+    def does_function_exist(self, function):
+        try:
+            function_:AbstractCommandFunction = self.loadedFunctions[function]
+            if function_ is not None:
+                return True
+            else:
+                return False
+        except:
+            return False
+
+    def run_function(self, user, function, args):
+            try:
+                function_:AbstractCommandFunction = self.loadedFunctions[function]
+                if function_ is not None:
+                    function_response = function_.do_function(user, function, args, None)
+                    return function_response
+            except:
+                return "{Function Error}"
 
 
-
-
-def lookupCommandReponse(input):
+def lookupCommandResponse(input):
     response = ""
     if input == "!testerino":
-        response = "A Testerino is Detected $(testerino $(#0))"
+        response = "A Testerino is Detected $(testerino $(#0) $(#1))"
     return response
 
 
@@ -244,11 +263,11 @@ if __name__ == '__main__':
     testModule = Token_Processor()
 
     commandName = "!testerino"
-    commandRawInput = "!testerino MODULE_TEST ABC123"
-    commandReponse = lookupCommandReponse(commandName)
+    commandRawInput = "!testerino MODULE_TEST ABC123 XYZ"
+    commandReponse = lookupCommandResponse(commandName)
 
     testModule.setup()
-    testResponse = testModule.parseTokenResponse(commandRawInput, commandReponse)
+    testResponse = testModule.parseTokenResponse("TestUser", commandRawInput, commandReponse)
     print("\ncommandRaw:\n" + commandRawInput)
     print("\ncommandReponse:\n" + commandReponse)
     print("\nresult:\n" + testResponse + "\n")

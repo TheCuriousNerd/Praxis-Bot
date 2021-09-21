@@ -27,7 +27,7 @@ class Function_v0(AbstractCommandFunction, metaclass=ABCMeta):
             helpText = Function_v0.helpText
             )
 
-    def do_function(self, user, input):
+    def do_function(self, user, functionName, args, bonusData):
         self.input_check(input)
         output = self.do_work(user, input)
 

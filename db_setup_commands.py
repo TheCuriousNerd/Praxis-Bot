@@ -20,17 +20,36 @@ def db_setup():
     db_obj.closeConnection()
 
 
+# def create_basicCommands():
+#     db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+#     if db_obj.doesTableExist("command_responses_v0") == True:
+#         results = db_obj.execQuery(
+#             'INSERT INTO command_responses_v0 '
+#             '(command, response) '
+#             'VALUES (\'test\',\'This is a $(test) command @(user)\');'
+#             )
+#         print(results)
+#     db_obj.closeConnection()
+
 def create_basicCommands():
+    create_basicCommand("!testerino", "A Testerino is Detected $(testerino $(#0))")
+
+    create_basicCommand("!chyron", "$(chyron $(#*))")
+    create_basicCommand("!roll", "$(roll $(#*))")
+    create_basicCommand("!lights", "$(lights $(#*))")
+    create_basicCommand("!text", "$(text $(#*))")
+    create_basicCommand("!tts", "$(tts $(#*))")
+
+def create_basicCommand(commandName:str, commandReponse:str):
     db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     if db_obj.doesTableExist("command_responses_v0") == True:
         results = db_obj.execQuery(
             'INSERT INTO command_responses_v0 '
             '(command, response) '
-            'VALUES (\'test\',\'This is a $(test) command @(user)\');'
+            'VALUES (\'%s\',\'%s\');' % (commandName, commandReponse)
             )
         print(results)
     db_obj.closeConnection()
-
 
 def init():
     # todo load entire command library and cache it here

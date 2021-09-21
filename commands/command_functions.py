@@ -41,7 +41,7 @@ class AbstractCommandFunction(metaclass=ABCMeta):
         return self.helpText
 
     @abstractmethod
-    def do_function(self, user, input):
+    def do_function(self, user, functionName, args, bonusData):
         pass
 
 class Function_Helpers():
