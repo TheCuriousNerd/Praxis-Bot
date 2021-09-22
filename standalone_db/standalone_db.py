@@ -38,6 +38,8 @@ import config
 
 import os
 import bot_functions.praxis_logging as praxis_logging
+from bot_functions import utilities_db as db_utility
+
 praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
@@ -52,25 +54,25 @@ hostName = dbCert.ipAddress
 databaseName = dbCert.databaseName
 connectionString = "postgresql://%s:%s@%s/%s" % (user, password, hostName, databaseName)
 
-dbConnection = None
+db_obj = None
 
 api = flask.Flask(__name__)
 # enable/disable this to get web pages of crashes returned
 api.config["DEBUG"] = False
 
 def test_init():
-    global dbConnection
-    dbConnection = db.create_engine(connectionString)
+    global db_obj
+    db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
 
     try:
-        dbConnection.execute(
+        db_obj.execQuery(
             'DROP TABLE users'
         )
     except:
         praxis_logger_obj.log("Couldn't Drop it")
 
     try:
-        dbConnection.execute(
+        db_obj.execQuery(
         'CREATE TABLE users ('
         'id SERIAL, '
         'name TEXT);'
@@ -79,7 +81,7 @@ def test_init():
         praxis_logger_obj.log("Couldn't Make it")
 
     try:
-        dbConnection.execute(
+        db_obj.execQuery(
             'DELETE FROM users WHERE id = 1;'
         )
     except:
@@ -88,7 +90,7 @@ def test_init():
 
     try:
         for x in range(10):
-            dbConnection.execute(
+            db_obj.execQuery(
             'INSERT INTO users '
             '(name) '
             'VALUES (\'Test Name\');'
@@ -97,7 +99,7 @@ def test_init():
         pass
 
     try:
-        results = dbConnection.execute(
+        results = db_obj.execQuery(
             'SELECT * FROM '
             'users;'
         )
@@ -109,17 +111,19 @@ def test_init():
 
 
 def init():
-    global dbConnection
-    dbConnection = db.create_engine(connectionString)
-    # try:
-    #     dbConnection.execute(
-    #         'DROP TABLE basic_key_vars'
-    #     )
-    #     praxis_logger_obj.log("[Dropped]: (basic_key_vars)")
-    # except:
-    #     praxis_logger_obj.log("[Couldn't Drop it]: (basic_key_vars)")
+    global db_obj
+    db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+    setup_basic_data()
+    setup_basicCommands
+
+
+# Basic Data Table Functions
+
+def setup_basic_data():
+    global db_obj
     try:
-        dbConnection.execute(
+        #db_obj.execQuery('DROP TABLE basic_key_vars')
+        db_obj.execQuery(
         'CREATE TABLE basic_key_vars ('
         'id SERIAL, '
         'key TEXT, '
@@ -130,10 +134,10 @@ def init():
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (basic_key_vars)")
 
 def get_basic_data(key):
-    global dbConnection
+    global db_obj
     try:
         returns = ""
-        results = dbConnection.execute(
+        results = db_obj.execQuery(
         'SELECT * FROM '
         'basic_key_vars '
         'WHERE key = \'%s\';' % (key)
@@ -146,9 +150,9 @@ def get_basic_data(key):
         return False
 
 def set_basic_data(key, var):
-    global dbConnection
+    global db_obj
     try:
-        dbConnection.execute(
+        db_obj.execQuery(
         'INSERT INTO basic_key_vars '
         '(key, var) '
         'VALUES (\'%s\',\'%s\');' % (key, var)
@@ -156,6 +160,45 @@ def set_basic_data(key, var):
         return 'Insertion Done'
     except:
         return 'Insertion Failed'
+
+
+# Basic Commands Table Functions
+
+def setup_basicCommands():
+    global db_obj
+    #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+    db_obj.execQuery('DROP TABLE command_responses_v0')
+    if db_obj.doesTableExist("command_responses_v0") == False:
+        print("Making Table")
+        results = db_obj.execQuery(
+            'CREATE TABLE command_responses_v0 ('
+            'id SERIAL, '
+            'command TEXT, '
+            'response TEXT);')
+
+def create_basicCommands():
+    create_basicCommand("!testerino", "A Testerino is Detected $(testerino $(#0))")
+
+    create_basicCommand("!chyron", "$(chyron $(#*))")
+    create_basicCommand("!roll", "$(roll $(#*))")
+    create_basicCommand("!lights", "$(lights $(#*))")
+    create_basicCommand("!text", "$(text $(#*))")
+    create_basicCommand("!tts", "$(tts $(#*))")
+
+def create_basicCommand(commandName:str, commandReponse:str):
+    global db_obj
+    #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+    db_obj.doesItemExist("command_responses_v0", commandName)
+    if (db_obj.doesTableExist("command_responses_v0") == True) and (db_obj.doesItemExist("command_responses_v0", commandName == False)):
+        results = db_obj.execQuery(
+            'INSERT INTO command_responses_v0 '
+            '(command, response) '
+            'VALUES (\'%s\',\'%s\');' % (commandName, commandReponse)
+            )
+        print(results)
+
+
+# API Stuff
 
 @api.route('/api/v1/get_data/basic_key_vars', methods=['GET'])
 def get_data():

@@ -59,6 +59,18 @@ class Praxis_DB_Connection():
             print("[Praxis_DB_Connection] query error")
             return False
 
+    def doesItemExist(self, tableName, rowName, item):
+        try:
+            query = "SELECT * FROM %s WHERE %s = %s" % (tableName, rowName, item)
+            result = self.dbConnection.execute(query)
+            for r in result:
+                if r == item:
+                    return True
+            return False
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return False
+
     def execQuery(self, query):
         try:
             results = self.dbConnection.execute(query)
