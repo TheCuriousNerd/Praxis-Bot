@@ -114,7 +114,7 @@ def init():
     global db_obj
     db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     setup_basic_data()
-    setup_basicCommands
+    setup_basicCommands()
 
 
 # Basic Data Table Functions
@@ -123,12 +123,14 @@ def setup_basic_data():
     global db_obj
     try:
         #db_obj.execQuery('DROP TABLE basic_key_vars')
-        db_obj.execQuery(
-        'CREATE TABLE basic_key_vars ('
-        'id SERIAL, '
-        'key TEXT, '
-        'var TEXT);'
-        )
+        query = (
+            'CREATE TABLE basic_key_vars ('
+            'id SERIAL, '
+            'key TEXT, '
+            'var TEXT);'
+            )
+        print(query)
+        db_obj.execQuery(query)
         praxis_logger_obj.log("[Table Created]: (basic_key_vars)")
     except:
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (basic_key_vars)")
@@ -137,11 +139,13 @@ def get_basic_data(key):
     global db_obj
     try:
         returns = ""
-        results = db_obj.execQuery(
-        'SELECT * FROM '
-        'basic_key_vars '
-        'WHERE key = \'%s\';' % (key)
-        )
+        query = (
+            'SELECT * FROM '
+            'basic_key_vars '
+            'WHERE key = \'%s\';' % (key)
+            )
+        print(query)
+        results = db_obj.execQuery(query)
         for item in results:
             returns = returns + str(item) + " "
             praxis_logger_obj.log(item)
@@ -152,11 +156,13 @@ def get_basic_data(key):
 def set_basic_data(key, var):
     global db_obj
     try:
-        db_obj.execQuery(
-        'INSERT INTO basic_key_vars '
-        '(key, var) '
-        'VALUES (\'%s\',\'%s\');' % (key, var)
-        )
+        query = (
+            'INSERT INTO basic_key_vars '
+            '(key, var) '
+            'VALUES (\'%s\',\'%s\');' % (key, var)
+            )
+        print(query)
+        db_obj.execQuery(query)
         return 'Insertion Done'
     except:
         return 'Insertion Failed'
@@ -167,34 +173,43 @@ def set_basic_data(key, var):
 def setup_basicCommands():
     global db_obj
     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
-    db_obj.execQuery('DROP TABLE command_responses_v0')
-    if db_obj.doesTableExist("command_responses_v0") == False:
-        print("Making Table")
-        results = db_obj.execQuery(
-            'CREATE TABLE command_responses_v0 ('
-            'id SERIAL, '
-            'command TEXT, '
-            'response TEXT);')
+    try:
+        #db_obj.execQuery('DROP TABLE command_responses_v0')
+        if db_obj.doesTableExist("command_responses_v0") == False:
+            print("Making setup_basicCommands Table")
+            query = (
+                'CREATE TABLE command_responses_v0 ('
+                'id SERIAL, '
+                'command TEXT, '
+                'response TEXT);'
+                )
+            print(query)
+            results = db_obj.execQuery(query)
+            praxis_logger_obj.log("[Table Created]: (command_responses_v0)")
+    except:
+        praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (command_responses_v0)")
 
 def create_basicCommands():
-    create_basicCommand("!testerino", "A Testerino is Detected $(testerino $(#0))")
+    create_basicCommand("!testerino_v3", "A Testerino is Detected $(testerino $(#0))")
 
-    create_basicCommand("!chyron", "$(chyron $(#*))")
-    create_basicCommand("!roll", "$(roll $(#*))")
-    create_basicCommand("!lights", "$(lights $(#*))")
-    create_basicCommand("!text", "$(text $(#*))")
-    create_basicCommand("!tts", "$(tts $(#*))")
+    #create_basicCommand("!chyron", "$(chyron $(#*))")
+    #create_basicCommand("!roll", "$(roll $(#*))")
+    #create_basicCommand("!lights", "$(lights $(#*))")
+    #create_basicCommand("!text", "$(text $(#*))")
+    #create_basicCommand("!tts", "$(tts $(#*))")
 
 def create_basicCommand(commandName:str, commandReponse:str):
     global db_obj
     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     db_obj.doesItemExist("command_responses_v0", commandName)
     if (db_obj.doesTableExist("command_responses_v0") == True) and (db_obj.doesItemExist("command_responses_v0", commandName == False)):
-        results = db_obj.execQuery(
-            'INSERT INTO command_responses_v0 '
-            '(command, response) '
-            'VALUES (\'%s\',\'%s\');' % (commandName, commandReponse)
-            )
+        query = (
+                'INSERT INTO command_responses_v0 '
+                '(command, response) '
+                'VALUES (\'%s\',\'%s\');' % (commandName, commandReponse)
+                )
+        print(query)
+        results = db_obj.execQuery(query)
         print(results)
 
 

@@ -28,6 +28,7 @@ from flask import Flask, request, after_this_request
 
 from commands import loader as command_loader
 from commands.command_base import AbstractCommand
+from commands.command_functions import AbstractCommandFunction, Function_Helpers
 
 from json import loads
 from urllib.parse import urlencode
@@ -55,19 +56,39 @@ def init():
 
 def load_commands():
     global loadedCommands
+    global loadedCommands_v3
     loadedCommands = command_loader.load_commands(AbstractCommand.CommandType.Ver2)
+    loadedCommands_v3 = command_loader.load_commands(AbstractCommand.CommandType.Ver3)
 
 
 def is_command(command: str) -> bool:
     #print(command)
+    isCommand = False
     for cmd in loadedCommands:
         #print(cmd)
         if command == cmd:
-            return True
+            isCommand = True
+
+    v3helper = Function_Helpers()
+    v3Command = v3helper.get_Command_returnString(command)
+    praxis_logger_obj.log("v3Command: ")
+    praxis_logger_obj.log(v3Command)
+
+    if v3Command is not None:
+        isCommand = True
+        praxis_logger_obj.log("v3Command: ")
+        praxis_logger_obj.log(v3Command)
 
     if command == "!echo":
+        isCommand = True
+
+    if isCommand == True:
+        log_ = "%s is a recognized command" % command
+        praxis_logger_obj.log(log_)
         return True
     else:
+        log_ = "%s is not a recognized command" % command
+        praxis_logger_obj.log(log_)
         return False
 
 def handle_command(source, username, command, rest, bonusData):
@@ -78,10 +99,43 @@ def handle_command(source, username, command, rest, bonusData):
 
     tempSource = source.replace('CommandSource.', '')
     realSource = AbstractCommand.CommandSource.__dict__[tempSource]
-    cmd:AbstractCommand = loadedCommands[command]
-    if cmd is not None:
-        cmd_response = cmd.do_command(source, username, command, rest, bonusData)
-        return flask.make_response("{\"message\":\"%s\"}" % cmd_response, 200, {"Content-Type": "application/json"})
+
+    cmd = None
+    cmd_v3 = None
+
+    v3Flag = False
+    try:
+        v3helper = Function_Helpers()
+        v3Command = v3helper.get_Command_returnString(command)
+        if v3Command is None:
+            cmd:AbstractCommand = loadedCommands[command]
+            #print(type(cmd))
+            #print(cmd.command)
+            praxis_logger_obj.log("cmd from loadedCommands")
+            praxis_logger_obj.log(cmd)
+    except:
+        pass
+    try:
+        v3helper = Function_Helpers()
+        v3Command = v3helper.get_Command_returnString(command)
+        if v3Command is not None:
+            v3Flag = True
+            cmd_v3:AbstractCommand = loadedCommands_v3["base_v3"]
+            #print(type(cmd_v3))
+            #print(cmd_v3.command)
+            praxis_logger_obj.log("cmd from loadedCommands_v3")
+            praxis_logger_obj.log(cmd_v3)
+    except:
+        pass
+
+    if v3Flag is True:
+        if cmd_v3 is not None:
+            cmd_response_v3 = cmd_v3.do_command(source, username, command, rest, bonusData)
+            return flask.make_response("{\"message\":\"%s\"}" % cmd_response_v3, 200, {"Content-Type": "application/json"})
+    else:
+        if cmd is not None:
+            cmd_response = cmd.do_command(source, username, command, rest, bonusData)
+            return flask.make_response("{\"message\":\"%s\"}" % cmd_response, 200, {"Content-Type": "application/json"})
 
     #print("Doing a command")
 

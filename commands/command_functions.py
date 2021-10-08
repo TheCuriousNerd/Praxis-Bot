@@ -1,3 +1,27 @@
+# The main repository of Praxis Bot can be found at: <https://github.com/TheCuriousNerd/Praxis-Bot>.
+# Copyright (C) 2021
+
+# Author Info Examples:
+#   Name / Email / Website
+#       Twitter / Twitch / Youtube / Github
+
+# Authors:
+#   Alex Orid / inquiries@thecuriousnerd.com / TheCuriousNerd.com
+#       Twitter: @TheCuriousNerd / Twitch: TheCuriousNerd / Youtube: thecuriousnerd / Github: TheCuriousNerd
+
+# This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as
+#   published by the Free Software Foundation, either version 3 of the
+#   License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 from abc import ABCMeta, abstractmethod
 from enum import Enum, auto
 
@@ -17,12 +41,14 @@ class AbstractCommandFunction(metaclass=ABCMeta):
             functionName: str,
             n_args: int = 0,
             functionType = FunctionType.NONE,
-            helpText:list=["No Help"]
+            helpText:list = ["No Help"],
+            bonusFunctionData = None
         ):
         self.functionName = functionName
         self.n_args = n_args
         self.functionType = functionType #Effectively Function Version
         self.helpText = helpText
+        self.bonusFunctionData = bonusFunctionData
 
     # no touch!
     def get_args(self, text: str) -> list:
@@ -45,19 +71,26 @@ class AbstractCommandFunction(metaclass=ABCMeta):
         pass
 
 class Function_Helpers():
+    import bot_functions.praxis_logging as praxis_logging
 
     def get_Command_returnString(self, command):
         try:
+            praxis_logger_obj = self.praxis_logging.praxis_logger()
             db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+            returns = ""
             dbResults = db_obj.execQuery(
                 'SELECT * FROM '
-                'command_responses_v0;')
+                'command_responses_v0 '
+                'WHERE command = \'%s\';' % (command)
+                )
+            for item in dbResults:
+                returns = returns + str(item) + " "
+                praxis_logger_obj.log("[Item]: " + item)
             db_obj.closeConnection()
-            for i in dbResults:
-                return i[2]
-            #return dbResults
+            return returns
         except:
-            return "UNABLE TO FIND RESPONSE"
+            print("UNABLE TO FIND RESPONSE")
+            return None
 
     def send_Lights_Command(self, username, light_group, command, rest):
         # todo need to url-escape command and rest

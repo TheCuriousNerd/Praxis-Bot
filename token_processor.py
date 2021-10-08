@@ -1,3 +1,27 @@
+# The main repository of Praxis Bot can be found at: <https://github.com/TheCuriousNerd/Praxis-Bot>.
+# Copyright (C) 2021
+
+# Author Info Examples:
+#   Name / Email / Website
+#       Twitter / Twitch / Youtube / Github
+
+# Authors:
+#   Alex Orid / inquiries@thecuriousnerd.com / TheCuriousNerd.com
+#       Twitter: @TheCuriousNerd / Twitch: TheCuriousNerd / Youtube: thecuriousnerd / Github: TheCuriousNerd
+
+# This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as
+#   published by the Free Software Foundation, either version 3 of the
+#   License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 from enum import Enum, auto
 import pyparsing
 
@@ -207,6 +231,7 @@ class Token_Processor():
                 for a in arg:
                     if a is not arg[0]:
                         computedResult = computedResult + a + " "
+                computedResult = computedResult[:-1]
                 returnString = modifyReturnString(newString = computedResult)
 
             if self.does_function_exist(functionName):
@@ -218,9 +243,14 @@ class Token_Processor():
 
         if targetToken == TokenType.ARGUMENT:
             print("{RUNNING a ARGUMENT}")
+            if "$(#*)" in returnString:
+                args = ""
+                for args_ in arguments:
+                    args = args + args_ + " "
+                args = args[:-1]
+                returnString = handleInput_Argument("*", args, returnString)
             argIndex = 0
             for argz in arguments:
-                #print(argz)
                 #print(" ")
                 returnString = handleInput_Argument(argIndex, argz, returnString)
                 argIndex = argIndex + 1
@@ -255,7 +285,7 @@ class Token_Processor():
 def lookupCommandResponse(input):
     response = ""
     if input == "!testerino":
-        response = "A Testerino is Detected $(testerino $(#0) $(#1))"
+        response = "A Testerino is Detected $(testerino $(#0) $(#1) $(#*))"
     return response
 
 

@@ -41,13 +41,19 @@ class Praxis_DB_Connection():
             self.startConnection()
 
     def startConnection(self):
+        print("starting engine with: \n" + self.connectionString)
         self.dbConnection = db.create_engine(self.connectionString)
 
     def closeConnection(self):
         self.dbConnection = None
 
+    def selfAutoStart(self):
+        if self.dbConnection is None:
+            self.startConnection()
+
     def doesTableExist(self, tableName):
         try:
+            self.selfAutoStart()
             query = "SELECT to_regclass('%s');" % tableName
             result = self.dbConnection.execute(query)
             for r in result:
@@ -61,9 +67,12 @@ class Praxis_DB_Connection():
 
     def doesItemExist(self, tableName, rowName, item):
         try:
-            query = "SELECT * FROM %s WHERE %s = %s" % (tableName, rowName, item)
+            self.selfAutoStart()
+            query = "SELECT * FROM %s WHERE %s = %s;" % (tableName, rowName, item)
             result = self.dbConnection.execute(query)
+            print(result)
             for r in result:
+                print(r)
                 if r == item:
                     return True
             return False
@@ -73,7 +82,10 @@ class Praxis_DB_Connection():
 
     def execQuery(self, query):
         try:
+            self.selfAutoStart()
+            print(query)
             results = self.dbConnection.execute(query)
+            print(results)
             return results
         except:
             print("[Praxis_DB_Connection] query error")
