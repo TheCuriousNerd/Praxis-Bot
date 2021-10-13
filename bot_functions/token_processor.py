@@ -103,6 +103,7 @@ class Token_Processor():
             arguments:list = [],
             userData = ""
             ):
+        output = None
         results = self.searchPrep(input)
 
         #print("\nv0 test:")
@@ -231,6 +232,7 @@ class Token_Processor():
                 for a in arg:
                     if a is not arg[0]:
                         computedResult = computedResult + a + " "
+                computedResult = computedResult[:-1]
                 returnString = modifyReturnString(newString = computedResult)
 
             if self.does_function_exist(functionName):
@@ -242,9 +244,14 @@ class Token_Processor():
 
         if targetToken == TokenType.ARGUMENT:
             print("{RUNNING a ARGUMENT}")
+            if "$(#*)" in returnString:
+                args = ""
+                for args_ in arguments:
+                    args = args + args_ + " "
+                args = args[:-1]
+                returnString = handleInput_Argument("*", args, returnString)
             argIndex = 0
             for argz in arguments:
-                #print(argz)
                 #print(" ")
                 returnString = handleInput_Argument(argIndex, argz, returnString)
                 argIndex = argIndex + 1
@@ -279,7 +286,7 @@ class Token_Processor():
 def lookupCommandResponse(input):
     response = ""
     if input == "!testerino":
-        response = "A Testerino is Detected $(testerino $(#0) $(#1))"
+        response = "A Testerino is Detected $(testerino $(#0) $(#1) $(#*))"
     return response
 
 

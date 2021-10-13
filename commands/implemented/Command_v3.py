@@ -61,8 +61,8 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         # rest = " #(0)" = " d20"
 
         # Look up command in DB and get return strings.
-        command_returnString = Function_Helpers.get_Command_returnString(command)
-        if command_returnString is False:
+        command_returnString = Function_Helpers().get_Command_returnString(command)
+        if command_returnString is None:
             return ""
 
         # Proccess strings

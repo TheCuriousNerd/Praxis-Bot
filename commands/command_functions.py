@@ -79,18 +79,17 @@ class Function_Helpers():
             db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
             returns = ""
             dbResults = db_obj.execQuery(
-                'SELECT * FROM '
-                'command_responses_v0 '
-                'WHERE command = \'%s\';' % (command)
+                "SELECT * FROM command_responses_v0 WHERE command = \'%s\';" % (command)
                 )
             for item in dbResults:
-                returns = returns + str(item) + " "
+                returns = item[2]
                 praxis_logger_obj.log("[Item]: " + item)
-            db_obj.closeConnection()
+                print(returns)
             return returns
-        except:
+        except Exception as e:
             print("UNABLE TO FIND RESPONSE")
-            return None
+            print(e)
+            return e
 
     def send_Lights_Command(self, username, light_group, command, rest):
         # todo need to url-escape command and rest
