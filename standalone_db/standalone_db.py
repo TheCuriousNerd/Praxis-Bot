@@ -116,23 +116,25 @@ def init():
     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     setup_basic_data()
     setup_basicCommands()
+    create_basicCommands()
 
 
 # Basic Data Table Functions
 
 def setup_basic_data():
-    global db_obj
+    #global db_obj
     try:
         #db_obj.execQuery('DROP TABLE basic_key_vars')
-        query = (
-            'CREATE TABLE basic_key_vars ('
-            'id SERIAL, '
-            'key TEXT, '
-            'var TEXT);'
-            )
-        print(query)
-        db_obj.execQuery(query)
-        praxis_logger_obj.log("[Table Created]: (basic_key_vars)")
+        if db_obj.doesTableExist("basic_key_vars") == False:
+            query = (
+                'CREATE TABLE basic_key_vars ('
+                'id SERIAL, '
+                'key TEXT, '
+                'var TEXT);'
+                )
+            print(query)
+            db_obj.execQuery(query)
+            praxis_logger_obj.log("[Table Created]: (basic_key_vars)")
     except:
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (basic_key_vars)")
 
@@ -192,6 +194,7 @@ def setup_basicCommands():
         praxis_logger_obj.log(exception)
 
 def create_basicCommands():
+    print("Creating Basic Commands for command_responses_v0")
     create_basicCommand("!testerino_v3", "A Testerino is Detected $(testerino $(#0))")
 
     #create_basicCommand("!chyron", "$(chyron $(#*))")
@@ -203,16 +206,17 @@ def create_basicCommands():
 def create_basicCommand(commandName:str, commandReponse:str):
     #global db_obj
     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
-    db_obj.doesItemExist("command_responses_v0", commandName)
-    if (db_obj.doesTableExist("command_responses_v0") == True) and (db_obj.doesItemExist("command_responses_v0", commandName == False)):
+    result = db_obj.doesItemExist("command_responses_v0", "command", commandName)
+    if (db_obj.doesTableExist("command_responses_v0") == True) and (result == False):
+        print("Creating Basic Command")
         query = (
                 'INSERT INTO command_responses_v0 '
                 '(command, response) '
                 'VALUES (\'%s\',\'%s\');' % (commandName, commandReponse)
                 )
-        print(query)
+        #print(query)
         results = db_obj.execQuery(query)
-        print(str(results))
+        #print(str(results))
 
 
 # API Stuff
