@@ -23,6 +23,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
+from logging import exception
 
 import time
 
@@ -54,7 +55,7 @@ hostName = dbCert.ipAddress
 databaseName = dbCert.databaseName
 connectionString = "postgresql://%s:%s@%s/%s" % (user, password, hostName, databaseName)
 
-db_obj = None
+db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
 
 api = flask.Flask(__name__)
 # enable/disable this to get web pages of crashes returned
@@ -111,8 +112,8 @@ def test_init():
 
 
 def init():
-    global db_obj
-    db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+    #global db_obj
+    #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     setup_basic_data()
     setup_basicCommands()
 
@@ -136,7 +137,7 @@ def setup_basic_data():
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (basic_key_vars)")
 
 def get_basic_data(key):
-    global db_obj
+    #global db_obj
     try:
         returns = ""
         query = (
@@ -154,7 +155,7 @@ def get_basic_data(key):
         return False
 
 def set_basic_data(key, var):
-    global db_obj
+    #global db_obj
     try:
         query = (
             'INSERT INTO basic_key_vars '
@@ -171,7 +172,7 @@ def set_basic_data(key, var):
 # Basic Commands Table Functions
 
 def setup_basicCommands():
-    global db_obj
+    #global db_obj
     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     try:
         #db_obj.execQuery('DROP TABLE command_responses_v0')
@@ -183,11 +184,12 @@ def setup_basicCommands():
                 'command TEXT, '
                 'response TEXT);'
                 )
-            print(query)
+            #print(query)
             results = db_obj.execQuery(query)
             praxis_logger_obj.log("[Table Created]: (command_responses_v0)")
-    except:
+    except exception:
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (command_responses_v0)")
+        praxis_logger_obj.log(exception)
 
 def create_basicCommands():
     create_basicCommand("!testerino_v3", "A Testerino is Detected $(testerino $(#0))")
@@ -199,7 +201,7 @@ def create_basicCommands():
     #create_basicCommand("!tts", "$(tts $(#*))")
 
 def create_basicCommand(commandName:str, commandReponse:str):
-    global db_obj
+    #global db_obj
     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     db_obj.doesItemExist("command_responses_v0", commandName)
     if (db_obj.doesTableExist("command_responses_v0") == True) and (db_obj.doesItemExist("command_responses_v0", commandName == False)):
@@ -210,7 +212,7 @@ def create_basicCommand(commandName:str, commandReponse:str):
                 )
         print(query)
         results = db_obj.execQuery(query)
-        print(results)
+        print(str(results))
 
 
 # API Stuff

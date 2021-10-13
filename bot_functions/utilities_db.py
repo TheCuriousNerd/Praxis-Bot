@@ -22,6 +22,7 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from logging import exception
 import sqlalchemy as db
 
 import credentials
@@ -34,7 +35,7 @@ class Praxis_DB_Connection():
         self.dbCert: credentials.DB_Credential = self.credentials_manager.find_Credential(credentials.DB_Credential, config.credentialsNickname)
 
         #self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, self.dbCert.ipAddress, self.dbCert.databaseName)
-        self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, "localhost", self.dbCert.databaseName)
+        self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, self.dbCert.ipAddress, self.dbCert.databaseName)
 
         self.dbConnection = None
         if autoConnect == True:
@@ -49,6 +50,7 @@ class Praxis_DB_Connection():
 
     def selfAutoStart(self):
         if self.dbConnection is None:
+            print("Auto Starting Connection to DB")
             self.startConnection()
 
     def doesTableExist(self, tableName):
@@ -67,7 +69,7 @@ class Praxis_DB_Connection():
 
     def doesItemExist(self, tableName, rowName, item):
         try:
-            self.selfAutoStart()
+            #self.selfAutoStart()
             query = "SELECT * FROM %s WHERE %s = %s;" % (tableName, rowName, item)
             result = self.dbConnection.execute(query)
             print(result)
@@ -82,11 +84,19 @@ class Praxis_DB_Connection():
 
     def execQuery(self, query):
         try:
-            self.selfAutoStart()
+            #self.selfAutoStart()
+            print("query:")
             print(query)
-            results = self.dbConnection.execute(query)
+            results = None
+            try:
+                results = self.dbConnection.execute(query)
+            except exception:
+                results = exception
+
+            print("results:")
             print(results)
             return results
-        except:
+        except exception:
             print("[Praxis_DB_Connection] query error")
-            return None
+            print(exception)
+            return exception
