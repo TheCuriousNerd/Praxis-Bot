@@ -103,6 +103,7 @@ class Token_Processor():
             arguments:list = [],
             userData = ""
             ):
+        output = None
         results = self.searchPrep(input)
 
         #print("\nv0 test:")
@@ -248,7 +249,8 @@ class Token_Processor():
                 for args_ in arguments:
                     args = args + args_ + " "
                 args = args[:-1]
-                returnString = handleInput_Argument("*", args, returnString)
+                if args is not "":
+                    returnString = handleInput_Argument("*", args, returnString)
             argIndex = 0
             for argz in arguments:
                 #print(" ")
@@ -293,7 +295,7 @@ if __name__ == '__main__':
     testModule = Token_Processor()
 
     commandName = "!testerino"
-    commandRawInput = "!testerino MODULE_TEST ABC123 XYZ"
+    commandRawInput = "!testerino"
     commandReponse = lookupCommandResponse(commandName)
 
     testModule.setup()

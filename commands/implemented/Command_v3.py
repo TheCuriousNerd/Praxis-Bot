@@ -67,9 +67,15 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         v3cmd_response = v3helper.get_Command_returnString(commandName)
         #if v3cmd_response is None:
         #    return "not none"
+        enoughArgs = self.enoughArgs(rest, v3cmd_response)
 
         # Proccess strings
         commandRawInput = commandName + " " + rest # This creates the full command string.
+        # Gets rid of the empty space if there are no arguments provided by the user
+        if rest is "":
+            commandRawInput = commandRawInput [:-1]
+        if not enoughArgs:
+            return "Not enough arguments, try again!"
 
         tokenWorker = token_processor.Token_Processor()
         tokenWorker.loadedFunctions = self.loadedFunctions
@@ -77,6 +83,24 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         returnString = tokenWorker_Results
 
         return returnString
+
+    def enoughArgs(self, args, v3cmd_response):
+        howManyArgsNeeded = 0
+        howManyArgsAvailable = 0
+        argRange = range(25)
+        for i in argRange:
+            if ("$(#%s)" % str(i)) in v3cmd_response:
+                howManyArgsNeeded = howManyArgsNeeded + 1
+
+        args = utility.get_args(args)
+        for a in args:
+            if a is not "":
+                howManyArgsAvailable = howManyArgsAvailable + 1
+
+        if howManyArgsAvailable >= howManyArgsNeeded:
+            return True
+        else:
+            return False
 
 
     def get_help(self):
