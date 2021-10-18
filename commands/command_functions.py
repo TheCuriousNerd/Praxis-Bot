@@ -70,26 +70,28 @@ class AbstractCommandFunction(metaclass=ABCMeta):
     def do_function(self, user, functionName, args, bonusData):
         pass
 
+import bot_functions.praxis_logging as praxis_logging
 class Function_Helpers():
-    import bot_functions.praxis_logging as praxis_logging
 
-    def get_Command_returnString(self, command):
+    def get_Command_returnString(self, command, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
         try:
-            praxis_logger_obj = self.praxis_logging.praxis_logger()
             db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
-            returns = ""
-            dbResults = db_obj.execQuery(
-                "SELECT * FROM command_responses_v0 WHERE command = \'%s\';" % (command)
-                )
-            for item in dbResults:
-                returns = item[2]
-                praxis_logger_obj.log("[Item]: " + item)
-                print(returns)
+            returns = None
+            #praxis_logger_obj.log("Getting Command ReturnString")
+
+            query = "SELECT * FROM command_responses_v0 WHERE command = \'%s\';" % (command)
+            #praxis_logger_obj.log(query)
+            dbResults = db_obj.execQuery(query, praxis_logger_obj)
+            #praxis_logger_obj.log("dbResults:")
+            #praxis_logger_obj.log(str(dbResults))
+            returns = dbResults[2]
+
             return returns
+
         except Exception as e:
             print("UNABLE TO FIND RESPONSE")
             print(e)
-            return e
+            return None
 
     def send_Lights_Command(self, username, light_group, command, rest):
         # todo need to url-escape command and rest

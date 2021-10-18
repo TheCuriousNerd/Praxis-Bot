@@ -85,19 +85,28 @@ class Praxis_DB_Connection():
             print("[Praxis_DB_Connection] query error")
             return False
 
-    def execQuery(self, query):
+    import bot_functions.praxis_logging as praxis_logging
+    def execQuery(self, query, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
         try:
             #self.selfAutoStart()
+            #praxis_logger_obj.log("query:")
+            #praxis_logger_obj.log(query)
             print("query:")
             print(query)
             results = None
             try:
                 results = self.dbConnection.execute(query)
-            except exception:
-                results = exception
+                for r in results:
+                    #praxis_logger_obj.log("query results:")
+                    #praxis_logger_obj.log(r)
+                    results = r
+            except:
+                results = "ERROR"
 
-            print("results:")
+            print("execQuery results:")
             print(results)
+            #praxis_logger_obj.log("execQuery results:")
+            #praxis_logger_obj.log(results)
             return results
         except Exception as e:
             print("[Praxis_DB_Connection] query error")

@@ -8,3 +8,4 @@ phue
 art
 requests
 pyparsing
+psycopg2

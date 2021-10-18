@@ -208,7 +208,10 @@ def create_basicCommand(commandName:str, commandReponse:str):
     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     result = db_obj.doesItemExist("command_responses_v0", "command", commandName)
     if (db_obj.doesTableExist("command_responses_v0") == True) and (result == False):
-        print("Creating Basic Command")
+        praxis_logger_obj.log("Creating Basic Command:")
+        praxis_logger_obj.log(commandName)
+        print("Creating Basic Command:")
+        print(commandName)
         query = (
                 'INSERT INTO command_responses_v0 '
                 '(command, response) '

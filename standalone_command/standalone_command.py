@@ -70,14 +70,17 @@ def is_command(command: str) -> bool:
             isCommand = True
 
     v3helper = Function_Helpers()
-    v3Command = v3helper.get_Command_returnString(command)
-    praxis_logger_obj.log("v3Command: ")
-    praxis_logger_obj.log(v3Command)
+    v3CommandResponse = v3helper.get_Command_returnString(command, praxis_logger_obj)
+    praxis_logger_obj.log("command: ")
+    praxis_logger_obj.log(command)
 
-    if v3Command is not None:
+    #praxis_logger_obj.log("v3Command: ")
+    #praxis_logger_obj.log(v3Command)
+
+    if v3CommandResponse is not None:
         isCommand = True
         praxis_logger_obj.log("v3Command: ")
-        praxis_logger_obj.log(v3Command)
+        praxis_logger_obj.log(v3CommandResponse)
 
     if command == "!echo":
         isCommand = True
@@ -92,6 +95,9 @@ def is_command(command: str) -> bool:
         return False
 
 def handle_command(source, username, command, rest, bonusData):
+    praxis_logger_obj.log("trying to handle command:")
+    praxis_logger_obj.log(command)
+
     if command == "!echo":
         message = "Got payload [%s]" % rest
         #print(message)
@@ -104,37 +110,39 @@ def handle_command(source, username, command, rest, bonusData):
     cmd_v3 = None
 
     v3Flag = False
+    v3helper = Function_Helpers()
+    v3cmd_response = v3helper.get_Command_returnString(command, praxis_logger_obj)
     try:
-        v3helper = Function_Helpers()
-        v3Command = v3helper.get_Command_returnString(command)
-        if v3Command is None:
+        if v3cmd_response is None:
             cmd:AbstractCommand = loadedCommands[command]
             #print(type(cmd))
             #print(cmd.command)
-            praxis_logger_obj.log("cmd from loadedCommands")
+            praxis_logger_obj.log("RUNNING cmd from loadedCommands")
             praxis_logger_obj.log(cmd)
     except:
         pass
     try:
-        v3helper = Function_Helpers()
-        v3Command = v3helper.get_Command_returnString(command)
-        if v3Command is not None:
+        if v3cmd_response is not None:
             v3Flag = True
             cmd_v3:AbstractCommand = loadedCommands_v3["base_v3"]
             #print(type(cmd_v3))
             #print(cmd_v3.command)
-            praxis_logger_obj.log("cmd from loadedCommands_v3")
+            praxis_logger_obj.log("RUNNING cmd from loadedCommands_v3")
             praxis_logger_obj.log(cmd_v3)
     except:
         pass
 
     if v3Flag is True:
         if cmd_v3 is not None:
-            cmd_response_v3 = cmd_v3.do_command(source, username, command, rest, bonusData)
-            return flask.make_response("{\"message\":\"%s\"}" % cmd_response_v3, 200, {"Content-Type": "application/json"})
+            cmd_results_v3 = cmd_v3.do_command(source, username, command, rest, bonusData)
+            praxis_logger_obj.log("COMMAND RESULTS V3:")
+            praxis_logger_obj.log(cmd_results_v3)
+            return flask.make_response("{\"message\":\"%s\"}" % cmd_results_v3, 200, {"Content-Type": "application/json"})
     else:
         if cmd is not None:
             cmd_response = cmd.do_command(source, username, command, rest, bonusData)
+            praxis_logger_obj.log("COMMAND RESULTS:")
+            praxis_logger_obj.log(cmd_response)
             return flask.make_response("{\"message\":\"%s\"}" % cmd_response, 200, {"Content-Type": "application/json"})
 
     #print("Doing a command")

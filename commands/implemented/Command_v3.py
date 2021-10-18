@@ -55,23 +55,25 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         self.isCommandEnabled = True
 
     def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
+
         # Command Example:
         # Idea: "!roll #(0)" = "!roll d20"
         # command = "!roll"
         # rest = " #(0)" = " d20"
 
         # Look up command in DB and get return strings.
-        command_returnString = Function_Helpers().get_Command_returnString(command)
-        if command_returnString is None:
-            return ""
+        commandName = "!testerino_v3"
+        v3helper = Function_Helpers()
+        v3cmd_response = v3helper.get_Command_returnString(commandName)
+        #if v3cmd_response is None:
+        #    return "not none"
 
         # Proccess strings
-        commandRawInput = command + " " + rest # This creates the full command string.
-
+        commandRawInput = commandName + " " + rest # This creates the full command string.
 
         tokenWorker = token_processor.Token_Processor()
         tokenWorker.loadedFunctions = self.loadedFunctions
-        tokenWorker_Results = tokenWorker.parseTokenResponse(user, commandRawInput, command_returnString)
+        tokenWorker_Results = tokenWorker.parseTokenResponse(user, commandRawInput, v3cmd_response)
         returnString = tokenWorker_Results
 
         return returnString
