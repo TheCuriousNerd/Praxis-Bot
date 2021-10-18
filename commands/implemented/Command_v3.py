@@ -62,7 +62,7 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         # rest = " #(0)" = " d20"
 
         # Look up command in DB and get return strings.
-        commandName = "!testerino_v3"
+        commandName = command
         v3helper = Function_Helpers()
         v3cmd_response = v3helper.get_Command_returnString(commandName)
         #if v3cmd_response is None:
