@@ -75,7 +75,7 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         if rest is "":
             commandRawInput = commandRawInput [:-1]
         if not enoughArgs:
-            return "Not enough arguments for command: %s try again!" % commandName
+            return "Not enough arguments for command: %s please try again." % commandName
 
         tokenWorker = token_processor.Token_Processor()
         tokenWorker.loadedFunctions = self.loadedFunctions
