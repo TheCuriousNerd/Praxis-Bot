@@ -3,5 +3,5 @@ flask
 requests
 psutil
 art
-psycopg2
 SQLAlchemy
+psycopg2

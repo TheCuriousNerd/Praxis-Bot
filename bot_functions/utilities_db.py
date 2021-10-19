@@ -22,6 +22,7 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from logging import exception
 import sqlalchemy as db
 
 import credentials
@@ -33,6 +34,7 @@ class Praxis_DB_Connection():
         self.credentials_manager.load_credentials()
         self.dbCert: credentials.DB_Credential = self.credentials_manager.find_Credential(credentials.DB_Credential, config.credentialsNickname)
 
+        #self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, self.dbCert.ipAddress, self.dbCert.databaseName)
         self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, self.dbCert.ipAddress, self.dbCert.databaseName)
 
         self.dbConnection = None
@@ -40,14 +42,73 @@ class Praxis_DB_Connection():
             self.startConnection()
 
     def startConnection(self):
+        print("starting engine with: \n" + self.connectionString)
         self.dbConnection = db.create_engine(self.connectionString)
 
     def closeConnection(self):
         self.dbConnection = None
 
-    def execQuery(self, query):
+    def selfAutoStart(self):
+        if self.dbConnection is None:
+            print("Auto Starting Connection to DB")
+            self.startConnection()
+
+    def doesTableExist(self, tableName):
         try:
-            return self.dbConnection.execute(query)
+            self.selfAutoStart()
+            query = "SELECT to_regclass('%s');" % tableName
+            result = self.dbConnection.execute(query)
+            for r in result:
+                if r[0] == tableName:
+                    return True
+            return False
+
         except:
             print("[Praxis_DB_Connection] query error")
-            return None
+            return False
+
+    def doesItemExist(self, tableName, rowName, item):
+        try:
+            print("Searching for item")
+            #self.selfAutoStart()
+            query = "SELECT * FROM %s WHERE %s = '%s';" % (tableName, rowName, item)
+            result = self.dbConnection.execute(query)
+            print(result)
+            for r in result:
+                print(r)
+                if r[1] == item:
+                    print("Found the item in DB")
+                    return True
+            print("Did not find the item in DB")
+            return False
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return False
+
+    import bot_functions.praxis_logging as praxis_logging
+    def execQuery(self, query, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
+        try:
+            #self.selfAutoStart()
+            #praxis_logger_obj.log("query:")
+            #praxis_logger_obj.log(query)
+            print("query:")
+            print(query)
+            results = None
+            try:
+                results = self.dbConnection.execute(query)
+                for r in results:
+                    #praxis_logger_obj.log("query results:")
+                    #praxis_logger_obj.log(r)
+                    results = r
+            except:
+                results = None
+
+            print("execQuery results:")
+            print(results)
+            #praxis_logger_obj.log("execQuery results:")
+            #praxis_logger_obj.log(results)
+            return results
+        except Exception as e:
+            print("[Praxis_DB_Connection] query error")
+            print(e)
+            return e

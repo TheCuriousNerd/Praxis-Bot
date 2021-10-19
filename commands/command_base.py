@@ -25,9 +25,10 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from abc import ABCMeta, abstractmethod
+from commands.command_functions import AbstractCommandFunction
 from enum import Enum, auto
 
-
+from commands import loader_functions as function_loader
 class AbstractCommand(metaclass=ABCMeta):
     """
     This is the base class for commands. In order to load a command a few conditions must be met:
@@ -40,10 +41,8 @@ class AbstractCommand(metaclass=ABCMeta):
 
     class CommandType(Enum):
         NONE = auto()
-        Praxis = auto()
-        TWITCH = auto()
-        DISCORD = auto()
         Ver2 = auto()
+        Ver3 = auto()
 
     class CommandSource(Enum):
         default = 0
@@ -55,8 +54,10 @@ class AbstractCommand(metaclass=ABCMeta):
         self.command = command
         self.n_args = n_args
         self.command_type = command_type
-        self.help = helpText
+        self.helpText = helpText
         self.isCommandEnabled = CommandEnabled
+
+        self.loadedFunctions = function_loader.load_functions(AbstractCommandFunction.FunctionType.ver0)
 
     # no touch!
     def get_args(self, text: str) -> list:
@@ -72,7 +73,7 @@ class AbstractCommand(metaclass=ABCMeta):
 
     # no touch!
     def get_help(self):
-        return self.help
+        return self.helpText
 
     # no touch!
     def is_command_enabled(self):

@@ -2,4 +2,5 @@ BadWordObfuscator
 twitchAPI
 psutil
 art
+SQLAlchemy
 requests

@@ -1,4 +1,4 @@
-FROM python:3.10.0a7-alpine3.13
+FROM python:3.7-stretch
 
 WORKDIR /Praxis
 
@@ -18,7 +18,6 @@ COPY /channel_rewards /Praxis/standalone_tts_core/channel_rewards
 COPY /commands /Praxis/standalone_tts_core/commands
 
 COPY requirements_sa_command.txt requirements_sa_command.txt
-RUN apk add --update gcc libc-dev linux-headers && rm -rf /var/cache/apk/*
 RUN pip3 install -r requirements_sa_command.txt
 
 COPY . .

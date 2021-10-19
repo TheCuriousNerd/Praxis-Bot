@@ -1,4 +1,5 @@
 BadWordObfuscator
+SQLAlchemy
 twitch-python
 discord.py
 flask
@@ -6,3 +7,5 @@ psutil
 phue
 art
 requests
+pyparsing
+psycopg2
