@@ -55,11 +55,11 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         self.isCommandEnabled = True
 
     def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
-
         # Command Example:
-        # Idea: "!roll #(0)" = "!roll d20"
-        # command = "!roll"
-        # rest = " #(0)" = " d20"
+        # Idea: "!roll $(#0))" = "!roll d20"
+        # Command: "!roll"
+        # Rest: "$(#0))" = "d20"
+        # Example command response: "You rolled $(roll $(#0)))""
 
         # Look up command in DB and get return strings.
         commandName = command
