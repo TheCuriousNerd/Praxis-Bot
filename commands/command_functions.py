@@ -88,9 +88,8 @@ class Function_Helpers():
 
             return returns
 
-        except Exception as e:
+        except:
             print("UNABLE TO FIND RESPONSE")
-            print(e)
             return None
 
     def send_Lights_Command(self, username, light_group, command, rest):

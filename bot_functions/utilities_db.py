@@ -101,7 +101,7 @@ class Praxis_DB_Connection():
                     #praxis_logger_obj.log(r)
                     results = r
             except:
-                results = "ERROR"
+                results = None
 
             print("execQuery results:")
             print(results)
