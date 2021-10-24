@@ -30,7 +30,7 @@ from urllib.parse import urlencode
 import requests
 
 from commands.command_base import AbstractCommand
-from commands.command_functions import AbstractCommandFunction, Function_Helpers
+from commands.command_functions import AbstractCommandFunction, Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
 from bot_functions import token_processor
@@ -63,7 +63,7 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
 
         # Look up command in DB and get return strings.
         commandName = command
-        v3helper = Function_Helpers()
+        v3helper = Abstract_Function_Helpers()
         v3cmd_response = v3helper.get_Command_returnString(commandName)
         #if v3cmd_response is None:
         #    return "not none"

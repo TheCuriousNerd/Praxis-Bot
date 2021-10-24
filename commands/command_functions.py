@@ -71,7 +71,7 @@ class AbstractCommandFunction(metaclass=ABCMeta):
         pass
 
 import bot_functions.praxis_logging as praxis_logging
-class Function_Helpers():
+class Abstract_Function_Helpers():
 
     def get_Command_returnString(self, command, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
         try:

@@ -27,8 +27,9 @@ import flask
 from flask import Flask, request, after_this_request
 
 from commands import loader as command_loader
+from commands import loader_functions as function_loader
 from commands.command_base import AbstractCommand
-from commands.command_functions import AbstractCommandFunction, Function_Helpers
+from commands.command_functions import AbstractCommandFunction, Abstract_Function_Helpers
 
 from json import loads
 from urllib.parse import urlencode
@@ -57,9 +58,13 @@ def init():
 def load_commands():
     global loadedCommands
     global loadedCommands_v3
+    global loadedFunctions
     loadedCommands = command_loader.load_commands(AbstractCommand.CommandType.Ver2)
     loadedCommands_v3 = command_loader.load_commands(AbstractCommand.CommandType.Ver3)
-
+    loadedFunctions = function_loader.load_functions(AbstractCommandFunction.FunctionType.ver0)
+    for f in loadedFunctions:
+        praxis_logger_obj.log("loadedFunctions: ")
+        praxis_logger_obj.log(str(f))
 
 def is_command(command: str) -> bool:
     #print(command)
@@ -69,7 +74,7 @@ def is_command(command: str) -> bool:
         if command == cmd:
             isCommand = True
 
-    v3helper = Function_Helpers()
+    v3helper = Abstract_Function_Helpers()
     v3CommandResponse = v3helper.get_Command_returnString(command, praxis_logger_obj)
     praxis_logger_obj.log("command: ")
     praxis_logger_obj.log(command)
@@ -110,7 +115,7 @@ def handle_command(source, username, command, rest, bonusData):
     cmd_v3 = None
 
     v3Flag = False
-    v3helper = Function_Helpers()
+    v3helper = Abstract_Function_Helpers()
     v3cmd_response = v3helper.get_Command_returnString(command, praxis_logger_obj)
     try:
         if v3cmd_response is None:
@@ -134,6 +139,7 @@ def handle_command(source, username, command, rest, bonusData):
 
     if v3Flag is True:
         if cmd_v3 is not None:
+            cmd_v3.loadedFunctions = loadedFunctions
             cmd_results_v3 = cmd_v3.do_command(source, username, command, rest, bonusData)
             praxis_logger_obj.log("COMMAND RESULTS V3:")
             praxis_logger_obj.log(cmd_results_v3)

@@ -26,7 +26,8 @@ from enum import Enum, auto
 import pyparsing
 
 from bot_functions import utilities_script as utility
-from commands.command_functions import AbstractCommandFunction, Function_Helpers
+from commands import loader_functions as function_loader
+from commands.command_functions import AbstractCommandFunction, Abstract_Function_Helpers
 
 class TokenType(Enum):
     NONE = auto()
@@ -236,6 +237,7 @@ class Token_Processor():
                 returnString = modifyReturnString(newString = computedResult)
 
             if self.does_function_exist(functionName):
+                return "function found"
                 functionResults = self.run_function(userData, functionName, arg)
                 returnString = modifyReturnString(newString = functionResults)
 

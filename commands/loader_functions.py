@@ -48,7 +48,7 @@ def compile_and_load_file(path: str, functionType: AbstractCommandFunction.Funct
     spec.loader.load_module(module_name)
 
     for name, obj in inspect.getmembers(module):
-        if inspect.isclass(obj) and name.startswith("Command"):
+        if inspect.isclass(obj) and name.startswith("Function"):
             function_inst = obj()
             if functionType == function_inst.get_functionType():
                 print(" ---Successfully loaded %s: %s" % (functionType, function_inst.get_name()))

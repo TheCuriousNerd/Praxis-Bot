@@ -31,7 +31,7 @@ import requests
 from commands.command_base import AbstractCommand
 from commands.command_functions import AbstractCommandFunction
 
-from commands.command_functions import Function_Helpers
+from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
 
