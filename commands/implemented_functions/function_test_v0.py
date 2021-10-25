@@ -47,7 +47,7 @@ class Function_v0(AbstractCommandFunction, metaclass=ABCMeta):
         super().__init__(
             functionName = Function_v0.functionName,
             n_args = 0,
-            functionType=AbstractCommandFunction.FunctionType.ver0,
+            functionType = AbstractCommandFunction.FunctionType.ver0,
             helpText = Function_v0.helpText,
             bonusFunctionData = None
             )

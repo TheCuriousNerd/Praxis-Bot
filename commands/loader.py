@@ -71,6 +71,7 @@ def compile_and_load(commandType: AbstractCommand.CommandType) -> Dict[str, Abst
             if command is not None and command.command_type is commandType:
                 dic[name] = command
         break
+    print(dic)
     return dic
 
 def get_base_dir() -> str:

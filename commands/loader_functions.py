@@ -33,6 +33,7 @@ from typing import Dict
 
 from commands.command_functions import AbstractCommandFunction
 
+
 #New
 def load_functions(functionType: AbstractCommandFunction.FunctionType) -> Dict[str, AbstractCommandFunction]:
     print(" -Loading ", functionType ," Functions...\n")
@@ -67,9 +68,10 @@ def compile_and_load(functionType: AbstractCommandFunction.FunctionType) -> Dict
             name = os.path.join(dirName, file)
             print("compiling: %s" % name)
             name, function = compile_and_load_file(name, functionType)
-            if function is not None and function.get_functionType is functionType:
+            if function is not None and function.functionType is functionType:
                 dic[name] = function
         break
+    print(dic)
     return dic
 
 def get_base_dir() -> str:

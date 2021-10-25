@@ -29,6 +29,7 @@ from json import loads
 from urllib.parse import urlencode
 import requests
 
+from commands import loader_functions as function_loader
 from commands.command_base import AbstractCommand
 from commands.command_functions import AbstractCommandFunction, Abstract_Function_Helpers
 
@@ -78,7 +79,7 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
             return "Not enough arguments for command: %s please try again." % commandName
 
         tokenWorker = token_processor.Token_Processor()
-        tokenWorker.loadedFunctions = self.loadedFunctions
+        #tokenWorker.loadedFunctions = function_loader.load_functions(AbstractCommandFunction.FunctionType.ver0)
         tokenWorker_Results = tokenWorker.parseTokenResponse(user, commandRawInput, v3cmd_response)
         returnString = tokenWorker_Results
 
