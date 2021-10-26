@@ -29,6 +29,8 @@ from bot_functions import utilities_script as utility
 from commands import loader_functions as function_loader
 from commands.command_functions import AbstractCommandFunction, Abstract_Function_Helpers
 
+import re
+
 class TokenType(Enum):
     NONE = auto()
     ARGUMENT = auto()
@@ -45,13 +47,46 @@ class Token_Processor():
         pass
 
     #Commands will call this function to parse tokens in the response string.
-    def parseTokenResponse(self, userData, commandRawInput, command_returnString):
+    def parseTokenResponse(self, userData, commandRawInput:str, command_returnString):
         commandArguments = utility.get_args(commandRawInput)
         #This removes the command from the arguments
         commandArguments.pop(0)
-        response = self.stringFunctionParser(command_returnString, commandArguments, userData)
+
+        #tempArg = commandRawInput.split("( )")
+        tempArg = re.split("( )", commandRawInput)
+        tempArg.pop(0)
+        tempArg.pop(0)
+        tempArg = self.cleanupTempArgs(tempArg)
+        print("\ntempArgs:")
+        for t in tempArg:
+            print(t)
+
+        response = self.stringFunctionParser(command_returnString, tempArg, userData, commandRawInput)
         return response
 
+    def cleanupTempArgs(self, input:list):
+        space_char = " "
+        blank = ''
+        print(input)
+        for i in input:
+            print(i)
+        print(" ")
+        for x in range(len(input) - 1, -1, -1) :
+            print("x in range")
+            print(input[x])
+            if input[x] is space_char and (input[x-1] is not space_char and input[x-1] is not blank) and x > 0:
+                print("-inner if")
+                input.pop(x)
+            elif(input[x] is blank):
+                print("-inner if 1 - remove blank")
+                input.pop(x)
+            elif (input[x] is space_char or input[x] is blank) and x < len(input) - 1:
+                print("-inner elif 2 - concatinate space")
+                input[ x + 1 ] = space_char + input[ x + 1 ]
+                input.pop(x)
+        output = input
+
+        return output
 
     def searchPrep(self, input):
         parserContent = pyparsing.Word(pyparsing.alphanums) | ' '
@@ -102,7 +137,8 @@ class Token_Processor():
     def stringFunctionParser(self,
             input:str = "",
             arguments:list = [],
-            userData = ""
+            userData = "",
+            commandRawInput = ""
             ):
         output = None
         results = self.searchPrep(input)
@@ -134,11 +170,11 @@ class Token_Processor():
 
                                 if "#" in data:
                                     selectedToken = TokenType.ARGUMENT
-                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData)
+                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput)
                                     #print(currentString)
                                 elif "@" in data:
                                     selectedToken = TokenType.VARIABLE
-                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData)
+                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput)
                                     #print(currentString)
                                 else:
                                     selectedToken = TokenType.FUNCTION
@@ -146,7 +182,7 @@ class Token_Processor():
                                     NoArgzNoVars = self.hasArgzOrVars(input)
                                     if NoArgzNoVars == False:
                                         #print("FUNCTION Time" + str(inputData_))
-                                        currentString = self.processToken(currentString, inputData_[0], inputData_, selectedToken, userData)
+                                        currentString = self.processToken(currentString, inputData_[0], inputData_, selectedToken, userData, commandRawInput)
                                         #print(currentString)
                                         break
                             else:
@@ -187,7 +223,7 @@ class Token_Processor():
         return output
 
 
-    def processToken(self, input:str, data, arguments, targetToken, userData):
+    def processToken(self, input:str, data, arguments, targetToken, userData, commandRawInput):
         returnString = input
         #print("running a thing!")
         #print(str(data) + " is about to run!\n")
@@ -220,11 +256,24 @@ class Token_Processor():
                 searchString_Suffix = ")",
                 newString = ""
                 ):
-                searchString = searchString_Prefix
-                for a in arg:
+                searchString = searchString_Prefix + functionName + " "
+
+                tempArg = re.split("( )", commandRawInput)
+                tempArg.pop(0)
+                tempArg.pop(0)
+                tempArg = self.cleanupTempArgs(tempArg)
+
+                for a in tempArg:
                     searchString = searchString + a + " "
                 searchString = searchString[:-1]
                 searchString = searchString + searchString_Suffix
+                print("\nsearchString:")
+                print(searchString)
+                print("newString:")
+                print(newString)
+                print("returnString:")
+                print(returnString)
+                print("\n")
                 modifiedString = returnString.replace(searchString, newString)
                 return modifiedString
 
@@ -239,7 +288,14 @@ class Token_Processor():
            # return str(self.loadedFunctions[functionName])
             if self.does_function_exist(functionName):
                 #return "function found"
-                functionResults = self.run_function(userData, functionName, arg)
+                tempArg = re.split("( )", commandRawInput)
+                tempArg.pop(0)
+                tempArg.pop(0)
+                tempArg = self.cleanupTempArgs(tempArg)
+
+                functionResults = self.run_function(userData, functionName, tempArg)
+                print("function Results")
+                print(functionResults)
                 returnString = modifyReturnString(newString = functionResults)
 
             return returnString
@@ -249,10 +305,21 @@ class Token_Processor():
             print("{RUNNING a ARGUMENT}")
             if "$(#*)" in returnString:
                 args = ""
-                for args_ in arguments:
+
+                tempArg = re.split("( )", commandRawInput)
+                tempArg.pop(0)
+                tempArg.pop(0)
+                tempArg = self.cleanupTempArgs(tempArg)
+
+                #skipFirst = True
+                for args_ in tempArg:
                     args = args + args_ + " "
                 args = args[:-1]
+
                 if args is not "":
+                    # Use regex to make commandRawInput lose the first word "command" up to and including the space
+                    #
+                    # Code HERE
                     returnString = handleInput_Argument("*", args, returnString)
             argIndex = 0
             for argz in arguments:
@@ -290,7 +357,7 @@ class Token_Processor():
 def lookupCommandResponse(input):
     response = ""
     if input == "!testerino":
-        response = "A Testerino is Detected $(testFunction $(#0) $(#1) $(#*))"
+        response = "A Testerino is Detected $(testFunction $(#*))"
     return response
 
 
@@ -298,21 +365,21 @@ if __name__ == '__main__':
     testModule = Token_Processor()
 
     commandName = "!testerino"
-    commandRawInput = "!testerino 123 abc XYZ"
-    commandRawInput2 = "!testerino GG"
+    commandRawInput = "!testerino ABC 123   1"
+    #commandRawInput2 = "!testerino GG    "
     commandReponse = lookupCommandResponse(commandName)
 
     testModule.setup()
     print("\n")
-    testResponse = testModule.parseTokenResponse("TestUser", commandName, commandReponse)
-    print("\ncommandRaw:\n" + commandRawInput)
-    print("\ncommandReponse:\n" + commandReponse)
-    print("\nresult:\n" + testResponse + "\n")
-    testResponse = testModule.parseTokenResponse("TestUser", commandRawInput2, commandReponse)
-    print("\ncommandRaw:\n" + commandRawInput)
-    print("\ncommandReponse:\n" + commandReponse)
-    print("\nresult:\n" + testResponse + "\n")
     testResponse = testModule.parseTokenResponse("TestUser", commandRawInput, commandReponse)
     print("\ncommandRaw:\n" + commandRawInput)
     print("\ncommandReponse:\n" + commandReponse)
     print("\nresult:\n" + testResponse + "\n")
+    # testResponse = testModule.parseTokenResponse("TestUser", commandRawInput2, commandReponse)
+    # print("\ncommandRaw:\n" + commandRawInput)
+    # print("\ncommandReponse:\n" + commandReponse)
+    # print("\nresult:\n" + testResponse + "\n")
+    # testResponse = testModule.parseTokenResponse("TestUser", commandRawInput, commandReponse)
+    # print("\ncommandRaw:\n" + commandRawInput2)
+    # print("\ncommandReponse:\n" + commandReponse)
+    # print("\nresult:\n" + testResponse + "\n")
