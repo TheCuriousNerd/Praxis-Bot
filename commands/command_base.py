@@ -57,7 +57,7 @@ class AbstractCommand(metaclass=ABCMeta):
         self.helpText = helpText
         self.isCommandEnabled = CommandEnabled
 
-        self.loadedFunctions = function_loader.load_functions(AbstractCommandFunction.FunctionType.ver0)
+        self.loadedFunctions = None
 
     # no touch!
     def get_args(self, text: str) -> list:

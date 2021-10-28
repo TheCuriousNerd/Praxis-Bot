@@ -31,7 +31,7 @@ import requests
 from commands.command_base import AbstractCommand
 from commands.command_functions import AbstractCommandFunction
 
-from commands.command_functions import Function_Helpers
+from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
 
@@ -47,7 +47,7 @@ class Function_v0(AbstractCommandFunction, metaclass=ABCMeta):
         super().__init__(
             functionName = Function_v0.functionName,
             n_args = 0,
-            functionType=AbstractCommandFunction.FunctionType.ver0,
+            functionType = AbstractCommandFunction.FunctionType.ver0,
             helpText = Function_v0.helpText,
             bonusFunctionData = None
             )

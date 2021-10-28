@@ -29,8 +29,9 @@ from json import loads
 from urllib.parse import urlencode
 import requests
 
+from commands import loader_functions as function_loader
 from commands.command_base import AbstractCommand
-from commands.command_functions import AbstractCommandFunction, Function_Helpers
+from commands.command_functions import AbstractCommandFunction, Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
 from bot_functions import token_processor
@@ -63,7 +64,7 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
 
         # Look up command in DB and get return strings.
         commandName = command
-        v3helper = Function_Helpers()
+        v3helper = Abstract_Function_Helpers()
         v3cmd_response = v3helper.get_Command_returnString(commandName)
         #if v3cmd_response is None:
         #    return "not none"
@@ -78,7 +79,7 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
             return "Not enough arguments for command: %s please try again." % commandName
 
         tokenWorker = token_processor.Token_Processor()
-        tokenWorker.loadedFunctions = self.loadedFunctions
+        #tokenWorker.loadedFunctions = function_loader.load_functions(AbstractCommandFunction.FunctionType.ver0)
         tokenWorker_Results = tokenWorker.parseTokenResponse(user, commandRawInput, v3cmd_response)
         returnString = tokenWorker_Results
 
