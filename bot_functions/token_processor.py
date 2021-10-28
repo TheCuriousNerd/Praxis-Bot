@@ -42,6 +42,7 @@ class Token_Processor():
         super().__init__(
         )
         self.loadedFunctions = function_loader.load_functions(AbstractCommandFunction.FunctionType.ver0)
+        self.functionCounter = self.FunctionCounter()
 
     def setup(self):
         pass
@@ -67,21 +68,21 @@ class Token_Processor():
     def cleanupTempArgs(self, input:list):
         space_char = " "
         blank = ''
-        print(input)
-        for i in input:
-            print(i)
-        print(" ")
+        #print(input)
+        #for i in input:
+            #print(i)
+        #print(" ")
         for x in range(len(input) - 1, -1, -1) :
-            print("x in range")
-            print(input[x])
+            #print("x in range")
+            #print(input[x])
             if input[x] is space_char and (input[x-1] is not space_char and input[x-1] is not blank) and x > 0:
-                print("-inner if")
+                #print("-inner if")
                 input.pop(x)
             elif(input[x] is blank):
-                print("-inner if 1 - remove blank")
+                #print("-inner if 1 - remove blank")
                 input.pop(x)
             elif (input[x] is space_char or input[x] is blank) and x < len(input) - 1:
-                print("-inner elif 2 - concatinate space")
+                #print("-inner elif 2 - concatinate space")
                 input[ x + 1 ] = space_char + input[ x + 1 ]
                 input.pop(x)
         output = input
@@ -134,6 +135,25 @@ class Token_Processor():
             results = results + i + " "
         return input
 
+    class FunctionCounter():
+        def __init__(self) -> None:
+            self.counts = {}
+
+        def count(self, functionName):
+            try:
+                i = self.counts[functionName]
+                self.counts[functionName] = i + 1
+            except:
+                self.counts[functionName] = 0
+
+        def getCount(self, functionName):
+            try:
+                i = self.counts[functionName]
+                return i
+            except:
+                self.counts[functionName] = 0
+                return self.counts[functionName]
+
     def stringFunctionParser(self,
             input:str = "",
             arguments:list = [],
@@ -142,18 +162,19 @@ class Token_Processor():
             ):
         output = None
         results = self.searchPrep(input)
+        rawReturnString = input
 
         #print("\nv0 test:")
         for result in results[0]:
             if type(result) == list:
-                #print("\n{Token FOUND}:")
-                #print(result)
-                #print(len(result))
+                print("\n{Token FOUND}:")
+                print(result)
+                print(len(result))
 
                 def processLoop(inputData_, input):
-                    #print("LOOP TIME")
-                    #print(inputData_)
-                    #print(input)
+                    print("LOOP TIME")
+                    print(inputData_)
+                    print(input)
                     global currentString
                     currentString = input
                     NoArgzNoVars = self.hasArgzOrVars(input)
@@ -170,11 +191,11 @@ class Token_Processor():
 
                                 if "#" in data:
                                     selectedToken = TokenType.ARGUMENT
-                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput)
+                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput, rawReturnString)
                                     #print(currentString)
                                 elif "@" in data:
                                     selectedToken = TokenType.VARIABLE
-                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput)
+                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput, rawReturnString)
                                     #print(currentString)
                                 else:
                                     selectedToken = TokenType.FUNCTION
@@ -182,7 +203,7 @@ class Token_Processor():
                                     NoArgzNoVars = self.hasArgzOrVars(input)
                                     if NoArgzNoVars == False:
                                         #print("FUNCTION Time" + str(inputData_))
-                                        currentString = self.processToken(currentString, inputData_[0], inputData_, selectedToken, userData, commandRawInput)
+                                        currentString = self.processToken(currentString, inputData_[0], arguments, selectedToken, userData, commandRawInput, rawReturnString)
                                         #print(currentString)
                                         break
                             else:
@@ -210,7 +231,7 @@ class Token_Processor():
                 output = processLoop(result, input)
                 #print(self.tokenSearch(output))
                 if self.tokenSearch(output):
-                    #print("\n-----------------\nLoop Part 2\n-----------------\n")
+                    print("\n-----------------\nLoop Part 2\n-----------------\n")
                     results2 = self.searchPrep(output)
                     #print(results2)
                     for newResult in results2[0]:
@@ -220,10 +241,23 @@ class Token_Processor():
                             #print(newResult)
                             output = processLoop(newResult, output)
 
+                #hasTokens = self.tokenSearch(output)
+                hasTokens = False
+                while hasTokens:
+                    print("\n-----------------\nLoop Part 3\n-----------------\n")
+                    results3 = self.searchPrep(output)
+                    #print(results2)
+                    for newResult in results3[0]:
+
+                        if type(newResult) == list:
+                            #print("\n{Token FOUND}:")
+                            #print(newResult)
+                            output = processLoop(newResult, output)
+
         return output
 
 
-    def processToken(self, input:str, data, arguments, targetToken, userData, commandRawInput):
+    def processToken(self, input:str, data, arguments, targetToken, userData, commandRawInput, rawReturnString):
         returnString = input
         #print("running a thing!")
         #print(str(data) + " is about to run!\n")
@@ -251,7 +285,7 @@ class Token_Processor():
             print(arg)
             print(returnString)
 
-            def modifyReturnString(
+            def prepStringReplacement(
                 searchString_Prefix = "$(",
                 searchString_Suffix = ")",
                 newString = ""
@@ -263,19 +297,43 @@ class Token_Processor():
                 tempArg.pop(0)
                 tempArg = self.cleanupTempArgs(tempArg)
 
+
+                def predictSearchString(functionName):
+                    rePattern = "(?<=\$\(%s)(.*?)(?=\))" % (functionName)
+                    reSearch = re.search(rePattern, returnString)
+                    if reSearch is not None:
+                        reResults = "$(%s%s)" % (functionName, reSearch.group(0))
+                        print("reResults")
+                        print(reResults)
+                        return reResults
+                    else:
+                        return searchString
+
+
                 for a in tempArg:
-                    searchString = searchString + a + " "
+                    if searchString + a in returnString:
+                        searchString = searchString + a + " "
+
                 searchString = searchString[:-1]
                 searchString = searchString + searchString_Suffix
-                print("\nsearchString:")
+
+                searchString = predictSearchString(functionName)
+                print("\ntempArg:")
+                print(tempArg)
+                print("rawReturnString:")
+                print(rawReturnString)
+                print("searchString:")
                 print(searchString)
                 print("newString:")
                 print(newString)
                 print("returnString:")
                 print(returnString)
                 print("\n")
-                modifiedString = returnString.replace(searchString, newString)
-                return modifiedString
+                #modifiedString = returnString.replace(searchString, newString)
+                return searchString , newString
+
+            def updateReturnString(oldString, newString):
+                return returnString.replace(oldString, newString)
 
             if functionName == "testerino":
                 computedResult = ""
@@ -283,20 +341,24 @@ class Token_Processor():
                     if a is not arg[0]:
                         computedResult = computedResult + a + " "
                 computedResult = computedResult[:-1]
-                returnString = modifyReturnString(newString = computedResult)
+                returnString = prepStringReplacement(newString = computedResult)
 
            # return str(self.loadedFunctions[functionName])
             if self.does_function_exist(functionName):
-                #return "function found"
-                tempArg = re.split("( )", commandRawInput)
-                tempArg.pop(0)
-                tempArg.pop(0)
-                tempArg = self.cleanupTempArgs(tempArg)
+                rePattern_arg = "(?<=\$\(%s)(.*?)(?=\))" % (functionName)
+                reSearch_arg = re.search(rePattern_arg, returnString)
+                try:
+                    reResults_arg = reSearch_arg.group(0)
+                    reResultsPrepped_arg = re.split("( )", reResults_arg)
+                    reResults_formated = self.cleanupTempArgs(reResultsPrepped_arg)
 
-                functionResults = self.run_function(userData, functionName, tempArg)
-                print("function Results")
-                print(functionResults)
-                returnString = modifyReturnString(newString = functionResults)
+                    functionResults = self.run_function(userData, functionName, reResults_formated)
+                    print("function Results")
+                    print(functionResults)
+                    oldString, newString = prepStringReplacement(newString = functionResults)
+                    returnString = updateReturnString(oldString, newString)
+                except:
+                    returnString = returnString
 
             return returnString
 
@@ -317,9 +379,6 @@ class Token_Processor():
                 args = args[:-1]
 
                 if args is not "":
-                    # Use regex to make commandRawInput lose the first word "command" up to and including the space
-                    #
-                    # Code HERE
                     returnString = handleInput_Argument("*", args, returnString)
             argIndex = 0
             for argz in arguments:
@@ -346,6 +405,11 @@ class Token_Processor():
 
     def run_function(self, user, function, args):
             try:
+                self.functionCounter.count(function)
+                # Reorder args here
+                #
+
+
                 function_:AbstractCommandFunction = self.loadedFunctions[function]
                 if function_ is not None:
                     function_response = function_.do_function(user, function, args, None)
@@ -356,16 +420,16 @@ class Token_Processor():
 
 def lookupCommandResponse(input):
     response = ""
-    if input == "!testerino":
-        response = "A Testerino is Detected $(testFunction $(#*))"
+    if input == "!test":
+        response = "A Testerino is Detected $(testFunction $(#*)) $(testFunction $(#0))"
     return response
 
 
 if __name__ == '__main__':
     testModule = Token_Processor()
 
-    commandName = "!testerino"
-    commandRawInput = "!testerino ABC 123   1"
+    commandName = "!test"
+    commandRawInput = "!test ABC 123     1"
     #commandRawInput2 = "!testerino GG    "
     commandReponse = lookupCommandResponse(commandName)
 
