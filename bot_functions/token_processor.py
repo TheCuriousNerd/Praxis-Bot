@@ -406,9 +406,6 @@ class Token_Processor():
     def run_function(self, user, function, args):
             try:
                 self.functionCounter.count(function)
-                # Reorder args here
-                #
-
 
                 function_:AbstractCommandFunction = self.loadedFunctions[function]
                 if function_ is not None:
