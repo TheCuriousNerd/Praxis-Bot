@@ -35,6 +35,7 @@ services:
       - praxisbot
     volumes:
       - "../logs:/Praxis/logs"
+      - "../credentials:/Praxis/credentials"
 networks:
   praxisbot:
     name: praxisbot

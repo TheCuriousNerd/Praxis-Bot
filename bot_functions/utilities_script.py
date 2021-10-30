@@ -44,6 +44,10 @@ def contains_url(input: str):
 def get_args(text: str) -> list:
     return text.split(" ")
 
+# This takes all items from a list and puts them into a string, separated by a space
+def list_to_string(list_to_convert):
+    return " ".join(list_to_convert)
+
 def does_contain_OnlyNumbers(text):
     isJustNumbers = False
     print("checking numbers")

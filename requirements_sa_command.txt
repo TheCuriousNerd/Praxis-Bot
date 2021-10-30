@@ -9,3 +9,5 @@ art
 requests
 pyparsing
 psycopg2
+paramiko
+numexpr

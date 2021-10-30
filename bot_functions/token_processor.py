@@ -310,12 +310,12 @@ class Token_Processor():
                         return searchString
 
 
-                for a in tempArg:
-                    if searchString + a in returnString:
-                        searchString = searchString + a + " "
+                #for a in tempArg:
+                #    if searchString + a in returnString:
+                #        searchString = searchString + a + " "
 
-                searchString = searchString[:-1]
-                searchString = searchString + searchString_Suffix
+                #searchString = searchString[:-1]
+                #searchString = searchString + searchString_Suffix
 
                 searchString = predictSearchString(functionName)
                 print("\ntempArg:")
@@ -343,7 +343,7 @@ class Token_Processor():
                 computedResult = computedResult[:-1]
                 returnString = prepStringReplacement(newString = computedResult)
 
-           # return str(self.loadedFunctions[functionName])
+            #return str(self.loadedFunctions[functionName])
             if self.does_function_exist(functionName):
                 rePattern_arg = "(?<=\$\(%s)(.*?)(?=\))" % (functionName)
                 reSearch_arg = re.search(rePattern_arg, returnString)
@@ -351,12 +351,16 @@ class Token_Processor():
                     reResults_arg = reSearch_arg.group(0)
                     reResultsPrepped_arg = re.split("( )", reResults_arg)
                     reResults_formated = self.cleanupTempArgs(reResultsPrepped_arg)
+                    # This removes first char of first element in list
+                    reResults_formated[0] = reResults_formated[0][1:]
 
                     functionResults = self.run_function(userData, functionName, reResults_formated)
                     print("function Results")
                     print(functionResults)
-                    oldString, newString = prepStringReplacement(newString = functionResults)
+                    oldString, newString = prepStringReplacement(newString = str(functionResults))
                     returnString = updateReturnString(oldString, newString)
+                    print("new returnString")
+                    print(returnString)
                 except:
                     returnString = returnString
 
@@ -419,14 +423,18 @@ def lookupCommandResponse(input):
     response = ""
     if input == "!test":
         response = "A Testerino is Detected $(testFunction $(#*)) $(testFunction $(#0))"
-    return response
+        return response
+    if input == "!math":
+        response = "$(#*) = $(math $(#*))"
+        return response
 
+    return response
 
 if __name__ == '__main__':
     testModule = Token_Processor()
 
-    commandName = "!test"
-    commandRawInput = "!test ABC 123     1"
+    commandName = "!math"
+    commandRawInput = "!math 2+2"
     #commandRawInput2 = "!testerino GG    "
     commandReponse = lookupCommandResponse(commandName)
 
