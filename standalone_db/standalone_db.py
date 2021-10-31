@@ -195,7 +195,10 @@ def setup_basicCommands():
 
 def create_basicCommands():
     print("Creating Basic Commands for command_responses_v0")
-    create_basicCommand("!testerino_v3", "A Testerino is Detected $(testerino $(#0))")
+    create_basicCommand("!testerino_v3", "A Testerino is Detected $(testFunction $(#*))")
+    create_basicCommand("!math", "$(#*) = $(math $(#*))")
+    create_basicCommand("!presentdaypresenttime", "The current date and time is: $(date %Y-%m-%d %H:%M:%S)")
+    create_basicCommand("!curdaytime", "The current date and time is: $(date $(#*))")
 
     #create_basicCommand("!chyron", "$(chyron $(#*))")
     #create_basicCommand("!roll", "$(roll $(#*))")

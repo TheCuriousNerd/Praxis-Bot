@@ -9,6 +9,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
      - 42099:80
+    networks:
+      - praxisbot
   standalone_db_main:
     image: postgres:13.3-alpine
     restart: always

@@ -69,6 +69,8 @@ class Mathematician():
 
             self.FarenheitToCelsius = lambda x: (x - 32) * 5/9
             self.CelsiusToFarenheit = lambda x: (x * 9/5) + 32
+            self.FarenheitToKelvin = lambda x: (x + 459.67) * 5/9
+            self.KelvinToFarenheit = lambda x: (x * 9/5) - 459.67
             self.CelsiusToKelvin = lambda x: x + 273.15
             self.KelvinToCelsius = lambda x: x - 273.15
 
@@ -83,7 +85,8 @@ class Mathematician():
                 ("ml", 1000),
                 ("cl", 100),
                 ("dl", 10),
-                ("m^3", 0.001)
+                ("m^3", 0.001),
+                ("m3", 0.001)
                 ]
             self.metric_weightUnitsConversion = [
                 ("g", 1),
@@ -92,7 +95,7 @@ class Mathematician():
                 ]
             #self.timeUnitsConversion = [("s", 1), ("min", 60), ("hr", 3600)]
 
-            self.temp_prefixes = ["C", "F", "K"]
+            self.temp_prefixes = ["c", "f", "k"]
             self.metric_prefixes = ["da", "h" ,"k", "M", "G", "T", "P", "E", "Z", "Y"]
             self.metric_subUnits = ["d", "c", "m", "μ", "n", "p", "f", "a", "z", "y"]
 
@@ -115,12 +118,42 @@ class Mathematician():
             :param toUnit: The unit to convert to.
             :return: The converted value.
             """
+            # Checks if the from and to units are for temperatures and then converts them
+            if fromUnit in self.temp_prefixes or toUnit in self.temp_prefixes:
+                if fromUnit in self.temp_prefixes and toUnit in self.temp_prefixes:
+                    value = self.convert_temperature(value, fromUnit, toUnit)
+                else:
+                    return "{Unit Conversion Error} [Temperature conversion requires two temperature units.]"
+            else:
+                # Convert the value to the base unit
+                value = self.convert_to_base_unit(value, fromUnit)
+                if value == False:
+                    return "{Unit Conversion Error} [Base unit not recognized]"
+                else:
+                    # Convert the value to the new unit
+                    value = self.convert_from_base_unit(value, toUnit)
+                    if value == False:
+                        return "{Unit Conversion Error} [New unit not recognized]"
 
-            # Convert the value to the base unit
-            value = self.convert_to_base_unit(value, fromUnit)
+            # Return the converted value
+            return value
 
-            # Convert the value to the new unit
-            value = self.convert_from_base_unit(value, toUnit)
+        def convert_temperature(self, value, fromUnit, toUnit):
+            if fromUnit == "c":
+                if toUnit == "f":
+                    value = self.CelsiusToFarenheit(float(value))
+                elif toUnit == "k":
+                    value = self.CelsiusToKelvin(float(value))
+            elif fromUnit == "f":
+                if toUnit == "c":
+                    value = self.FarenheitToCelsius(float(value))
+                elif toUnit == "k":
+                    value = self.FarenheitToKelvin(float(value))
+            elif fromUnit == "k":
+                if toUnit == "c":
+                    value = self.KelvinToCelsius(float(value))
+                elif toUnit == "f":
+                    value = self.KelvinToFarenheit(float(value))
 
             # Return the converted value
             return value
@@ -166,6 +199,9 @@ class Mathematician():
                 if fromUnit == u_[0]:
                     conversionType_Weight = True
                     print("conversionType_Weight:", conversionType_Weight)
+
+            if not conversionType_Distance and not conversionType_Volume and not conversionType_Weight:
+                return False
 
             # Convert the value to the base unit
             if conversionType_Distance:
@@ -234,6 +270,9 @@ class Mathematician():
                 if toUnit == u_[0]:
                     conversionType_Weight = True
                     print("conversionType_Weight:", conversionType_Weight)
+
+            if not conversionType_Distance and not conversionType_Volume and not conversionType_Weight:
+                return False
 
             # Convert the value from the base unit
             if conversionType_Distance:

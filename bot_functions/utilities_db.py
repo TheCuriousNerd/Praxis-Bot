@@ -85,6 +85,16 @@ class Praxis_DB_Connection():
             print("[Praxis_DB_Connection] query error")
             return False
 
+    def deleteItems(self, tableName, rowName, item):
+        try:
+            #self.selfAutoStart()
+            query = "DELETE FROM %s WHERE %s = '%s';" % (tableName, rowName, item)
+            self.dbConnection.execute(query)
+            return True
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return False
+
     import bot_functions.praxis_logging as praxis_logging
     def execQuery(self, query, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
         try:
