@@ -22,63 +22,97 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import time
 import requests
+from json import dumps
 from json import loads
 import datetime
 
-class CryptoStats():
-    class Token():
-        def __init__(self, name, symbol, balance, price, timestamp):
-            self.name = name
-            self.symbol = symbol
-            self.balance = balance
-            self.price = price
-            self.time = timestamp
+from bot_functions import utilities_db
 
+
+class CryptoStats():
     def __init__(self):
-        self.tokens = []
         self.tokenRefreshTime = 60
+        self.db = utilities_db.Praxis_DB_Connection()
+        #self.db.connectionString = "postgresql://PRAXIS_BOT:PRAXISPRAXISPRAXIS@standalone_db_main/PRAXIS_BOT_DB"
+        self.db.startConnection()
+        self.lastAPI_Response = ""
+        self.lastAPI_ResponseTime = None
+
+    def getCryptoPrice(self, targetCrypto:str, cryptoToCompareAgainst:str):
+        # Looks up most recent price of a token in db, if its older than 60 seconds, update it.
+
+        #return str(self.getAPICallResultsFromDB())
+
         self.updateTokens()
+        # for token in self.lastAPI_Response:
+        #     print(token)
+        #     print(type(token))
+        searchSymbol = targetCrypto.upper() + cryptoToCompareAgainst.upper()
+        for token in self.lastAPI_Response:
+            #print(token)
+            if token['symbol'] == searchSymbol:
+                return str(token['price'])
+
 
     def updateTokens(self):
-        self.tokens = []
-        self.tokens.append(CryptoStats.Token("ETH", "ETH", 0, self.get_currentEthPrice(), datetime.datetime.now()))
-        self.tokens.append(CryptoStats.Token("BTC", "BTC", 0, self.get_currentBtcPrice(), datetime.datetime.now()))
+        self.getAPICallResultsFromDB()
+        if self.lastAPI_ResponseTime is None:
+            return self.refreshTokens()
+        elif self.isTokenOlderThan(self.lastAPI_ResponseTime, self.tokenRefreshTime):
+            return self.refreshTokens()
 
-    def isTokenOlderThan(self, token, seconds):
-        return (datetime.datetime.now() - token.time).total_seconds() > seconds
+    def isTokenOlderThan(self, tokenTime, seconds):
+        if tokenTime is None:
+            return True
+        else:
+            return (time.time() - tokenTime) > seconds
 
     def refreshTokens(self):
-        for token in self.tokens:
-            if self.isTokenOlderThan(token, 60):
-                self.updateTokens()
-                break
+        curPrices = self.get_currentPrice_binance()
+        self.lastAPI_Response = curPrices
+        self.lastAPI_ResponseTime = time.time()
+        self.addAPICallToDB()
+        return curPrices
 
-    def get_currentEthPrice(self):
-        url = "https://api.etherscan.io/api?module=stats&action=ethprice"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url, headers=headers)
-        data = loads(response.text)
+    def addAPICallToDB(self):
+        self.db.addAPI_Call("binance", "https://api.binance.com/api/v3/ticker/price", "", "", dumps(self.lastAPI_Response), str(self.lastAPI_ResponseTime))
 
-        return data['result']['ethusd']
+    def getAPICallResultsFromDB(self):
+        try:
+            results = self.db.getAPI_Call("binance")
+            self.lastAPI_Response = loads(results[5])
+            self.lastAPI_ResponseTime = float(results[6])
+        except:
+            pass
+        return results
 
-    def get_currentBtcPrice(self):
+    # def get_currentEthPrice(self):
+    #     url = "https://api.etherscan.io/api?module=stats&action=ethprice"
+    #     headers = {'User-Agent': 'Mozilla/5.0'}
+    #     response = requests.get(url, headers=headers)
+    #     data = loads(response.text)
+
+    #     return data
+
+    def get_currentPrice_binance(self):
         url = "https://api.binance.com/api/v3/ticker/price"
         headers = {'User-Agent': 'Mozilla/5.0'}
         response = requests.get(url, headers=headers)
         data = loads(response.text)
+        return data
 
-        return data['price']
+    # def getEthAddressTokens(self, address):
+    #     url = "https://api.etherscan.io/api?module=account&action=tokentx&address=" + address + "&startblock=0&endblock=999999999&sort=asc&apikey=YourApiKeyToken"
+    #     headers = {'User-Agent': 'Mozilla/5.0'}
+    #     response = requests.get(url, headers=headers)
+    #     data = loads(response.text)
 
-    def getEthAddressTokens(self, address):
-        url = "https://api.etherscan.io/api?module=account&action=tokentx&address=" + address + "&startblock=0&endblock=999999999&sort=asc&apikey=YourApiKeyToken"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url, headers=headers)
-        data = loads(response.text)
+    #     return data['result']
 
-        return data['result']
+
 
 if __name__ == "__main__":
     cs = CryptoStats()
-    print(cs.get_currentEthPrice())
-    print(cs.get_currentBtcPrice())
+    print(cs.getCryptoPrice("ETH", "USDT"))

@@ -35,6 +35,8 @@ from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
 
+from bot_functions import CryptoStats
+
 class Function_getCryptoPrice(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
@@ -58,31 +60,14 @@ class Function_getCryptoPrice(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
-        work = str(args)
+        targetCrypto = args[0]
+        targetCrypto = targetCrypto.upper()
 
+        # Get the current price of the target crypto USD (or other currency)
+        cryptoToCompareAgainst = args[1]
+        cryptoToCompareAgainst = cryptoToCompareAgainst.upper()
+        Searcher = CryptoStats.CryptoStats()
 
-        return work
+        results = Searcher.getCryptoPrice(targetCrypto, cryptoToCompareAgainst)
 
-    def get_currentEthPrice(self):
-        url = "https://api.etherscan.io/api?module=stats&action=ethprice"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url, headers=headers)
-        data = loads(response.text)
-
-        return data['result']['ethusd']
-
-    def get_currentBtcPrice(self):
-        url = "https://api.binance.com/api/v3/ticker/price"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url, headers=headers)
-        data = loads(response.text)
-
-        return data['price']
-
-    def getEthAddressTokens(self, address):
-        url = "https://api.etherscan.io/api?module=account&action=tokentx&address=" + address + "&startblock=0&endblock=999999999&sort=asc&apikey=YourApiKeyToken"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url, headers=headers)
-        data = loads(response.text)
-
-        return data['result']
+        return results

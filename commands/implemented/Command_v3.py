@@ -36,6 +36,8 @@ from commands.command_functions import AbstractCommandFunction, Abstract_Functio
 from bot_functions import utilities_script as utility
 from bot_functions import token_processor
 
+import credentials
+
 import pyparsing
 
 class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):

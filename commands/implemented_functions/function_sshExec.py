@@ -60,10 +60,16 @@ class Function_sshExec(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
-        work = str(args)
+        isFileTransfer = False
+        isContainerCommand = False
+
+        if args[0] == "file":
+            isFileTransfer = True
+        if (args[0] == "stop") or (args[0] == "start") or (args[0] == "restart"):
+            isContainerCommand = True
 
 
-        return work
+        return "work"
 
     class ssh_connection():
         def __init__(self, host, port, username, password):

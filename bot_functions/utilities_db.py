@@ -22,6 +22,8 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import time
+import datetime
 from logging import exception
 import sqlalchemy as db
 
@@ -67,11 +69,11 @@ class Praxis_DB_Connection():
             print("[Praxis_DB_Connection] query error")
             return False
 
-    def doesItemExist(self, tableName, rowName, item):
+    def doesItemExist(self, tableName, columnName, item):
         try:
             print("Searching for item")
             #self.selfAutoStart()
-            query = "SELECT * FROM %s WHERE %s = '%s';" % (tableName, rowName, item)
+            query = "SELECT * FROM %s WHERE %s = '%s';" % (tableName, columnName, item)
             result = self.dbConnection.execute(query)
             print(result)
             for r in result:
@@ -85,15 +87,71 @@ class Praxis_DB_Connection():
             print("[Praxis_DB_Connection] query error")
             return False
 
-    def deleteItems(self, tableName, rowName, item):
+    def deleteItems(self, tableName, columnName, item):
         try:
             #self.selfAutoStart()
-            query = "DELETE FROM %s WHERE %s = '%s';" % (tableName, rowName, item)
+            query = "DELETE FROM %s WHERE %s = %s;" % (tableName, columnName, item)
             self.dbConnection.execute(query)
             return True
         except:
             print("[Praxis_DB_Connection] query error")
             return False
+
+    def insertItem(self, tableName, columnName, item):
+        try:
+            #self.selfAutoStart()
+            query = "INSERT INTO %s (%s) VALUES (%s);" % (tableName, columnName, item)
+            self.dbConnection.execute(query)
+            return True
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return False
+
+    def updateItems(self, tableName, columnName, item, newItem):
+        try:
+            #self.selfAutoStart()
+            query = "UPDATE %s SET %s = %s WHERE %s = %s;" % (tableName, columnName, newItem, columnName, item)
+            self.dbConnection.execute(query)
+            return True
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return False
+
+    def getItemRow(self, tableName, columnName, item):
+        try:
+            #self.selfAutoStart()
+            query = "SELECT * FROM %s WHERE %s = %s;" % (tableName, columnName, item)
+            result = self.dbConnection.execute(query)
+            for r in result:
+                return r
+            return None
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return None
+
+    def addAPI_Call(self, APIname, url, method, parameters, response, timeStamp):
+        try:
+            self.selfAutoStart()
+            query = "INSERT INTO external_api_v0 (name, url, method, parameters, response, time) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (APIname, url, method, parameters, response, str(timeStamp))
+            result = self.dbConnection.execute(query)
+            return True
+        except:
+            print("[Praxis_DB_Connection] query error")
+
+    def getAPI_Call(self, APIname):
+        try:
+            self.selfAutoStart()
+            query = "SELECT * FROM external_api_v0 WHERE name = '%s';" % APIname
+            result = self.dbConnection.execute(query)
+            results = None
+            for r in result:
+                    #praxis_logger_obj.log("query results:")
+                    #praxis_logger_obj.log(r)
+                    results = r
+            return results
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return None
 
     import bot_functions.praxis_logging as praxis_logging
     def execQuery(self, query, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):

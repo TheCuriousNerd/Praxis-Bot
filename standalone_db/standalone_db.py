@@ -118,6 +118,8 @@ def init():
     setup_basicCommands()
     create_basicCommands()
 
+    createExternalAPI_Tables()
+
 
 # Basic Data Table Functions
 
@@ -199,6 +201,9 @@ def create_basicCommands():
     create_basicCommand("!math", "$(#*) = $(math $(#*))")
     create_basicCommand("!presentdaypresenttime", "The current date and time is: $(date %Y-%m-%d %H:%M:%S)")
     create_basicCommand("!curdaytime", "The current date and time is: $(date $(#*))")
+    create_basicCommand("!convertunit", "$(#0) $(#1) = $(math_unitConversion $(#*)) $(#2)")
+
+    create_basicCommand("!cryptoprice", "The current price of $(#0) against $(#1) is $(getCryptoPrice $(#0) $(#1))")
 
     #create_basicCommand("!chyron", "$(chyron $(#*))")
     #create_basicCommand("!roll", "$(roll $(#*))")
@@ -223,6 +228,29 @@ def create_basicCommand(commandName:str, commandReponse:str):
         #print(query)
         results = db_obj.execQuery(query)
         #print(str(results))
+
+# External Api Functions
+def createExternalAPI_Tables():
+    #global db_obj
+    #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+    try:
+        if db_obj.doesTableExist("external_api_v0") == False:
+            query = (
+                'CREATE TABLE external_api_v0 ('
+                'id SERIAL, '
+                'name TEXT, '
+                'url TEXT, '
+                'method TEXT, '
+                'parameters TEXT, '
+                'response TEXT, '
+                'time TEXT);'
+                )
+            print(query)
+            db_obj.execQuery(query)
+            praxis_logger_obj.log("[Table Created]: (external_api_v0)")
+    except:
+        praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (external_api_v0)")
+
 
 
 # API Stuff
