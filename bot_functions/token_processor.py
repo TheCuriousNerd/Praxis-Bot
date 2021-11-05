@@ -56,7 +56,10 @@ class Token_Processor():
         #tempArg = commandRawInput.split("( )")
         tempArg = re.split("( )", commandRawInput)
         tempArg.pop(0)
-        tempArg.pop(0)
+        try:
+            tempArg.pop(0)
+        except:
+            pass
         tempArg = self.cleanupTempArgs(tempArg)
         print("\ntempArgs:")
         for t in tempArg:
@@ -398,7 +401,10 @@ class Token_Processor():
 
                 tempArg = re.split("( )", commandRawInput)
                 tempArg.pop(0)
-                tempArg.pop(0)
+                try:
+                    tempArg.pop(0)
+                except:
+                    pass
                 tempArg = self.cleanupTempArgs(tempArg)
 
                 #skipFirst = True
@@ -454,13 +460,16 @@ def lookupCommandResponse(input):
     if input == "!math2":
         response = "$(#*) = $(math 2 + 2)"
         return response
+    if input == "!date":
+        response = "The current date and time is: $(datetime %Y-%m-%d)"
+        return response
 
     return response
 
 if __name__ == '__main__':
     testModule = Token_Processor()
 
-    commandName = "!math"
+    commandName = "!date"
     commandRawInput = "%s 2+2" % (commandName)
     #commandRawInput2 = "!testerino GG    "
     commandReponse = lookupCommandResponse(commandName)
