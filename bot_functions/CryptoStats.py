@@ -33,7 +33,7 @@ from bot_functions import utilities_db
 
 class CryptoStats():
     def __init__(self):
-        self.tokenRefreshTime = 60
+        self.tokenRefreshTime:float = 60
         self.db = utilities_db.Praxis_DB_Connection()
         #self.db.connectionString = "postgresql://PRAXIS_BOT:PRAXISPRAXISPRAXIS@standalone_db_main/PRAXIS_BOT_DB"
         self.db.startConnection()
@@ -42,10 +42,11 @@ class CryptoStats():
 
     def getCryptoPrice(self, targetCrypto:str, cryptoToCompareAgainst:str):
         # Looks up most recent price of a token in db, if its older than 60 seconds, update it.
-
         #return str(self.getAPICallResultsFromDB())
 
+        #tempR = str(self.shouldICallAPI())
         self.updateTokens()
+
         # for token in self.lastAPI_Response:
         #     print(token)
         #     print(type(token))
@@ -75,6 +76,9 @@ class CryptoStats():
         self.lastAPI_ResponseTime = time.time()
         self.addAPICallToDB()
         return curPrices
+
+    def shouldICallAPI(self):
+        return self.db.shouldICallAPI("binance", self.tokenRefreshTime)
 
     def addAPICallToDB(self):
         self.db.addAPI_Call("binance", "https://api.binance.com/api/v3/ticker/price", "", "", dumps(self.lastAPI_Response), str(self.lastAPI_ResponseTime))

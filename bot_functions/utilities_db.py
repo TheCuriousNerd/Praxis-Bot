@@ -90,7 +90,7 @@ class Praxis_DB_Connection():
     def deleteItems(self, tableName, columnName, item):
         try:
             #self.selfAutoStart()
-            query = "DELETE FROM %s WHERE %s = %s;" % (tableName, columnName, item)
+            query = "DELETE FROM %s WHERE %s = '%s';" % (tableName, columnName, item)
             self.dbConnection.execute(query)
             return True
         except:
@@ -110,7 +110,7 @@ class Praxis_DB_Connection():
     def updateItems(self, tableName, columnName, item, newItem):
         try:
             #self.selfAutoStart()
-            query = "UPDATE %s SET %s = %s WHERE %s = %s;" % (tableName, columnName, newItem, columnName, item)
+            query = "UPDATE %s SET %s = %s WHERE %s = '%s';" % (tableName, columnName, newItem, columnName, item)
             self.dbConnection.execute(query)
             return True
         except:
@@ -120,7 +120,7 @@ class Praxis_DB_Connection():
     def getItemRow(self, tableName, columnName, item):
         try:
             #self.selfAutoStart()
-            query = "SELECT * FROM %s WHERE %s = %s;" % (tableName, columnName, item)
+            query = "SELECT * FROM %s WHERE %s = '%s';" % (tableName, columnName, item)
             result = self.dbConnection.execute(query)
             for r in result:
                 return r
@@ -137,6 +137,21 @@ class Praxis_DB_Connection():
             return True
         except:
             print("[Praxis_DB_Connection] query error")
+
+    def shouldICallAPI(self, APIname, seconds):
+        try:
+            self.selfAutoStart()
+            query = "SELECT * FROM external_api_v0 WHERE name = '%s';" % APIname
+            result = self.dbConnection.execute(query)
+            results = None
+            for r in result:
+                results = r
+            lastCalled = float(results[6])
+            currentTime = time.time()
+            return (currentTime - lastCalled) > seconds
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return False
 
     def getAPI_Call(self, APIname):
         try:
