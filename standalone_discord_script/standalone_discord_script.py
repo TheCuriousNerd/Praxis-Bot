@@ -148,7 +148,8 @@ class Discord_Module(discord.Client):
             data = loads(resp.text)
             msg = data['message']
             if msg is not None:
-                await self.send_message(realMessage, msg)
+                #await self.send_message(realMessage, msg)
+                await self.send_message_to_channel(realMessage.channel.id, msg)
         else:
             # todo handle failed requests
             pass
@@ -157,9 +158,19 @@ class Discord_Module(discord.Client):
         isBlocked = await self.isChannel_inConfigList(str(message.channel.id), config.block_DiscordChannelsMessaging)
         if self.cooldownModule.isCooldownActive("discordRateLimit") == False and not isBlocked and not config.blockAll_DiscordChannelsMessaging:
             if not utility.contains_slur(response):
-                await message.channel.send(response)
+                await message.channel.send(message.channel.id)
 
                 self.cooldownModule.actionTrigger("discordRateLimit")
+
+    async def send_message_to_channel(self, channel, message):
+        isBlocked = await self.isChannel_inConfigList(str(channel), config.block_DiscordChannelsMessaging)
+        if self.cooldownModule.isCooldownActive("discordRateLimit") == False and not isBlocked and not config.blockAll_DiscordChannelsMessaging:
+            if not utility.contains_slur(message):
+                destChannel = self.get_channel(channel)
+                await destChannel.send(message)
+
+                self.cooldownModule.actionTrigger("discordRateLimit")
+
 
     # Checks if Sender is bot.
     async def isSenderBot(self, message: discord.Message):
