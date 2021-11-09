@@ -24,6 +24,8 @@
 
 import random
 import re
+
+from discord import client
 import bot_functions.utilities_script as utility
 from json import loads
 from urllib.parse import urlencode
@@ -67,7 +69,12 @@ class Discord_Module(discord.Client):
         # don't freak out, this is *merely* a regex for matching urls that will hit just about everything
         self._urlMatcher = re.compile(
             "(https?:(/{1,3}|[a-z0-9%])|[a-z0-9.-]+[.](com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw))")
-
+        self.guild = discord.Object(id=197565046916775945)
+        self.commands = [
+            discord.ApplicationCommand(
+                name="math",
+                description="Does some math"),
+        ]
 
     async def startup(self):
         await self.start(self.discordCredential.token)
@@ -79,6 +86,23 @@ class Discord_Module(discord.Client):
 
     async def on_ready(self):
         print('Logged on as', self.user)
+
+    def newMain(self):
+        self.loop.create_task(self.newStartup())
+        self.loop.run_forever()
+
+    async def newStartup(self):
+            await self.login(self.discordCredential.token)
+            #await self.register_application_commands(None)
+            await self.register_application_commands(self.commands)
+            await self.connect()
+
+    async def on_slash_command(interaction: discord.Interaction):
+        cmdName = interaction.command_name
+        interaction.response.send_message(f"You called {cmdName}")
+
+
+
 
     async def on_message(self, message: discord.Message):
         print("{" + message.guild.name + "}[ " + str(message.channel) + " ](" + message.author.display_name + ")> ")
@@ -268,4 +292,4 @@ if __name__ == "__main__":
     credentials_manager.load_credentials()
     testModule.discordCredential = credentials_manager.find_Discord_Credential(config.credentialsNickname)
 
-    testModule.main()
+    testModule.newMain()

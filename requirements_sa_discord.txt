@@ -1,5 +1,6 @@
 BadWordObfuscator
-discord.py
+novus
+PyNaCl
 psutil
 art
 SQLAlchemy
