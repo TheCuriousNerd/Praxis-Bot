@@ -94,13 +94,16 @@ class Discord_Module(discord.Client):
     async def newStartup(self):
             await self.login(self.discordCredential.token)
             #await self.register_application_commands(None)
-            await self.register_application_commands(self.commands)
+            #await self.register_application_commands(self.commands)
             await self.connect()
 
-    async def on_slash_command(interaction: discord.Interaction):
-        cmdName = interaction.command_name
-        interaction.response.send_message(f"You called {cmdName}")
-
+    async def on_slash_command(self, interaction: discord.Interaction):
+        praxis_logger_obj.log("\n -Slash Command: " + str(interaction.command_name))
+        if interaction:
+            cmdName = interaction.command_name
+            await interaction.response.send_message("You called %s" % cmdName)
+        else:
+            await interaction.response.send_message("You called a slash command")
 
 
 
