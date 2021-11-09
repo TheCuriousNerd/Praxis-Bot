@@ -22,6 +22,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get install python3.8-dev
 RUN apt-get install libnacl-dev
 RUN apt-get install libffi-dev
+RUN apt-get install -y ffmpeg
 
 COPY requirements_sa_discord.txt requirements_sa_discord.txt
 RUN pip3 install -r requirements_sa_discord.txt
