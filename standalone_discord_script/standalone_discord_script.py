@@ -22,10 +22,13 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import abc
 import random
 import re
 
 from discord import client
+from discord.types.snowflake import Snowflake
+from discord.voice_client import VoiceClient
 import bot_functions.utilities_script as utility
 from json import loads
 from urllib.parse import urlencode
@@ -102,8 +105,22 @@ class Discord_Module(discord.Client):
         if interaction:
             cmdName = interaction.command_name
             await interaction.response.send_message("You called %s" % cmdName)
+            await self.voiceTest()
+            await self.send_message_to_channel(835319293981622302, "slash command extra")
         else:
             await interaction.response.send_message("You called a slash command")
+
+
+    async def voiceTest(self):
+        praxis_logger_obj.log("\n -Voice Test")
+        self.VC_Channel:discord.channel.VoiceChannel = self.get_channel(812662889008594944)
+        praxis_logger_obj.log("About to Connect")
+        await self.VC_Channel.connect()
+        #praxis_logger_obj.log("\n -Voice Channel: " + str(self.VC_Channel))
+        #praxis_logger_obj.log("\n -Voice Channel Type: " + str(type(self.VC_Channel)))
+
+        #await self.VC.move_to(self.VC_Channel)
+        #await self.VC_Channel
 
 
 
