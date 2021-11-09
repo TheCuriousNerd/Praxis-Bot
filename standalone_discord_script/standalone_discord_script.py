@@ -73,7 +73,7 @@ class Discord_Module(discord.Client):
         self.commands = [
             discord.ApplicationCommand(
                 name="math",
-                description="Does some math"),
+                description="Solves your math problem."),
         ]
 
     async def startup(self):
