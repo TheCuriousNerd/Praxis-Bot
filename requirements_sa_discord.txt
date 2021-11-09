@@ -1,7 +1,8 @@
 BadWordObfuscator
-novus
+novus[voice]
 PyNaCl
 psutil
 art
 SQLAlchemy
 requests
+youtube_dl

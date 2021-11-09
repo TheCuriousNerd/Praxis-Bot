@@ -7,7 +7,7 @@ pandas
 numpy
 gTTS
 playsound
-novus
+novus[voice]
 PyNaCl
 psutil
 art
@@ -19,3 +19,4 @@ pyparsing
 psycopg2
 numexpr
 paramiko
+youtube_dl

@@ -78,23 +78,25 @@ class Discord_Module(discord.Client):
                 name="math",
                 description="Solves your math problem."),
         ]
+        self.VC_Channel:discord.channel.VoiceChannel = None
+        self.voiceClient = None
 
-    async def startup(self):
-        await self.start(self.discordCredential.token)
+    # async def startup(self):
+    #     await self.start(self.discordCredential.token)
 
-    def main(self):
-        print("starting loop")
-        self.loop.create_task(self.startup())
-        self.loop.run_forever()
+    # def main(self):
+    #     print("starting loop")
+    #     self.loop.create_task(self.startup())
+    #     self.loop.run_forever()
 
     async def on_ready(self):
         print('Logged on as', self.user)
 
-    def newMain(self):
-        self.loop.create_task(self.newStartup())
+    def main(self):
+        self.loop.create_task(self.startup())
         self.loop.run_forever()
 
-    async def newStartup(self):
+    async def startup(self):
             await self.login(self.discordCredential.token)
             #await self.register_application_commands(None)
             #await self.register_application_commands(self.commands)
@@ -106,7 +108,7 @@ class Discord_Module(discord.Client):
             cmdName = interaction.command_name
             await interaction.response.send_message("You called %s" % cmdName)
             await self.voiceTest()
-            await self.send_message_to_channel(835319293981622302, "slash command extra")
+            #await self.send_message_to_channel(835319293981622302, str(utility.get_dir("tts")))
         else:
             await interaction.response.send_message("You called a slash command")
 
@@ -115,7 +117,10 @@ class Discord_Module(discord.Client):
         praxis_logger_obj.log("\n -Voice Test")
         self.VC_Channel:discord.channel.VoiceChannel = self.get_channel(812662889008594944)
         praxis_logger_obj.log("About to Connect")
-        await self.VC_Channel.connect()
+        self.voiceClient:discord.VoiceClient = await self.VC_Channel.connect()
+        audioFile = utility.get_dir("tts") + "/70446e1d94b6c504c456e35251c18ae9_tts.mp3"
+        player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(audioFile))
+        self.voiceClient.play(player)
         #praxis_logger_obj.log("\n -Voice Channel: " + str(self.VC_Channel))
         #praxis_logger_obj.log("\n -Voice Channel Type: " + str(type(self.VC_Channel)))
 
@@ -312,4 +317,4 @@ if __name__ == "__main__":
     credentials_manager.load_credentials()
     testModule.discordCredential = credentials_manager.find_Discord_Credential(config.credentialsNickname)
 
-    testModule.newMain()
+    testModule.main()
