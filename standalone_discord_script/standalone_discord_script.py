@@ -107,7 +107,8 @@ class Discord_Module(discord.Client):
         if interaction:
             cmdName = interaction.command_name
             await interaction.response.send_message("You called %s" % cmdName)
-            await self.voiceTest()
+            #await self.voiceTest()
+            await self.move_user_to_voice_channel(interaction.user.id, 663970225821188096)
             #await self.send_message_to_channel(835319293981622302, str(utility.get_dir("tts")))
         else:
             await interaction.response.send_message("You called a slash command")
@@ -115,10 +116,10 @@ class Discord_Module(discord.Client):
 
     async def voiceTest(self):
         praxis_logger_obj.log("\n -Voice Test")
-        self.VC_Channel:discord.channel.VoiceChannel = self.get_channel(812662889008594944)
+        self.VC_Channel:discord.channel.VoiceChannel = self.get_channel(663970225821188096)
         praxis_logger_obj.log("About to Connect")
         self.voiceClient:discord.VoiceClient = await self.VC_Channel.connect()
-        audioFile = utility.get_dir("tts") + "/70446e1d94b6c504c456e35251c18ae9_tts.mp3"
+        audioFile = utility.get_dir("tts") + "/Pancake_Wow.mp3"
         player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(audioFile))
         self.voiceClient.play(player)
         #praxis_logger_obj.log("\n -Voice Channel: " + str(self.VC_Channel))
@@ -126,8 +127,23 @@ class Discord_Module(discord.Client):
 
         #await self.VC.move_to(self.VC_Channel)
         #await self.VC_Channel
+        waitBool = True
+        while waitBool:
+            if self.voiceClient.is_playing():
+                await asyncio.sleep(1)
+            else:
+                waitBool = False
+        await self.voiceClient.disconnect()
 
 
+    async def move_user_to_voice_channel(self, userID, newChannelID):
+        praxis_logger_obj.log("\n -Move User To Voice Channel")
+        guildData:discord.Guild = self.get_guild(self.guild.id)
+        praxis_logger_obj.log("\n -Guild: " + str(guildData))
+        memberData = await guildData.fetch_member(userID)
+        praxis_logger_obj.log("\n -Member: " + str(memberData))
+        await memberData.move_to(self.get_channel(newChannelID))
+        praxis_logger_obj.log("\n -Moved User To Voice Channel")
 
     async def on_message(self, message: discord.Message):
         print("{" + message.guild.name + "}[ " + str(message.channel) + " ](" + message.author.display_name + ")> ")
