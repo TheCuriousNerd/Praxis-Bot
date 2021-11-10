@@ -108,7 +108,7 @@ class Discord_Module(discord.Client):
             cmdName = interaction.command_name
             await interaction.response.send_message("You called %s" % cmdName)
             #await self.voiceTest()
-            await self.move_user_to_voice_channel(interaction.user.id, 663970225821188096)
+            #await self.move_user_to_voice_channel(interaction.user.id, 663970225821188096)
             #await self.send_message_to_channel(835319293981622302, str(utility.get_dir("tts")))
         else:
             await interaction.response.send_message("You called a slash command")
@@ -119,7 +119,7 @@ class Discord_Module(discord.Client):
         self.VC_Channel:discord.channel.VoiceChannel = self.get_channel(663970225821188096)
         praxis_logger_obj.log("About to Connect")
         self.voiceClient:discord.VoiceClient = await self.VC_Channel.connect()
-        audioFile = utility.get_dir("tts") + "/Pancake_Wow.mp3"
+        audioFile = utility.get_dir("tts") + "/68e2183965ed238c82d138030b82986f_tts.mp3"
         player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(audioFile))
         self.voiceClient.play(player)
         #praxis_logger_obj.log("\n -Voice Channel: " + str(self.VC_Channel))
