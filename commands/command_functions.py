@@ -67,7 +67,7 @@ class AbstractCommandFunction(metaclass=ABCMeta):
         return self.helpText
 
     @abstractmethod
-    def do_function(self, user, functionName, args, bonusData):
+    def do_function(self, tokenSource, user, functionName, args, bonusData):
         pass
 
 import bot_functions.praxis_logging as praxis_logging

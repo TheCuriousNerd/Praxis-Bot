@@ -54,7 +54,7 @@ class Function_sshExec(AbstractCommandFunction, metaclass=ABCMeta):
             bonusFunctionData = None
             )
 
-    def do_function(self, user, functionName, args, bonusData):
+    def do_function(self, tokenSource, user, functionName, args, bonusData):
         output = self.do_work(user, functionName, args, bonusData)
 
         return output

@@ -99,7 +99,7 @@ def is_command(command: str) -> bool:
         praxis_logger_obj.log(log_)
         return False
 
-def handle_command(source, username, command, rest, bonusData):
+def handle_command(source, username, userID, command, rest, bonusData):
     praxis_logger_obj.log("trying to handle command:")
     praxis_logger_obj.log(command)
 
@@ -140,13 +140,13 @@ def handle_command(source, username, command, rest, bonusData):
     if v3Flag is True:
         if cmd_v3 is not None:
             cmd_v3.loadedFunctions = loadedFunctions
-            cmd_results_v3 = cmd_v3.do_command(source, username, command, rest, bonusData)
+            cmd_results_v3 = cmd_v3.do_command(source, username, userID, command, rest, bonusData)
             praxis_logger_obj.log("COMMAND RESULTS V3:")
             praxis_logger_obj.log(cmd_results_v3)
             return flask.make_response("{\"message\":\"%s\"}" % cmd_results_v3, 200, {"Content-Type": "application/json"})
     else:
         if cmd is not None:
-            cmd_response = cmd.do_command(source, username, command, rest, bonusData)
+            cmd_response = cmd.do_command(source, username, userID, command, rest, bonusData)
             praxis_logger_obj.log("COMMAND RESULTS:")
             praxis_logger_obj.log(cmd_response)
             return flask.make_response("{\"message\":\"%s\"}" % cmd_response, 200, {"Content-Type": "application/json"})
@@ -197,7 +197,12 @@ def exec_command():
     else:
         username = request.args['user_name']
 
-    return handle_command(request.args['command_source'], username, request.args['command_name'], request.args['rest'], request.args['bonus_data'])
+    if 'user_id' not in request.args:
+        userID = "0"
+    else:
+        userID = request.args['user_id']
+
+    return handle_command(request.args['command_source'], username, userID, request.args['command_name'], request.args['rest'], request.args['bonus_data'])
 
 @api.route('/api/v1/get_list/all', methods=['GET'])
 def get_list():

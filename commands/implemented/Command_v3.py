@@ -57,7 +57,7 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         self.helpText = Command_v3.helpText
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User", userID = "0",  command = "", rest = "", bonusData = None):
         # Command Example:
         # Idea: "!roll $(#0))" = "!roll d20"
         # Command: "!roll"
@@ -82,7 +82,7 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
 
         tokenWorker = token_processor.Token_Processor()
         #tokenWorker.loadedFunctions = function_loader.load_functions(AbstractCommandFunction.FunctionType.ver0)
-        tokenWorker_Results = tokenWorker.parseTokenResponse(user, commandRawInput, v3cmd_response)
+        tokenWorker_Results = tokenWorker.parseTokenResponse(user, userID, commandRawInput, v3cmd_response, source)
         returnString = tokenWorker_Results
 
         return returnString

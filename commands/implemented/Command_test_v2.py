@@ -40,7 +40,7 @@ class Command_test_v2(AbstractCommand, metaclass=ABCMeta):
         "\nExample:","testerino"]
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User", userID = "0",  command = "", rest = "", bonusData = None):
         returnString = user + " sent: [ " + command + " ] with: " + rest
         #print(returnString)
         return returnString

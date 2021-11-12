@@ -48,7 +48,10 @@ class Token_Processor():
         pass
 
     #Commands will call this function to parse tokens in the response string.
-    def parseTokenResponse(self, userData, commandRawInput:str, command_returnString):
+    def parseTokenResponse(self, userData, userID, commandRawInput:str, command_returnString, tokenSource):
+        combinedUserData = {}
+        combinedUserData["userData"] = userData
+        combinedUserData["userID"] = userID
         commandArguments = utility.get_args(commandRawInput)
         #This removes the command from the arguments
         commandArguments.pop(0)
@@ -65,7 +68,7 @@ class Token_Processor():
         for t in tempArg:
             print(t)
 
-        response = self.stringFunctionParser(command_returnString, tempArg, userData, commandRawInput)
+        response = self.stringFunctionParser(command_returnString, tempArg, combinedUserData, commandRawInput, tokenSource)
         return response
 
     def cleanupTempArgs(self, input:list):
@@ -161,7 +164,8 @@ class Token_Processor():
             input:str = "",
             arguments:list = [],
             userData = "",
-            commandRawInput = ""
+            commandRawInput = "",
+            tokenSource = None
             ):
         output = None
         results = self.searchPrep(input)
@@ -194,11 +198,11 @@ class Token_Processor():
 
                                 if "#" in data:
                                     selectedToken = TokenType.ARGUMENT
-                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput, rawReturnString)
+                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput, rawReturnString, tokenSource)
                                     #print(currentString)
                                 elif "@" in data:
                                     selectedToken = TokenType.VARIABLE
-                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput, rawReturnString)
+                                    currentString = self.processToken(currentString, data, arguments, selectedToken, userData, commandRawInput, rawReturnString, tokenSource)
                                     #print(currentString)
                                 else:
                                     selectedToken = TokenType.FUNCTION
@@ -206,7 +210,7 @@ class Token_Processor():
                                     NoArgzNoVars = self.hasArgzOrVars(input)
                                     if NoArgzNoVars == False:
                                         #print("FUNCTION Time" + str(inputData_))
-                                        currentString = self.processToken(currentString, inputData_[0], arguments, selectedToken, userData, commandRawInput, rawReturnString)
+                                        currentString = self.processToken(currentString, inputData_[0], arguments, selectedToken, userData, commandRawInput, rawReturnString, tokenSource)
                                         #print(currentString)
                                         break
                             else:
@@ -264,7 +268,7 @@ class Token_Processor():
         return output
 
 
-    def processToken(self, input:str, data, arguments, targetToken, userData, commandRawInput, rawReturnString):
+    def processToken(self, input:str, data, arguments, targetToken, userData, commandRawInput, rawReturnString, tokenSource):
         returnString = input
         #print("running a thing!")
         #print(str(data) + " is about to run!\n")
@@ -381,7 +385,7 @@ class Token_Processor():
                     print(functionName)
                     print(reResults_formated_temp_)
 
-                    functionResults = self.run_function(userData, functionName, reResults_formated_temp_)
+                    functionResults = self.run_function(userData, functionName, reResults_formated_temp_, tokenSource)
                     print("\nFunction Results:")
                     print(functionResults)
                     oldString, newString = prepStringReplacement(newString = str(functionResults))
@@ -437,13 +441,13 @@ class Token_Processor():
         except:
             return False
 
-    def run_function(self, user, function, args):
+    def run_function(self, user, function, args, tokenSource):
             try:
                 self.functionCounter.count(function)
 
                 function_:AbstractCommandFunction = self.loadedFunctions[function]
                 if function_ is not None:
-                    function_response = function_.do_function(user, function, args, None)
+                    function_response = function_.do_function(tokenSource, user, function, args, None)
                     return function_response
             except:
                 return "{Function Error}"
@@ -472,15 +476,15 @@ if __name__ == '__main__':
     commandName = "!date"
     commandRawInput = "%s 2+2" % (commandName)
     #commandRawInput2 = "!testerino GG    "
-    commandReponse = lookupCommandResponse(commandName)
+    commandResponse = lookupCommandResponse(commandName)
 
     testModule.setup()
     print("\n")
-    testResponse = testModule.parseTokenResponse("TestUser", commandRawInput, commandReponse)
+    testResponse = testModule.parseTokenResponse("TestUser", commandRawInput, commandResponse, None)
     print("\ncommandRaw:\n" + commandRawInput)
-    print("\ncommandReponse:\n" + commandReponse)
+    print("\ncommandReponse:\n" + commandResponse)
     print("\nresult:\n" + testResponse + "\n")
-    # testResponse = testModule.parseTokenResponse("TestUser", commandRawInput2, commandReponse)
+    # testResponse = testModule.parseTokenResponse("TestUser", commandRawInput2, commandResponse)
     # print("\ncommandRaw:\n" + commandRawInput)
     # print("\ncommandReponse:\n" + commandReponse)
     # print("\nresult:\n" + testResponse + "\n")

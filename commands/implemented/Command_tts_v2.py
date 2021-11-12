@@ -54,7 +54,7 @@ class Command_tts_v2(AbstractCommand, metaclass=ABCMeta):
         "\nExample:","tts \"TEXT\""]
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user:str = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user:str = "User", userID = "0",  command = "", rest = "", bonusData = None):
         returnString = user + " sent a tts command!"
         praxis_logger_obj.log("\n Command>: " + command + rest)
 

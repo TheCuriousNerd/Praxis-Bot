@@ -55,7 +55,7 @@ class Command_pride_v2(AbstractCommand, metaclass=ABCMeta):
         self.isCommandEnabled = True
         self.threads = []
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User", userID = "0",  command = "", rest = "", bonusData = None):
         returnString = ""
         praxis_logger_obj.log("\n Command>: " + command + rest)
         isTwitch = False

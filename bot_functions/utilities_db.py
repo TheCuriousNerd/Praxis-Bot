@@ -168,6 +168,34 @@ class Praxis_DB_Connection():
             print("[Praxis_DB_Connection] query error")
             return None
 
+    def getTasksFromQueue(self, targetSystem):
+        try:
+            self.selfAutoStart()
+            query = "SELECT * FROM task_queue_v0 WHERE target_standalone_system = '%s';" % targetSystem
+            result = self.dbConnection.execute(query)
+            results = []
+            for r in result:
+                results.append(r)
+            return results
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return None
+
+    def add_taskToQueue(self, target_standalone_system:str, name:str, time:str, command:str, parameters:str, bonus_data:str):
+        try:
+            self.selfAutoStart()
+            query = (
+            'INSERT INTO task_queue_v0 '
+            '(target_standalone_system, name, time, command, parameters, bonus_data) '
+            'VALUES (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');' % (target_standalone_system, name, time, command, parameters, bonus_data)
+            )
+            result = self.dbConnection.execute(query)
+            return True
+        except:
+            print("[Praxis_DB_Connection] query error")
+            return None
+
+
     import bot_functions.praxis_logging as praxis_logging
     def execQuery(self, query, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
         try:

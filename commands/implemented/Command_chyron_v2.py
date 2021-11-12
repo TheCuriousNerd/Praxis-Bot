@@ -52,7 +52,7 @@ class Command_chyron_v2(AbstractCommand, metaclass=ABCMeta):
         "\nExample:","chyron update \"RIGHTNOW\""]
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User", userID = "0",  command = "", rest = "", bonusData = None):
         returnString = "trying to update chyron..."
         praxis_logger_obj.log("\n [" + user + "] Command>: " + command + " " + rest)
 
