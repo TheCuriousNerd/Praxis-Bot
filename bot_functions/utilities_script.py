@@ -42,7 +42,7 @@ def contains_url(input: str):
     return containsURL
 
 def contains_pattern(input:str, pattern):
-    containsFileEXT = re.search(pattern, input.lower()) is not None
+    return re.search(pattern, input.lower()) is not None
 
 def get_args(text: str) -> list:
     return text.split(" ")

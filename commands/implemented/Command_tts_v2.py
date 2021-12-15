@@ -34,8 +34,6 @@ import re
 
 import config
 
-import discord
-
 import os
 import bot_functions.praxis_logging as praxis_logging
 praxis_logger_obj = praxis_logging.praxis_logger()

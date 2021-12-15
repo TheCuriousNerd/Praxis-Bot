@@ -23,9 +23,10 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import abc
+from operator import isub
 import random
 import re
-from time import time
+import time
 
 from discord import client
 from discord.types.snowflake import Snowflake
@@ -34,6 +35,8 @@ import bot_functions.utilities_script as utility
 import bot_functions.utilities_db
 from json import loads
 from urllib.parse import urlencode
+
+from json import dump, loads
 
 import requests
 
@@ -143,8 +146,8 @@ class Discord_Module(discord.Client):
                 description="Solves your math problem.",
                 options=[discord.ApplicationCommandOption(
                     name="equation",
-                    description="The equation to solve.",
-                    type=discord.ApplicationCommandOptionType.string
+                    description="The equation you want to solve.",
+                    type=discord.ApplicationCommandOptionType.string,
                     )],
                 ),
             discord.ApplicationCommand(
@@ -153,7 +156,8 @@ class Discord_Module(discord.Client):
                 options=[discord.ApplicationCommandOption(
                     name="input",
                     description="The input data.",
-                    type=discord.ApplicationCommandOptionType.string
+                    type=discord.ApplicationCommandOptionType.string,
+                    required=False
                     )],
                 ),
         ]
@@ -168,6 +172,19 @@ class Discord_Module(discord.Client):
         self.DB = bot_functions.utilities_db.Praxis_DB_Connection()
         self.tasks = []
 
+
+    def main(self):
+        self.loop.create_task(self.task_lookup_Loop())
+        self.loop.create_task(self.startup())
+        self.loop.run_forever()
+
+    async def startup(self):
+            await self.login(self.discordCredential.token)
+            #await self.register_application_commands(None)
+            await self.setupCommands()
+            await self.register_application_commands(self.commands)
+            await self.connect()
+
     # async def startup(self):
     #     await self.start(self.discordCredential.token)
 
@@ -179,21 +196,62 @@ class Discord_Module(discord.Client):
     #async def api_startup(self):
     #    api.run(host='0.0.0.0', port=42048)
 
+    async def setupCommands(self):
+        defaultOptions=[discord.ApplicationCommandOption(
+                        name="input",
+                        description="Command input data.",
+                        type=discord.ApplicationCommandOptionType.string,
+                        required=False
+                        )]
+        commandsToAdd = [
+            {"name":"play", "description":"Plays audio in voice channel.", "options":defaultOptions},
+            {"name":"playnext", "description":"Adds audio to the next slot in the queue.", "options":defaultOptions},
+            {"name":"stop", "description":"Stops audio being played in the voice channel.", "options":[]},
+            {"name":"pause", "description":"Pauses audio being playing in the voice channel.", "options":[]},
+            {"name":"resume", "description":"Resumes audio being playing in the voice channel.", "options":[]},
+            {"name":"skip", "description":"Skips audio being played to the next audio in the queue in the voice channel.", "options":[]},
+            {"name":"clear", "description":"Clears the queue.", "options":[]},
+            {"name":"volume", "description":"Changes the volume.", "options":defaultOptions},
+            {"name":"loop", "description":"Enables/Disables the looping of the queue.", "options":defaultOptions},
+            {"name":"repeat", "description":"Enables/Disables the repeat of an audio.", "options":defaultOptions},
+            {"name":"shuffle", "description":"Shuffles the queue.", "options":defaultOptions},
+            {"name":"join", "description":"Joins a voice channel.", "options":defaultOptions},
+            {"name":"leave", "description":"Leaves the voice channel.", "options":[]},
+        ]
+        for command_ in commandsToAdd:
+            newCommand = discord.ApplicationCommand(
+                    name=command_["name"],
+                    description=command_["description"],
+                    options=command_["options"],
+                    )
+            self.commands.append(newCommand)
+
     async def task_lookup_Loop(self):
         await self.wait_until_ready()
         while not self.is_closed():
-            praxis_logger_obj.log(" -Discord: task_lookup_Loop()")
-            await asyncio.sleep(60)
+            #praxis_logger_obj.log(" -Discord: task_lookup_Loop()")
+            await self.getTasks()
+            await self.task_Loop()
+            await asyncio.sleep(10)
 
     async def getTasks(self):
         self.tasks = self.DB.getTasksFromQueue("standalone_discord")
-
-    async def task_Loop(self):
         for task in self.tasks:
             try:
-                await self.task_handler(task)
-            finally:
                 await self.deleteTaskFromDB(task)
+            except Exception as e:
+                praxis_logger_obj.log("Error deleting task from DB: " + str(e))
+
+    async def addTask(self, task):
+        self.tasks.append(task)
+
+    async def task_Loop(self):
+        if self.tasks is not None:
+            for task in self.tasks:
+                try:
+                    await self.task_handler(task)
+                except:
+                    pass
 
     async def task_handler(self, task):
         if task[2] == "voice":
@@ -243,7 +301,7 @@ class Discord_Module(discord.Client):
 
 
     async def prepTrack(self, task):
-        preppedTrack:dict = loads(task[5])
+        preppedTrack:dict = task[5]
         if preppedTrack["type"] == "file":
             return discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(preppedTrack["text"]))
         elif preppedTrack["type"] == "url":
@@ -255,22 +313,27 @@ class Discord_Module(discord.Client):
             return None
 
     async def play_voice_task_handler(self, task):
+        await self.send_message_to_channel(835319293981622302, "Voice Task")
         if self.voiceClient is None:
-            pass
+            await self.send_message_to_channel(835319293981622302, "VC is none?")
         else:
             # Checks if queue is enabled and empty, if so, it will add the audio source to the queue and then start playing it.
-            if self.voice_isQueueEnabled and self.voiceQueue == []:
-                newTrack = await self.prepTrack(task)
-                self.voiceQueue.append(newTrack)
+            #if self.voice_isQueueEnabled and self.voiceQueue == []:
+            newTrack = await self.prepTrack(task)
+            self.voiceQueue.append(newTrack)
+            await self.send_message_to_channel(835319293981622302, "Appended Track to Queue: " + str(newTrack))
 
 
             if self.voiceClient.is_connected():
                 if self.voiceClient.is_playing():
                     self.voiceClient.stop()
                     source = self.voiceQueue.pop(0)
+                    #source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("/tts/wow.mp3"))
+                    await self.send_message_to_channel(835319293981622302, "Playing: " + str(source))
                     self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else self.nextTrack())
                 else:
                     source = self.voiceQueue.pop(0)
+                    await self.send_message_to_channel(835319293981622302, "Player Error: " + str(source))
                     self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else self.nextTrack())
             else:
                 try:
@@ -390,7 +453,7 @@ class Discord_Module(discord.Client):
             textToSpeak = data["text"]
             pass
 
-    async def join_voice_task_handler(self, task):
+    async def join_voice_task_handler_OLD(self, task):
         if self.voiceClient is None:
             try:
                 self.VC_Channel = self.get_channel(int(task[5]))
@@ -398,7 +461,7 @@ class Discord_Module(discord.Client):
                 guildData:discord.Guild = self.get_guild(self.guild.id)
                 memberData = await guildData.fetch_member(int(task[6]))
                 self.VC_Channel = memberData.voice.channel
-            self.voiceClient = await self.voiceClient.connect(self.VC_Channel)
+            self.voiceClient = await self.VC_Channel.connect(self.VC_Channel)
         else:
             curChannelID = self.VC_Channel.id
             try:
@@ -408,10 +471,29 @@ class Discord_Module(discord.Client):
                 memberData = await guildData.fetch_member(int(task[6]))
                 newChannelID = memberData.voice.channel.id
 
-            await self.voiceClient.disconnect()
+            if self.voiceClient.is_connected():
+                await self.voiceClient.disconnect()
             if curChannelID != newChannelID:
                 self.VC_Channel = self.get_channel(newChannelID)
-                self.voiceClient = await self.voiceClient.connect(self.VC_Channel)
+                self.voiceClient = await self.VC_Channel.connect(self.VC_Channel)
+
+    async def join_voice_task_handler(self, task):
+        await self.send_message_to_channel(835319293981622302, "Joining...")
+        if self.voiceClient is None:
+            try:
+                self.VC_Channel:discord.channel.VoiceChannel = self.get_channel(int(task[5]))
+                self.voiceClient = await self.VC_Channel.connect()
+            except:
+                guildData:discord.Guild = self.get_guild(self.guild.id)
+                memberData = await guildData.fetch_member(int(task[6]))
+                self.VC_Channel = self.get_channel(memberData.voice.channel.id)
+                self.voiceClient = await self.VC_Channel.connect()
+        else:
+            await self.voiceClient.disconnect()
+            self.voiceClient = None
+            await self.join_voice_task_handler(task)
+            #await self.send_message_to_channel(835319293981622302, "vs is not none")
+        #await self.send_message_to_channel(835319293981622302, "Finished joining")
 
     async def leave_voice_task_handler(self, task):
         if self.voiceClient is None:
@@ -472,16 +554,8 @@ class Discord_Module(discord.Client):
     async def on_ready(self):
         print('Logged on as', self.user)
 
-    def main(self):
-        self.loop.create_task(self.task_lookup_Loop())
-        self.loop.create_task(self.startup())
-        self.loop.run_forever()
 
-    async def startup(self):
-            await self.login(self.discordCredential.token)
-            #await self.register_application_commands(None)
-            await self.register_application_commands(self.commands)
-            await self.connect()
+
 
     async def on_slash_command(self, interaction: discord.Interaction):
         praxis_logger_obj.log("\n -Slash Command: " + str(interaction.command_name))
@@ -489,17 +563,83 @@ class Discord_Module(discord.Client):
             cmdName = interaction.command_name
             author:discord.member.Member = interaction.user
             msg = interaction.data
-            inputData = msg["options"][0]["value"]
-            await interaction.response.send_message("%s called %s | %s" % (author.name, cmdName, inputData))
+            msgChannel = interaction.channel
+            try:
+                inputData = msg["options"][0]["value"]
+            except:
+                inputData = ""
+            await interaction.response.send_message("%s called %s | %s || FROM %s" % (author.name, cmdName, inputData, msgChannel.name))
             if cmdName == "test":
                 if inputData == "123":
                     await self.voiceTest()
                 elif inputData == "abc":
                     await self.move_user_to_voice_channel(interaction.user.id, 663970225821188096)
+                elif inputData == "jump":
+                    await self.move_users_to_voice_channel(
+                        [76078763984551936, 224403903607865344, 516364659327238166, 107729761194782720, 283035826491752449, 144902397477519362, 160953588250705921], 741473571141976096)
+
+            DefaultCommands = ["join", "leave", "play", "pause", "resume", "skip", "clear", "volume", "loop", "repeat", "shuffle"]
+            for command in DefaultCommands:
+                if cmdName == command:
+                    await self.send_message_to_channel(835319293981622302, "About to run handler")
+                    await self.default_slash_command_handler(interaction, author, msgChannel, command, inputData)
+
             #await self.send_message_to_channel(835319293981622302, str(utility.get_dir("tts")))
         else:
             await interaction.response.send_message("You called a slash command")
 
+    async def default_slash_command_handler(self, interaction, author:discord.member.Member, msgChannel, command, inputData):
+        if command == "join":
+            await self.send_message_to_channel(835319293981622302, "Join detected")
+            task = [None, "standalone_discord", "voice", str(time.time()), "join", inputData, author.id]
+            await self.send_message_to_channel(835319293981622302, str(task))
+            await self.join_voice_task_handler(task)
+        elif command == "leave":
+            await self.leave_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
+        elif command == "play":
+            if await self.isUserAllowed(author.id):
+                await self.send_message_to_channel(835319293981622302, "Good User")
+                inputArgs = "".join(inputData)
+                newAudio = {}
+                await self.send_message_to_channel(835319293981622302, inputArgs)
+                # Determine if inputArgs is either a url, a file, or a string
+                if utility.contains_url(inputArgs):
+                    # inputArgs is a url
+                    newAudio["type"] = "url"
+                if utility.contains_pattern(inputArgs, ".*\.(mp3|pcm|wav|aiff|aac|ogg|wma|flac|alac)$"):
+                    # inputArgs is a file
+                    newAudio["type"] = "file"
+                    await self.send_message_to_channel(835319293981622302, "Detected File")
+                else:
+                    # inputArgs is a string
+                    newAudio["type"] = "tts"
+                newAudio["text"] = inputArgs
+                preppedAudio = newAudio
+                await self.send_message_to_channel(835319293981622302, "Playing Audio")
+                await self.play_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
+        elif command == "pause":
+            await self.pause_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "pause", "", ""])
+        elif command == "resume":
+            await self.resume_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "resume", "", ""])
+        elif command == "skip":
+            await self.skip_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "skip", "", ""])
+        elif command == "clear":
+            await self.clear_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "clear", "", ""])
+        elif command == "volume":
+            await self.volume_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "volume", inputData, ""])
+        elif command == "loop":
+            await self.loop_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "loop", inputData, ""])
+        elif command == "repeat":
+            await self.repeat_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "repeat", inputData, ""])
+        elif command == "shuffle":
+            await self.shuffle_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "shuffle", inputData, ""])
+
+    async def isUserAllowed(self, userID):
+        goodIDs = [76078763984551936, 276588812539527168]
+        if userID in goodIDs:
+            return True
+        else:
+            return False
 
     async def voiceTest(self, filename: str = "68e2183965ed238c82d138030b82986f_tts"):
         praxis_logger_obj.log("\n -Voice Test")
@@ -523,14 +663,23 @@ class Discord_Module(discord.Client):
         await self.voiceClient.disconnect()
 
 
-    async def move_user_to_voice_channel(self, userID, newChannelID):
-        praxis_logger_obj.log("\n -Move User To Voice Channel")
-        guildData:discord.Guild = self.get_guild(self.guild.id)
-        praxis_logger_obj.log("\n -Guild: " + str(guildData))
-        memberData = await guildData.fetch_member(userID)
-        praxis_logger_obj.log("\n -Member: " + str(memberData))
+    async def move_user_to_voice_channel(self, memberData, newChannelID):
         await memberData.move_to(self.get_channel(newChannelID))
-        praxis_logger_obj.log("\n -Moved User To Voice Channel")
+
+
+    async def move_users_to_voice_channel(self, userIDs, newChannelID):
+
+        guildData:discord.Guild = self.get_guild(self.guild.id)
+        for userID in userIDs:
+            memberData = await guildData.fetch_member(userID)
+            await self.move_user_to_voice_channel(memberData, newChannelID)
+
+
+
+
+
+
+
 
     async def on_message(self, message: discord.Message):
         print("{" + message.guild.name + "}[ " + str(message.channel) + " ](" + message.author.display_name + ")> ")
