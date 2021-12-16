@@ -44,6 +44,8 @@ from discord import message
 from discord.client import Client
 import asyncio
 
+import bot_functions.tts
+
 import config
 
 from commands import command_base
@@ -229,11 +231,11 @@ class Discord_Module(discord.Client):
     async def task_lookup_Loop(self):
         await self.wait_until_ready()
         while not self.is_closed():
-            praxis_logger_obj.log(" -Discord: task_lookup_Loop()")
+            #praxis_logger_obj.log(" -Discord: task_lookup_Loop()")
             await self.getTasks()
             #await self.send_message_to_channel(835319293981622302, "Inner Loop Tick")
             await self.task_Loop()
-            await asyncio.sleep(5)
+            await asyncio.sleep(0.1)
 
     async def getTasks(self):
         newTasks = self.DB.getTasksFromQueue("standalone_discord")
@@ -320,57 +322,66 @@ class Discord_Module(discord.Client):
         elif preppedTrack["type"] == "url":
             return await YTDLSource.from_url(preppedTrack["text"], loop=self.loop)
         elif preppedTrack["type"] == "tts":
-            pass
-            #return await YTDLSource.from_url(preppedTrack["name"], loop=self.loop)
+            #generate TTS audio to then play
+            filePath = bot_functions.tts.create_speech_file(preppedTrack["text"])
+            return discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(filePath))
         else:
             return None
 
     async def play_voice_task_handler(self, task):
         await self.send_message_to_channel(835319293981622302, "Voice Task")
-        if self.voiceClient is None:
+        if self.voiceClient is None or self.voiceClient.is_connected() is False:
             await self.send_message_to_channel(835319293981622302, "VC is none?")
-        else:
-            # Checks if queue is enabled and empty, if so, it will add the audio source to the queue and then start playing it.
-            #if self.voice_isQueueEnabled and self.voiceQueue == []:
-            newTrack = await self.prepTrack(task)
-            #self.voiceQueue.append(newTrack)
+            guildData:discord.Guild = self.get_guild(self.guild.id)
+            memberData = await guildData.fetch_member(int(task[6]))
+            self.VC_Channel = memberData.voice.channel
+            await self.send_message_to_channel(835319293981622302, "VC ID: " + str(self.VC_Channel.id))
+            voiceClientID = self.get_channel(self.VC_Channel.id)
+            #self.voiceClient:discord.VoiceClient = await self.VC_Channel.connect(self.VC_Channel.id)
+            joinTask = [None, "standalone_discord", "voice", str(time.time()), "join", voiceClientID, task[6]]
+            await self.join_voice_task_handler(joinTask)
 
-            # If the newTrack is not reinstanstiated, then the subsequent audio added to the queue will not be played.
-            #newTrack = await self.prepTrack(task)
-            #self.voiceQueue.append(newTrack)
-            #newTrack = await self.prepTrack(task)
-            #self.voiceQueue.append(newTrack)
+        # Checks if queue is enabled and empty, if so, it will add the audio source to the queue and then start playing it.
+        #if self.voice_isQueueEnabled and self.voiceQueue == []:
+        newTrack = await self.prepTrack(task)
+        #self.voiceQueue.append(newTrack)
 
-            await self.send_message_to_channel(835319293981622302, "Appended Track to Queue: " + str(newTrack))
+        # If the newTrack is not reinstanstiated, then the subsequent audio added to the queue will not be played.
+        #newTrack = await self.prepTrack(task)
+        #self.voiceQueue.append(newTrack)
+        #newTrack = await self.prepTrack(task)
+        #self.voiceQueue.append(newTrack)
+
+        await self.send_message_to_channel(835319293981622302, "Appended Track to Queue: " + str(newTrack))
 
 
-            if self.voiceClient.is_connected():
-                if self.voiceClient.is_playing():
-                    self.voiceClient.stop()
-                    source = newTrack
-                    await self.send_message_to_channel(835319293981622302, "Playing new Source: " + str(source))
-                    self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
-                    while self.voiceClient.is_playing():
-                        pass
-                    await self.nextTrack()
-                else:
-                    self.voiceQueue.append(newTrack)
-                    source = self.voiceQueue.pop(0)
-                    await self.send_message_to_channel(835319293981622302, "Player: " + str(source))
-                    self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
-                    while self.voiceClient.is_playing():
-                        pass
-                    await self.nextTrack()
-            else:
-                try:
-                    await self.voiceClient.connect(self.VC_Channel)
-                except:
-                    guildData:discord.Guild = self.get_guild(self.guild.id)
-                    memberData = await guildData.fetch_member(int(task[6]))
-                    self.VC_Channel = memberData.voice.channel
-                    await self.voiceClient.connect(self.VC_Channel)
-                source = self.voiceQueue.pop(0)
+        if self.voiceClient.is_connected():
+            if self.voiceClient.is_playing():
+                self.voiceClient.stop()
+                source = newTrack
+                await self.send_message_to_channel(835319293981622302, "Playing new Source: " + str(source))
                 self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+                while self.voiceClient.is_playing():
+                    pass
+                await self.nextTrack()
+            else:
+                self.voiceQueue.append(newTrack)
+                source = self.voiceQueue.pop(0)
+                await self.send_message_to_channel(835319293981622302, "Player: " + str(source))
+                self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+                while self.voiceClient.is_playing():
+                    pass
+                await self.nextTrack()
+        else:
+            try:
+                await self.voiceClient.connect(self.VC_Channel)
+            except:
+                guildData:discord.Guild = self.get_guild(self.guild.id)
+                memberData = await guildData.fetch_member(int(task[6]))
+                self.VC_Channel = memberData.voice.channel
+                await self.voiceClient.connect(self.VC_Channel)
+            source = self.voiceQueue.pop(0)
+            self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
 
     async def nextTrack(self):
         #praxis_logger_obj.log("Voice Task - Next Track")
@@ -629,8 +640,8 @@ class Discord_Module(discord.Client):
             await self.addTask(task)
             #await self.join_voice_task_handler(task)
         elif command == "leave":
-            #await self.leave_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
-            await self.addTask([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
+            await self.leave_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
+            #await self.addTask([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
         elif command == "play":
             if await self.isUserAllowed(author.id):
                 await self.send_message_to_channel(835319293981622302, "Good User")
@@ -644,7 +655,7 @@ class Discord_Module(discord.Client):
                 if utility.contains_pattern(inputArgs, ".*\.(mp3|pcm|wav|aiff|aac|ogg|wma|flac|alac)$"):
                     # inputArgs is a file
                     newAudio["type"] = "file"
-                    await self.send_message_to_channel(835319293981622302, "Detected File")
+                    #await self.send_message_to_channel(835319293981622302, "Detected File")
                 else:
                     # inputArgs is a string
                     newAudio["type"] = "tts"

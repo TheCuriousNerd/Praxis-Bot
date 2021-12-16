@@ -6,3 +6,5 @@ art
 SQLAlchemy
 requests
 youtube_dl
+gtts
+playsound
