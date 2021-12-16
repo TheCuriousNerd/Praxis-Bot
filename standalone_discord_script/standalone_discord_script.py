@@ -229,26 +229,39 @@ class Discord_Module(discord.Client):
     async def task_lookup_Loop(self):
         await self.wait_until_ready()
         while not self.is_closed():
-            #praxis_logger_obj.log(" -Discord: task_lookup_Loop()")
+            praxis_logger_obj.log(" -Discord: task_lookup_Loop()")
             await self.getTasks()
+            #await self.send_message_to_channel(835319293981622302, "Inner Loop Tick")
             await self.task_Loop()
-            await asyncio.sleep(10)
+            await asyncio.sleep(5)
 
     async def getTasks(self):
-        self.tasks = self.DB.getTasksFromQueue("standalone_discord")
-        for task in self.tasks:
-            try:
-                await self.deleteTaskFromDB(task)
-            except Exception as e:
-                praxis_logger_obj.log("Error deleting task from DB: " + str(e))
+        newTasks = self.DB.getTasksFromQueue("standalone_discord")
+        if newTasks is not None:
+            for task in newTasks:
+                try:
+                    await self.deleteTaskFromDB(task)
+                except Exception as e:
+                    praxis_logger_obj.log("Error deleting task from DB: " + str(e))
+            #Add new tasks to the queue
+            for task in newTasks:
+                try:
+                    await self.addTask(task)
+                except Exception as e:
+                    praxis_logger_obj.log("Error adding task to queue: " + str(e))
 
     async def addTask(self, task):
         self.tasks.append(task)
 
     async def task_Loop(self):
+        #await self.send_message_to_channel(835319293981622302, "Inner Loop")
         if self.tasks is not None:
+            #await self.send_message_to_channel(835319293981622302, "Inner Loop is not None")
             for task in self.tasks:
                 try:
+                    #await self.send_message_to_channel(835319293981622302, "Inner Loop Task Loop: " + str(task))
+                    curTask = task
+                    self.tasks.remove(task)
                     await self.task_handler(task)
                 except:
                     pass
@@ -320,21 +333,34 @@ class Discord_Module(discord.Client):
             # Checks if queue is enabled and empty, if so, it will add the audio source to the queue and then start playing it.
             #if self.voice_isQueueEnabled and self.voiceQueue == []:
             newTrack = await self.prepTrack(task)
-            self.voiceQueue.append(newTrack)
+            #self.voiceQueue.append(newTrack)
+
+            # If the newTrack is not reinstanstiated, then the subsequent audio added to the queue will not be played.
+            #newTrack = await self.prepTrack(task)
+            #self.voiceQueue.append(newTrack)
+            #newTrack = await self.prepTrack(task)
+            #self.voiceQueue.append(newTrack)
+
             await self.send_message_to_channel(835319293981622302, "Appended Track to Queue: " + str(newTrack))
 
 
             if self.voiceClient.is_connected():
                 if self.voiceClient.is_playing():
                     self.voiceClient.stop()
-                    source = self.voiceQueue.pop(0)
-                    #source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("/tts/wow.mp3"))
-                    await self.send_message_to_channel(835319293981622302, "Playing: " + str(source))
-                    self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else self.nextTrack())
+                    source = newTrack
+                    await self.send_message_to_channel(835319293981622302, "Playing new Source: " + str(source))
+                    self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+                    while self.voiceClient.is_playing():
+                        pass
+                    await self.nextTrack()
                 else:
+                    self.voiceQueue.append(newTrack)
                     source = self.voiceQueue.pop(0)
-                    await self.send_message_to_channel(835319293981622302, "Player Error: " + str(source))
-                    self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else self.nextTrack())
+                    await self.send_message_to_channel(835319293981622302, "Player: " + str(source))
+                    self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+                    while self.voiceClient.is_playing():
+                        pass
+                    await self.nextTrack()
             else:
                 try:
                     await self.voiceClient.connect(self.VC_Channel)
@@ -344,12 +370,14 @@ class Discord_Module(discord.Client):
                     self.VC_Channel = memberData.voice.channel
                     await self.voiceClient.connect(self.VC_Channel)
                 source = self.voiceQueue.pop(0)
-                self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else self.nextTrack())
+                self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
 
     async def nextTrack(self):
+        #praxis_logger_obj.log("Voice Task - Next Track")
         if self.voiceClient is None:
             pass
         else:
+            await self.send_message_to_channel(835319293981622302, "Voice Task - Next Track")
             if self.voice_isQueueLooping or self.voice_isQueueRepeating:
                 self.voiceQueue.append(self.voiceQueue[0])
             if self.voice_isQueueShuffle:
@@ -358,9 +386,11 @@ class Discord_Module(discord.Client):
                 if self.voiceClient.is_playing():
                     self.voiceClient.stop()
                 source = self.voiceQueue.pop(0)
-                self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else self.nextTrack())
-            else:
-                self.voiceClient.stop()
+                await self.send_message_to_channel(835319293981622302, "Player: " + str(source))
+                self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+                while self.voiceClient.is_playing():
+                    pass
+                await self.nextTrack()
 
     async def playNext_voice_task_handler(self, task):
         if self.voiceClient is None:
@@ -369,7 +399,10 @@ class Discord_Module(discord.Client):
             if self.voiceClient.is_playing():
                 self.voiceClient.stop()
                 source = self.voiceQueue.pop(0)
-                self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else self.nextTrack())
+                self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+                while self.voiceClient.is_playing():
+                    pass
+                await self.nextTrack()
 
     async def stop_voice_task_handler(self, task):
         if self.voiceClient is None:
@@ -593,9 +626,11 @@ class Discord_Module(discord.Client):
             await self.send_message_to_channel(835319293981622302, "Join detected")
             task = [None, "standalone_discord", "voice", str(time.time()), "join", inputData, author.id]
             await self.send_message_to_channel(835319293981622302, str(task))
-            await self.join_voice_task_handler(task)
+            await self.addTask(task)
+            #await self.join_voice_task_handler(task)
         elif command == "leave":
-            await self.leave_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
+            #await self.leave_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
+            await self.addTask([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
         elif command == "play":
             if await self.isUserAllowed(author.id):
                 await self.send_message_to_channel(835319293981622302, "Good User")
@@ -616,7 +651,8 @@ class Discord_Module(discord.Client):
                 newAudio["text"] = inputArgs
                 preppedAudio = newAudio
                 await self.send_message_to_channel(835319293981622302, "Playing Audio")
-                await self.play_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
+                #await self.play_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
+                await self.addTask([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
         elif command == "pause":
             await self.pause_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "pause", "", ""])
         elif command == "resume":
