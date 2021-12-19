@@ -35,7 +35,7 @@ user_module: bool = True
 autoJoin_TwitchChannel = "thecuriousnerd"
 autoJoin_TwitchChannels = ["thecuriousnerd"]
 allowedCommandsList_TwitchPowerUsers = ["thecuriousnerd"]
-allowedTTS_List = ["thecuriousnerd"]
+allowedTTS_List = ["thecuriousnerd", "<@!76078763984551936>", "<@76078763984551936>", "76078763984551936"]
 adminUsers_List = ["thecuriousnerd", "<@!76078763984551936>", "<@76078763984551936>", "76078763984551936"]
 
 #Twitch Module Configs

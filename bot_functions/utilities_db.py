@@ -39,7 +39,7 @@ class Praxis_DB_Connection():
         #self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, self.dbCert.ipAddress, self.dbCert.databaseName)
         self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, self.dbCert.ipAddress, self.dbCert.databaseName)
 
-        self.dbConnection = None
+        self.dbConnection:db.engine.base.Engine = None
         if autoConnect == True:
             self.startConnection()
 
@@ -48,6 +48,7 @@ class Praxis_DB_Connection():
         self.dbConnection = db.create_engine(self.connectionString)
 
     def closeConnection(self):
+        self.dbConnection.dispose()
         self.dbConnection = None
 
     def selfAutoStart(self):
@@ -62,7 +63,9 @@ class Praxis_DB_Connection():
             result = self.dbConnection.execute(query)
             for r in result:
                 if r[0] == tableName:
+                    self.closeConnection()
                     return True
+            self.closeConnection()
             return False
 
         except:
@@ -80,8 +83,10 @@ class Praxis_DB_Connection():
                 print(r)
                 if r[1] == item:
                     print("Found the item in DB")
+                    self.closeConnection()
                     return True
             print("Did not find the item in DB")
+            self.closeConnection()
             return False
         except:
             print("[Praxis_DB_Connection] query error")
@@ -90,8 +95,9 @@ class Praxis_DB_Connection():
     def deleteItems(self, tableName, columnName, item):
         try:
             #self.selfAutoStart()
-            query = "DELETE FROM %s WHERE %s = '%s';" % (tableName, columnName, item)
+            query = "DELETE FROM %s WHERE %s = \'%s\';" % (tableName, columnName, item)
             self.dbConnection.execute(query)
+            self.closeConnection()
             return True
         except:
             print("[Praxis_DB_Connection] query error")
@@ -102,6 +108,7 @@ class Praxis_DB_Connection():
             #self.selfAutoStart()
             query = "INSERT INTO %s (%s) VALUES (%s);" % (tableName, columnName, item)
             self.dbConnection.execute(query)
+            self.closeConnection()
             return True
         except:
             print("[Praxis_DB_Connection] query error")
@@ -112,6 +119,7 @@ class Praxis_DB_Connection():
             #self.selfAutoStart()
             query = "UPDATE %s SET %s = %s WHERE %s = '%s';" % (tableName, columnName, newItem, columnName, item)
             self.dbConnection.execute(query)
+            self.closeConnection()
             return True
         except:
             print("[Praxis_DB_Connection] query error")
@@ -124,6 +132,7 @@ class Praxis_DB_Connection():
             result = self.dbConnection.execute(query)
             for r in result:
                 return r
+            self.closeConnection()
             return None
         except:
             print("[Praxis_DB_Connection] query error")
@@ -134,6 +143,7 @@ class Praxis_DB_Connection():
             self.selfAutoStart()
             query = "INSERT INTO external_api_v0 (name, url, method, parameters, response, time) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (APIname, url, method, parameters, response, str(timeStamp))
             result = self.dbConnection.execute(query)
+            self.closeConnection()
             return True
         except:
             print("[Praxis_DB_Connection] query error")
@@ -148,6 +158,7 @@ class Praxis_DB_Connection():
                 results = r
             lastCalled = float(results[6])
             currentTime = time.time()
+            self.closeConnection()
             return (currentTime - lastCalled) > seconds
         except:
             print("[Praxis_DB_Connection] query error")
@@ -163,6 +174,7 @@ class Praxis_DB_Connection():
                     #praxis_logger_obj.log("query results:")
                     #praxis_logger_obj.log(r)
                     results = r
+            self.closeConnection()
             return results
         except:
             print("[Praxis_DB_Connection] query error")
@@ -171,11 +183,12 @@ class Praxis_DB_Connection():
     def getTasksFromQueue(self, targetSystem):
         try:
             self.selfAutoStart()
-            query = "SELECT * FROM task_queue_v0 WHERE target_standalone_system = '%s';" % targetSystem
+            query = "SELECT * FROM task_queue_v0 WHERE target_standalone_system = \'%s\';" % (targetSystem)
             result = self.dbConnection.execute(query)
             results = []
             for r in result:
                 results.append(r)
+            self.closeConnection()
             return results
         except:
             print("[Praxis_DB_Connection] query error")
@@ -193,6 +206,7 @@ class Praxis_DB_Connection():
             return True
         except:
             print("[Praxis_DB_Connection] query error")
+            self.closeConnection()
             return None
 
 
@@ -218,6 +232,7 @@ class Praxis_DB_Connection():
             print(results)
             #praxis_logger_obj.log("execQuery results:")
             #praxis_logger_obj.log(results)
+            self.closeConnection()
             return results
         except Exception as e:
             print("[Praxis_DB_Connection] query error")

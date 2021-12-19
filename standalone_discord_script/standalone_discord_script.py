@@ -29,6 +29,7 @@ import re
 import time
 
 from discord import client
+from discord.activity import Game
 from discord.types.snowflake import Snowflake
 from discord.voice_client import VoiceClient
 import bot_functions.utilities_script as utility
@@ -206,17 +207,17 @@ class Discord_Module(discord.Client):
                         required=False
                         )]
         commandsToAdd = [
-            {"name":"play", "description":"Plays audio in voice channel.", "options":defaultOptions},
-            {"name":"playnext", "description":"Adds audio to the next slot in the queue.", "options":defaultOptions},
+            {"name":"play", "description":"Plays TTS audio in voice channel.", "options":defaultOptions},
+            #{"name":"playnext", "description":"Adds audio to the next slot in the queue.", "options":defaultOptions},
             {"name":"stop", "description":"Stops audio being played in the voice channel.", "options":[]},
             {"name":"pause", "description":"Pauses audio being playing in the voice channel.", "options":[]},
             {"name":"resume", "description":"Resumes audio being playing in the voice channel.", "options":[]},
-            {"name":"skip", "description":"Skips audio being played to the next audio in the queue in the voice channel.", "options":[]},
+            #{"name":"skip", "description":"Skips audio being played to the next audio in the queue in the voice channel.", "options":[]},
             {"name":"clear", "description":"Clears the queue.", "options":[]},
             {"name":"volume", "description":"Changes the volume.", "options":defaultOptions},
-            {"name":"loop", "description":"Enables/Disables the looping of the queue.", "options":defaultOptions},
-            {"name":"repeat", "description":"Enables/Disables the repeat of an audio.", "options":defaultOptions},
-            {"name":"shuffle", "description":"Shuffles the queue.", "options":defaultOptions},
+            #{"name":"loop", "description":"Enables/Disables the looping of the queue.", "options":defaultOptions},
+            #{"name":"repeat", "description":"Enables/Disables the repeat of an audio.", "options":defaultOptions},
+            #{"name":"shuffle", "description":"Shuffles the queue.", "options":defaultOptions},
             {"name":"join", "description":"Joins a voice channel.", "options":defaultOptions},
             {"name":"leave", "description":"Leaves the voice channel.", "options":[]},
         ]
@@ -238,9 +239,11 @@ class Discord_Module(discord.Client):
             await asyncio.sleep(0.1)
 
     async def getTasks(self):
+        self.DB.startConnection()
         newTasks = self.DB.getTasksFromQueue("standalone_discord")
         if newTasks is not None:
             for task in newTasks:
+                await self.send_message_to_channel(835319293981622302, "New Task: " + str(task))
                 try:
                     await self.deleteTaskFromDB(task)
                 except Exception as e:
@@ -248,6 +251,7 @@ class Discord_Module(discord.Client):
             #Add new tasks to the queue
             for task in newTasks:
                 try:
+                    task[4] = loads(task[4])
                     await self.addTask(task)
                 except Exception as e:
                     praxis_logger_obj.log("Error adding task to queue: " + str(e))
@@ -627,10 +631,23 @@ class Discord_Module(discord.Client):
                 if cmdName == command:
                     await self.send_message_to_channel(835319293981622302, "About to run handler")
                     await self.default_slash_command_handler(interaction, author, msgChannel, command, inputData)
+            slashV3Commands = ["math"]
+            for command in slashV3Commands:
+                if cmdName == command:
+                    await self.v3_slash_command_handler("!"+cmdName, inputData, msgChannel.id)
 
             #await self.send_message_to_channel(835319293981622302, str(utility.get_dir("tts")))
         else:
             await interaction.response.send_message("You called a slash command")
+
+    async def v3_slash_command_handler(self, command, rest, targetChannel):
+        try:
+            is_actionable = await self.is_command(command)
+            if is_actionable:
+                if self.cooldownModule.isCooldownActive("discordRateLimit") == False:
+                    await self.exec_command(None, command, rest, targetChannel)
+        except:
+                    print("something went wrong with a command")
 
     async def default_slash_command_handler(self, interaction, author:discord.member.Member, msgChannel, command, inputData):
         if command == "join":
@@ -649,9 +666,9 @@ class Discord_Module(discord.Client):
                 newAudio = {}
                 await self.send_message_to_channel(835319293981622302, inputArgs)
                 # Determine if inputArgs is either a url, a file, or a string
-                if utility.contains_url(inputArgs):
-                    # inputArgs is a url
-                    newAudio["type"] = "url"
+                #if utility.contains_url(inputArgs):
+                #    # inputArgs is a url
+                #    newAudio["type"] = "url"
                 if utility.contains_pattern(inputArgs, ".*\.(mp3|pcm|wav|aiff|aac|ogg|wma|flac|alac)$"):
                     # inputArgs is a file
                     newAudio["type"] = "file"
@@ -661,7 +678,7 @@ class Discord_Module(discord.Client):
                     newAudio["type"] = "tts"
                 newAudio["text"] = inputArgs
                 preppedAudio = newAudio
-                await self.send_message_to_channel(835319293981622302, "Playing Audio")
+                await self.send_message_to_channel(835319293981622302, "Playing Audio: " + str(newAudio["text"]))
                 #await self.play_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
                 await self.addTask([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
         elif command == "pause":
@@ -726,7 +743,8 @@ class Discord_Module(discord.Client):
 
 
 
-
+    async def on_connect(self):
+        await self.change_presence(status=discord.Status.online, activity=discord.Game("Exploring the internet"))
 
     async def on_message(self, message: discord.Message):
         print("{" + message.guild.name + "}[ " + str(message.channel) + " ](" + message.author.display_name + ")> ")
@@ -739,6 +757,9 @@ class Discord_Module(discord.Client):
         if not await self.isSenderBot(message):
             # This will check for the Praxis-Bot-tts channel and will TTS stuff from there.
             #await self.eval_triggeredEvents(message)
+            command, rest = utility.parse_line(message.content)
+            if command == "-tts":
+                await self.addTask([None, "standalone_discord", "voice", str(time.time()), "play", {"type":"tts","text":rest}, message.author.id])
 
             await self.eval_commands(message)
             await self.eval_tts(message)
@@ -780,7 +801,7 @@ class Discord_Module(discord.Client):
         resp = requests.get(url)
         return resp.status_code == 200
 
-    async def exec_command(self, realMessage: discord.Message, command: str, rest: str):
+    async def exec_command(self, realMessage: discord.Message, command: str, rest: str, returnStringChannelID:int = 0):
         # todo need to url-escape command and rest
         params = urlencode(
             {'command_source': command_base.AbstractCommand.CommandSource.Discord,
@@ -798,7 +819,10 @@ class Discord_Module(discord.Client):
             msg = data['message']
             if msg is not None:
                 #await self.send_message(realMessage, msg)
-                await self.send_message_to_channel(realMessage.channel.id, msg)
+                if returnStringChannelID == 0:
+                    await self.send_message_to_channel(realMessage.channel.id, msg)
+                else:
+                    await self.send_message_to_channel(returnStringChannelID, msg)
         else:
             # todo handle failed requests
             pass
