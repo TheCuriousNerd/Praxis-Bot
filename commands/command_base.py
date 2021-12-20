@@ -80,5 +80,5 @@ class AbstractCommand(metaclass=ABCMeta):
         return self.isCommandEnabled
 
     @abstractmethod
-    def do_command(self, source, user, command, rest, bonusData):
+    def do_command(self, source, user, userID, command, rest, bonusData):
         pass

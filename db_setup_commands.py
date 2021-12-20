@@ -65,6 +65,7 @@ def handle_command(command, argz):
         cmd_response = cmd.do_command(
             AbstractCommand.CommandSource.default,
             "test_user",
+            "0",
             command,
             argz,
             None)

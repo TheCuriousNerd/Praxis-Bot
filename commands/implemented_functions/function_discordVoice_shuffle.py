@@ -24,9 +24,12 @@
 
 from abc import ABCMeta
 
-from json import loads
+from json import dump, loads
+from time import time
 from urllib.parse import urlencode
 import requests
+
+import time
 
 from commands.command_base import AbstractCommand
 from commands.command_functions import AbstractCommandFunction
@@ -34,40 +37,41 @@ from commands.command_functions import AbstractCommandFunction
 from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
+from bot_functions import utilities_db
 
-from bot_functions import CryptoStats
+import datetime
 
-class Function_getCryptoPrice(AbstractCommandFunction, metaclass=ABCMeta):
+class Function_discordVoice_shuffle(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "getCryptoPrice"
+    functionName = "shuffle"
     helpText = ["This is a v0 function.",
         "\nExample:","testFunction"]
 
     def __init__(self):
         super().__init__(
-            functionName = Function_getCryptoPrice.functionName,
+            functionName = Function_discordVoice_shuffle.functionName,
             n_args = 0,
             functionType = AbstractCommandFunction.FunctionType.ver0,
-            helpText = Function_getCryptoPrice.helpText,
+            helpText = Function_discordVoice_shuffle.helpText,
             bonusFunctionData = None
             )
 
     def do_function(self, tokenSource, user, functionName, args, bonusData):
-        output = self.do_work(user, functionName, args, bonusData)
+        output = ""
+        if tokenSource is AbstractCommand.CommandSource.Discord:
+            output = self.do_work(user, functionName, args, bonusData)
+        else:
+            output = "[Unable to use function in this context]"
 
         return output
 
     def do_work(self, user, functionName, args, bonusData):
-        targetCrypto = args[0]
-        targetCrypto = targetCrypto.upper()
+        arg:str = args[0]
+        if (arg.lower() == "true"):
+            arg = "true"
+        db = utilities_db.Praxis_DB_Connection(autoConnect=True)
+        db.add_taskToQueue("standalone_discord", "voice", str(time.time()), "shuffle", arg, "")
+        return args
 
-        # Get the current price of the target crypto USD (or other currency)
-        cryptoToCompareAgainst = args[1]
-        cryptoToCompareAgainst = cryptoToCompareAgainst.upper()
-        Searcher = CryptoStats.CryptoStats()
-
-        results = Searcher.getCryptoPrice(targetCrypto, cryptoToCompareAgainst)
-
-        return results

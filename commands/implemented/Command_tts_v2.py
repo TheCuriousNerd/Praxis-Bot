@@ -26,7 +26,7 @@ from abc import ABCMeta
 
 from commands.command_base import AbstractCommand
 
-from json import loads
+from json import dumps, loads
 from urllib.parse import urlencode
 from urllib.parse import parse_qs
 import requests
@@ -34,7 +34,8 @@ import re
 
 import config
 
-import discord
+import bot_functions.utilities_db as utilities_db
+import time
 
 import os
 import bot_functions.praxis_logging as praxis_logging
@@ -54,7 +55,7 @@ class Command_tts_v2(AbstractCommand, metaclass=ABCMeta):
         "\nExample:","tts \"TEXT\""]
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user:str = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user:str = "User", userID = "0",  command = "", rest = "", bonusData = None):
         returnString = user + " sent a tts command!"
         praxis_logger_obj.log("\n Command>: " + command + rest)
 
@@ -65,6 +66,8 @@ class Command_tts_v2(AbstractCommand, metaclass=ABCMeta):
                 tempName = user.lower()
                 if name == tempName:
                     self.send_TTS(user, rest)
+                    db = utilities_db.Praxis_DB_Connection(autoConnect=True)
+                    db.add_taskToQueue("standalone_discord", "voice", str(time.time()), "play", dumps({"type":"tts","text":rest}), "")
         elif "Discord" in source:
             for name in config.allowedTTS_List:
                 print(name)
@@ -72,8 +75,11 @@ class Command_tts_v2(AbstractCommand, metaclass=ABCMeta):
                 tempNick = self.contains_value("(?<=nick=')[^']+", bonusData)
 
                 tempName = user.lower()
-                if name == tempName:
+                if name == str(userID):
                     self.send_TTS(tempNick, rest)
+
+                    db = utilities_db.Praxis_DB_Connection(autoConnect=True)
+                    db.add_taskToQueue("standalone_discord", "voice", str(time.time()), "play", dumps({"type":"tts","text":rest}), "")
         else:
             returnString = self.send_TTS(user, rest)
 

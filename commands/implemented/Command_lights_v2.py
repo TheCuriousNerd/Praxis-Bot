@@ -50,7 +50,7 @@ class Command_lights_v2(AbstractCommand, metaclass=ABCMeta):
         "\nExample:","lights \"SCENE\"","lights \"COLOR\"","lights \"R\" \"G\" \"B\"","lights \"1\" \"0.5\" \"0\""]
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User", userID = "0",  command = "", rest = "", bonusData = None):
         returnString = ""
         praxis_logger_obj.log("\n Command>: " + command + rest)
         isTwitch = False

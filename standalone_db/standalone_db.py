@@ -119,6 +119,7 @@ def init():
     create_basicCommands()
 
     createExternalAPI_Tables()
+    setup_taskQueue()
 
 
 # Basic Data Table Functions
@@ -251,9 +252,70 @@ def createExternalAPI_Tables():
     except:
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (external_api_v0)")
 
+# Task Queue Functions
+def setup_taskQueue():
+    #global db_obj
+    #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+    try:
+        if db_obj.doesTableExist("task_queue_v0") == False:
+            query = (
+                'CREATE TABLE task_queue_v0 ('
+                'id SERIAL, '
+                'target_standalone_system TEXT, '
+                'name TEXT, '
+                'time TEXT, '
+                'command TEXT, '
+                'parameters TEXT, '
+                'bonus_data TEXT);'
+                )
+            print(query)
+            db_obj.execQuery(query)
+            praxis_logger_obj.log("[Table Created]: (task_queue_v0)")
+    except:
+        praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (task_queue_v0)")
 
+def add_taskToQueue(target_standalone_system:str, name:str, time:str, command:str, parameters:str, bonus_data:str):
+    #global db_obj
+    #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+    try:
+        query = (
+            'INSERT INTO task_queue_v0 '
+            '(target_standalone_system, name, time, command, parameters, bonus_data) '
+            'VALUES (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');' % (target_standalone_system, name, time, command, parameters, bonus_data)
+            )
+        print(query)
+        db_obj.execQuery(query)
+        return 'Insertion Done'
+    except:
+        return 'Insertion Failed'
 
 # API Stuff
+
+@api.route('/api/v1/add_taskToQueue', methods=['GET'])
+def add_taskToQueue_api():
+    if 'target_standalone_system' not in request.args:
+        return flask.make_response('{\"text\":"Argument \'target_standalone_system\' not in request"}', 400)
+    if 'name' not in request.args:
+        return flask.make_response('{\"text\":"Argument \'name\' not in request"}', 400)
+    if 'time' not in request.args:
+        return flask.make_response('{\"text\":"Argument \'time\' not in request"}', 400)
+    if 'command' not in request.args:
+        return flask.make_response('{\"text\":"Argument \'command\' not in request"}', 400)
+    if 'parameters' not in request.args:
+        parameters = ""
+    else:
+        parameters = request.args.get('parameters')
+    if 'bonus_data' not in request.args:
+        bonus_data = ""
+    else:
+        bonus_data = request.args.get('bonus_data')
+
+    target_standalone_system = request.args.get('target_standalone_system')
+    name = request.args.get('name')
+    time = request.args.get('time')
+    command = request.args.get('command')
+    response = add_taskToQueue(target_standalone_system, name, time, command, parameters, bonus_data)
+    flask.make_response("{\"message\":\"%s\"}" % response, 200, {"Content-Type": "application/json"})
 
 @api.route('/api/v1/get_data/basic_key_vars', methods=['GET'])
 def get_data():

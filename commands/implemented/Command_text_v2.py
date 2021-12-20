@@ -52,7 +52,7 @@ class Command_Text_v2(AbstractCommand, metaclass=ABCMeta):
         "\nExample:","temptext update \"Name\" \"Title\" \"Content\""]
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User", userID = "0",  command = "", rest = "", bonusData = None):
         returnString = "trying to update text..."
         praxis_logger_obj.log("\n Command>: " + command + " " + rest)
         returnString = user + " has attempted to update the text but an error may have occurred!"

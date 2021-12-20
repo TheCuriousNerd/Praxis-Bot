@@ -35,8 +35,8 @@ user_module: bool = True
 autoJoin_TwitchChannel = "thecuriousnerd"
 autoJoin_TwitchChannels = ["thecuriousnerd"]
 allowedCommandsList_TwitchPowerUsers = ["thecuriousnerd"]
-allowedTTS_List = ["thecuriousnerd"]
-adminUsers_List = ["thecuriousnerd", "<@!76078763984551936>", "<@76078763984551936>"]
+allowedTTS_List = ["thecuriousnerd", "<@!76078763984551936>", "<@76078763984551936>", "76078763984551936"]
+adminUsers_List = ["thecuriousnerd", "<@!76078763984551936>", "<@76078763984551936>", "76078763984551936"]
 
 #Twitch Module Configs
 block_TwitchChannelsMessaging = [""] # Blocks the ability to send messages to twitch channels

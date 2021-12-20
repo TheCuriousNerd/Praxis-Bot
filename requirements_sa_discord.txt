@@ -1,6 +1,11 @@
 BadWordObfuscator
-discord.py
+novus[voice]
+PyNaCl
 psutil
 art
 SQLAlchemy
 requests
+youtube_dl
+gtts
+playsound
+psycopg2

@@ -1,7 +1,7 @@
 BadWordObfuscator
 SQLAlchemy
 twitch-python
-discord.py
+PyNaCl
 flask
 psutil
 phue

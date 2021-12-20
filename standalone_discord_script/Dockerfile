@@ -1,4 +1,4 @@
-FROM python:3.7-stretch
+FROM python:3.8-bullseye
 
 WORKDIR /Praxis
 
@@ -17,8 +17,16 @@ RUN mkdir /Praxis/commands
 COPY /channel_rewards /Praxis/standalone_discord_script/channel_rewards
 COPY /commands /Praxis/standalone_discord_script/commands
 
+RUN apt-get update && apt-get install -y software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get install python3.8-dev
+RUN apt-get install libnacl-dev
+RUN apt-get install libffi-dev
+RUN apt-get install -y ffmpeg
+
 COPY requirements_sa_discord.txt requirements_sa_discord.txt
 RUN pip3 install -r requirements_sa_discord.txt
+RUN pip3 install novus[voice]
 
 COPY . .
 

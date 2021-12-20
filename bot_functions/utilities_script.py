@@ -41,6 +41,9 @@ def contains_url(input: str):
     containsURL = re.search(urlMatcher, input.lower()) is not None
     return containsURL
 
+def contains_pattern(input:str, pattern):
+    return re.search(pattern, input.lower()) is not None
+
 def get_args(text: str) -> list:
     return text.split(" ")
 

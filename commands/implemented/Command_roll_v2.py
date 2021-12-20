@@ -41,7 +41,7 @@ class Command_roll_v2(AbstractCommand, metaclass=ABCMeta):
         "\nExample:","roll \"d20\"", "roll \"1D20+5\"", "roll \"10df\"", "roll \"10Df+3\""]
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User", userID = "0",  command = "", rest = "", bonusData = None):
         returnString = user + " sent: [ " + command + " ] with: " + rest
 
         if ("f") in rest.lower():

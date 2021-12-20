@@ -52,27 +52,28 @@ class Command_chyron_v2(AbstractCommand, metaclass=ABCMeta):
         "\nExample:","chyron update \"RIGHTNOW\""]
         self.isCommandEnabled = True
 
-    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User",  command = "", rest = "", bonusData = None):
+    def do_command(self, source = AbstractCommand.CommandSource.default, user = "User", userID = "0",  command = "", rest = "", bonusData = None):
         returnString = "trying to update chyron..."
-        praxis_logger_obj.log("\n [" + user + "] Command>: " + command + " " + rest)
+        praxis_logger_obj.log("\n [" + userID + "] Command>: " + command + " " + rest)
+        try:
+            for name in config.adminUsers_List:
+                print(name)
+                if name == userID:
 
-        for name in config.adminUsers_List:
-            print(name)
-            tempName = user.lower()
-            if name in tempName:
+                    try:
+                        returnString = user + " has updated the chyron!"
+                        chyron_ = chyron_module.Chyron_Module()
 
-                try:
-                    returnString = user + " has updated the chyron!"
-                    chyron_ = chyron_module.Chyron_Module()
-
-                    chyron_.main(rest)
-                    chyron_.chyron_stringUpdater()
-                    chyron_.updateChyronFile()
-                except:
-                    returnString = user + " has attempted to update the chyron but an error may have occurred!"
-                #returnString = chyron_.chyron_computedString
-            #else:
-            #    returnString = user + " has attempted to update the chyron but an error may have occurred further on!!!"
+                        chyron_.main(rest)
+                        chyron_.chyron_stringUpdater()
+                        chyron_.updateChyronFile()
+                    except:
+                        returnString = user + " has attempted to update the chyron but an error may have occurred!"
+                    #returnString = chyron_.chyron_computedString
+                #else:
+                #    returnString = user + " has attempted to update the chyron but an error may have occurred further on!!!"
+        except:
+            returnString = user + " has attempted to update the chyron but an error may have occurred further on!!!"
 
 
         return returnString
