@@ -243,7 +243,7 @@ class Discord_Module(discord.Client):
         newTasks = self.DB.getTasksFromQueue("standalone_discord")
         if newTasks is not None:
             for task in newTasks:
-                await self.send_message_to_channel(835319293981622302, "New Task: " + str(task))
+                #await self.send_message_to_channel(835319293981622302, "New Task: " + str(task))
                 try:
                     await self.deleteTaskFromDB(task)
                 except Exception as e:
@@ -333,13 +333,13 @@ class Discord_Module(discord.Client):
             return None
 
     async def play_voice_task_handler(self, task):
-        await self.send_message_to_channel(835319293981622302, "Voice Task")
+        #await self.send_message_to_channel(835319293981622302, "Voice Task")
         if self.voiceClient is None or self.voiceClient.is_connected() is False:
-            await self.send_message_to_channel(835319293981622302, "VC is none?")
+            #await self.send_message_to_channel(835319293981622302, "VC is none?")
             guildData:discord.Guild = self.get_guild(self.guild.id)
             memberData = await guildData.fetch_member(int(task[6]))
             self.VC_Channel = memberData.voice.channel
-            await self.send_message_to_channel(835319293981622302, "VC ID: " + str(self.VC_Channel.id))
+            #await self.send_message_to_channel(835319293981622302, "VC ID: " + str(self.VC_Channel.id))
             voiceClientID = self.get_channel(self.VC_Channel.id)
             #self.voiceClient:discord.VoiceClient = await self.VC_Channel.connect(self.VC_Channel.id)
             joinTask = [None, "standalone_discord", "voice", str(time.time()), "join", voiceClientID, task[6]]
@@ -616,7 +616,7 @@ class Discord_Module(discord.Client):
                 inputData = msg["options"][0]["value"]
             except:
                 inputData = ""
-            await interaction.response.send_message("%s called %s | %s || FROM %s" % (author.name, cmdName, inputData, msgChannel.name))
+            #await interaction.response.send_message("%s called %s | %s || FROM %s" % (author.name, cmdName, inputData, msgChannel.name))
             if cmdName == "test":
                 if inputData == "123":
                     await self.voiceTest()
@@ -629,31 +629,40 @@ class Discord_Module(discord.Client):
             DefaultCommands = ["join", "leave", "play", "pause", "resume", "skip", "clear", "volume", "loop", "repeat", "shuffle"]
             for command in DefaultCommands:
                 if cmdName == command:
-                    await self.send_message_to_channel(835319293981622302, "About to run handler")
+                    #await self.send_message_to_channel(835319293981622302, "About to run handler")
                     await self.default_slash_command_handler(interaction, author, msgChannel, command, inputData)
             slashV3Commands = ["math"]
             for command in slashV3Commands:
                 if cmdName == command:
-                    await self.v3_slash_command_handler("!"+cmdName, inputData, msgChannel.id)
+                    #await self.send_message_to_channel(835319293981622302, "About to run math handler")
+                    await self.v3_slash_command_handler("!"+cmdName, inputData, msgChannel.id, author, interaction)
 
+            #response = ""
+            #await interaction.response.send_message(response)
+            #await interaction.response.send_message("%s called %s | %s || FROM %s" % (author.name, cmdName, inputData, msgChannel.name))
             #await self.send_message_to_channel(835319293981622302, str(utility.get_dir("tts")))
         else:
             await interaction.response.send_message("You called a slash command")
 
-    async def v3_slash_command_handler(self, command, rest, targetChannel):
+    async def v3_slash_command_handler(self, command, rest, targetChannel, author, interaction):
         try:
+            #await self.send_message_to_channel(835319293981622302, "Trying to run math handler")
             is_actionable = await self.is_command(command)
+            #await self.send_message_to_channel(835319293981622302, "Is actionable: " + str(is_actionable))
             if is_actionable:
                 if self.cooldownModule.isCooldownActive("discordRateLimit") == False:
-                    await self.exec_command(None, command, rest, targetChannel)
+                    ##await self.send_message_to_channel(835319293981622302, "Not on cooldown")
+                    await self.exec_command(None, command, rest, targetChannel, author, interaction)
+                    ##await self.send_message_to_channel(835319293981622302, "Executed command")
         except:
-                    print("something went wrong with a command")
+            await self.send_message_to_channel(835319293981622302, "something went wrong with a command")
+            print("something went wrong with a command")
 
     async def default_slash_command_handler(self, interaction, author:discord.member.Member, msgChannel, command, inputData):
         if command == "join":
             await self.send_message_to_channel(835319293981622302, "Join detected")
             task = [None, "standalone_discord", "voice", str(time.time()), "join", inputData, author.id]
-            await self.send_message_to_channel(835319293981622302, str(task))
+            #await self.send_message_to_channel(835319293981622302, str(task))
             await self.addTask(task)
             #await self.join_voice_task_handler(task)
         elif command == "leave":
@@ -661,7 +670,7 @@ class Discord_Module(discord.Client):
             #await self.addTask([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
         elif command == "play":
             if await self.isUserAllowed(author.id):
-                await self.send_message_to_channel(835319293981622302, "Good User")
+                #await self.send_message_to_channel(835319293981622302, "Good User")
                 inputArgs = "".join(inputData)
                 newAudio = {}
                 await self.send_message_to_channel(835319293981622302, inputArgs)
@@ -801,12 +810,18 @@ class Discord_Module(discord.Client):
         resp = requests.get(url)
         return resp.status_code == 200
 
-    async def exec_command(self, realMessage: discord.Message, command: str, rest: str, returnStringChannelID:int = 0):
+    async def exec_command(self, realMessage: discord.Message, command: str, rest: str, returnStringChannelID:int = 0, user = None, interaction = None):
         # todo need to url-escape command and rest
+        if user != None:
+            author_name = str(user.name)
+            author_id = str(user.id)
+        else:
+            author_name = str(realMessage.author.name)
+            author_id = str(realMessage.author.id)
         params = urlencode(
             {'command_source': command_base.AbstractCommand.CommandSource.Discord,
-            'user_name': str(realMessage.author.name),
-            'user_id': str(realMessage.author.id),
+            'user_name': author_name,
+            'user_id': author_id,
             'command_name': command,
             'rest': rest,
             'bonus_data': realMessage})
@@ -817,12 +832,14 @@ class Discord_Module(discord.Client):
             print("Got the following message: %s" % resp.text)
             data = loads(resp.text)
             msg = data['message']
-            if msg is not None:
+            if msg is not None and interaction is None:
                 #await self.send_message(realMessage, msg)
                 if returnStringChannelID == 0:
                     await self.send_message_to_channel(realMessage.channel.id, msg)
                 else:
                     await self.send_message_to_channel(returnStringChannelID, msg)
+            if interaction != None:
+                await interaction.response.send_message(msg)
         else:
             # todo handle failed requests
             pass
