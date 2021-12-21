@@ -38,6 +38,7 @@ from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
 from bot_functions import utilities_db
+from bot_functions import tts
 
 import datetime
 
@@ -71,16 +72,17 @@ class Function_discordVoice_play(AbstractCommandFunction, metaclass=ABCMeta):
         inputArgs = utility.list_to_string(args)
         newAudio = {}
         # Determine if inputArgs is either a url, a file, or a string
-        if utility.contains_url(inputArgs):
-            # inputArgs is a url
-            newAudio["type"] = "url"
-        elif utility.contains_pattern(inputArgs, ".*\.(mp3|pcm|wav|aiff|aac|ogg|wma|flac|alac)$"):
+        #if utility.contains_url(inputArgs):
+        #    # inputArgs is a url
+        #    newAudio["type"] = "url"
+
+        newAudio["text"] = inputArgs
+        if utility.contains_pattern(inputArgs, ".*\.(mp3|pcm|wav|aiff|aac|ogg|wma|flac|alac)$"):
             # inputArgs is a file
             newAudio["type"] = "file"
         else:
             # inputArgs is a string
             newAudio["type"] = "tts"
-        newAudio["text"] = inputArgs
         preppedAudio = dump(newAudio)
 
         db = utilities_db.Praxis_DB_Connection(autoConnect=True)
