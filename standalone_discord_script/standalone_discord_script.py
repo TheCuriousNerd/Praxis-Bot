@@ -706,6 +706,9 @@ class Discord_Module(discord.Client):
         elif command == "resume":
             await self.resume_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "resume", "", ""])
             resturnString = "Resuming Audio"
+        elif command == "stop":
+            await self.stop_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "stop", "", ""])
+            resturnString = "Stopping Audio"
         elif command == "skip":
             await self.skip_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "skip", "", ""])
             resturnString = "Skipping Audio"
