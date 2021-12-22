@@ -208,7 +208,7 @@ class Discord_Module(discord.Client):
                         )]
         commandsToAdd = [
             {"name":"play", "description":"Plays TTS audio in voice channel.", "options":defaultOptions},
-            #{"name":"playnext", "description":"Adds audio to the next slot in the queue.", "options":defaultOptions},
+            {"name":"playnext", "description":"Adds audio to the next slot in the queue.", "options":defaultOptions},
             {"name":"stop", "description":"Stops audio being played in the voice channel.", "options":[]},
             {"name":"pause", "description":"Pauses audio being playing in the voice channel.", "options":[]},
             {"name":"resume", "description":"Resumes audio being playing in the voice channel.", "options":[]},
@@ -276,6 +276,17 @@ class Discord_Module(discord.Client):
                     await self.task_handler(task)
                 except:
                     pass
+
+        if self.voiceClient is not None:
+            if self.voiceClient.is_connected():
+                if self.voiceClient.is_playing() == False or self.voiceClient.is_paused() == True:
+                    if len(self.voiceQueue) != 0:
+                        if self.voice_isQueueLooping == True:
+                            await self.play_voice_task_handler(self.voiceQueue[0])
+                            self.voiceQueue.append(self.voiceQueue.pop(0))
+                        else:
+                            await self.play_voice_task_handler(self.voiceQueue[0])
+                            self.voiceQueue.pop(0)
 
     async def task_handler(self, task):
         if task[2] == "voice":
@@ -366,21 +377,22 @@ class Discord_Module(discord.Client):
 
         if self.voiceClient.is_connected():
             if self.voiceClient.is_playing():
-                self.voiceClient.stop()
-                source = newTrack
+                #self.voiceClient.stop()
+                #source = newTrack
+                self.voiceQueue.append(newTrack)
                 #await self.send_message_to_channel(835319293981622302, "Playing new Source: " + str(source))
-                self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
-                while self.voiceClient.is_playing():
-                    pass
-                await self.nextTrack()
+                #self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+                #while self.voiceClient.is_playing():
+                #    pass
+                #await self.nextTrack()
             else:
                 self.voiceQueue.append(newTrack)
                 source = self.voiceQueue.pop(0)
                 #await self.send_message_to_channel(835319293981622302, "Player: " + str(source))
                 self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
-                while self.voiceClient.is_playing():
-                    pass
-                await self.nextTrack()
+                #while self.voiceClient.is_playing():
+                #    pass
+                #await self.nextTrack()
         else:
             try:
                 await self.voiceClient.connect(self.VC_Channel)
@@ -399,7 +411,7 @@ class Discord_Module(discord.Client):
         else:
             #await self.send_message_to_channel(835319293981622302, "Voice Task - Next Track")
             if self.voice_isQueueLooping or self.voice_isQueueRepeating:
-                self.voiceQueue.append(self.voiceQueue[0])
+                self.voiceQueue.insert(0, self.voiceQueue[0])
             if self.voice_isQueueShuffle:
                 random.shuffle(self.voiceQueue)
             if self.voiceQueue != []:
@@ -416,19 +428,15 @@ class Discord_Module(discord.Client):
         if self.voiceClient is None:
             pass
         else:
-            if self.voiceClient.is_playing():
-                self.voiceClient.stop()
-                source = self.voiceQueue.pop(0)
-                self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
-                while self.voiceClient.is_playing():
-                    pass
-                await self.nextTrack()
+            #appends the next track to the front of the queue
+            if self.voice_isQueueLooping or self.voice_isQueueRepeating:
+                newTrack = await self.prepTrack(task)
+                self.voiceQueue.append(newTrack)
 
     async def stop_voice_task_handler(self, task):
-        if self.voiceClient is None:
-            pass
-        else:
-            self.voiceClient.stop()
+        if self.voiceClient.is_connected():
+            if self.voiceClient.is_playing():
+                self.voiceClient.stop()
 
     async def pause_voice_task_handler(self, task):
         if self.voiceClient is None:
@@ -631,7 +639,7 @@ class Discord_Module(discord.Client):
                     await self.move_users_to_voice_channel(
                         [76078763984551936, 224403903607865344, 516364659327238166, 107729761194782720, 283035826491752449, 144902397477519362, 160953588250705921], 741473571141976096)
 
-            DefaultCommands = ["join", "leave", "play", "pause", "resume", "skip", "clear", "volume", "loop", "repeat", "shuffle"]
+            DefaultCommands = ["join", "leave", "play", "pause", "stop", "resume", "skip", "clear", "volume", "loop", "repeat", "shuffle"]
             for command in DefaultCommands:
                 if cmdName == command:
                     #await self.send_message_to_channel(835319293981622302, "About to run handler")
@@ -698,7 +706,7 @@ class Discord_Module(discord.Client):
                 #await self.send_message_to_channel(835319293981622302, "Playing Audio: " + str(newAudio["text"]))
                 #await self.play_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
                 await self.addTask([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
-                reponseText = "Playing Audio"
+            reponseText = "Playing Audio"
         elif command == "pause":
             await self.pause_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "pause", "", ""])
             reponseText = "Paused Audio"
