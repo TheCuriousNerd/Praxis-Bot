@@ -429,9 +429,8 @@ class Discord_Module(discord.Client):
             pass
         else:
             #appends the next track to the front of the queue
-            if self.voice_isQueueLooping or self.voice_isQueueRepeating:
-                newTrack = await self.prepTrack(task)
-                self.voiceQueue.append(newTrack)
+            newTrack = await self.prepTrack(task)
+            self.voiceQueue.append(newTrack)
 
     async def stop_voice_task_handler(self, task):
         if self.voiceClient.is_connected():
