@@ -251,8 +251,13 @@ class Discord_Module(discord.Client):
             #Add new tasks to the queue
             for task in newTasks:
                 try:
-                    task[4] = loads(task[4])
-                    await self.addTask(task)
+                    await self.send_message_to_channel(835319293981622302, "New Task: " + str(task) + " Task Type: " + str(type(task)))
+                    taskToAdd = []
+                    for item_ in task:
+                        taskToAdd.append(item_)
+                    taskToAdd[5] = loads(taskToAdd[5])
+
+                    await self.addTask(taskToAdd)
                 except Exception as e:
                     praxis_logger_obj.log("Error adding task to queue: " + str(e))
 

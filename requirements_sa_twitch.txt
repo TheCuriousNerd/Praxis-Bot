@@ -4,3 +4,4 @@ psutil
 art
 requests
 SQLAlchemy
+psycopg2

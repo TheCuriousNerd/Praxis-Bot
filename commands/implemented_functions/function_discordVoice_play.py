@@ -24,7 +24,7 @@
 
 from abc import ABCMeta
 
-from json import dump, loads
+from json import dumps, loads
 from time import time
 from urllib.parse import urlencode
 import requests
@@ -60,7 +60,7 @@ class Function_discordVoice_play(AbstractCommandFunction, metaclass=ABCMeta):
 
     def do_function(self, tokenSource, user, functionName, args, bonusData):
         output = ""
-        if tokenSource is AbstractCommand.CommandSource.Discord:
+        if "discord" in tokenSource.lower():
             output = self.do_work(user, functionName, args, bonusData)
         else:
             output = "[Unable to use function in this context]"
@@ -70,18 +70,19 @@ class Function_discordVoice_play(AbstractCommandFunction, metaclass=ABCMeta):
     def do_work(self, user, functionName, args, bonusData):
         inputArgs = utility.list_to_string(args)
         newAudio = {}
+
+        newAudio["text"] = inputArgs
         # Determine if inputArgs is either a url, a file, or a string
-        if utility.contains_url(inputArgs):
-            # inputArgs is a url
-            newAudio["type"] = "url"
-        elif utility.contains_pattern(inputArgs, ".*\.(mp3|pcm|wav|aiff|aac|ogg|wma|flac|alac)$"):
+        #if utility.contains_url(inputArgs):
+        #    # inputArgs is a url
+        #    newAudio["type"] = "url"
+        if utility.contains_pattern(inputArgs, ".*\.(mp3|pcm|wav|aiff|aac|ogg|wma|flac|alac)$"):
             # inputArgs is a file
             newAudio["type"] = "file"
         else:
             # inputArgs is a string
             newAudio["type"] = "tts"
-        newAudio["text"] = inputArgs
-        preppedAudio = dump(newAudio)
+        preppedAudio = dumps(newAudio)
 
         db = utilities_db.Praxis_DB_Connection(autoConnect=True)
         db.add_taskToQueue("standalone_discord", "voice", str(time.time()), "play", preppedAudio, "")
