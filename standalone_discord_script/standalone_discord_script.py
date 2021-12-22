@@ -368,7 +368,7 @@ class Discord_Module(discord.Client):
             if self.voiceClient.is_playing():
                 self.voiceClient.stop()
                 source = newTrack
-                await self.send_message_to_channel(835319293981622302, "Playing new Source: " + str(source))
+                #await self.send_message_to_channel(835319293981622302, "Playing new Source: " + str(source))
                 self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
                 while self.voiceClient.is_playing():
                     pass
@@ -376,7 +376,7 @@ class Discord_Module(discord.Client):
             else:
                 self.voiceQueue.append(newTrack)
                 source = self.voiceQueue.pop(0)
-                await self.send_message_to_channel(835319293981622302, "Player: " + str(source))
+                #await self.send_message_to_channel(835319293981622302, "Player: " + str(source))
                 self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
                 while self.voiceClient.is_playing():
                     pass
@@ -397,7 +397,7 @@ class Discord_Module(discord.Client):
         if self.voiceClient is None:
             pass
         else:
-            await self.send_message_to_channel(835319293981622302, "Voice Task - Next Track")
+            #await self.send_message_to_channel(835319293981622302, "Voice Task - Next Track")
             if self.voice_isQueueLooping or self.voice_isQueueRepeating:
                 self.voiceQueue.append(self.voiceQueue[0])
             if self.voice_isQueueShuffle:
@@ -406,7 +406,7 @@ class Discord_Module(discord.Client):
                 if self.voiceClient.is_playing():
                     self.voiceClient.stop()
                 source = self.voiceQueue.pop(0)
-                await self.send_message_to_channel(835319293981622302, "Player: " + str(source))
+                #await self.send_message_to_channel(835319293981622302, "Player: " + str(source))
                 self.voiceClient.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
                 while self.voiceClient.is_playing():
                     pass
@@ -531,7 +531,7 @@ class Discord_Module(discord.Client):
                 self.voiceClient = await self.VC_Channel.connect(self.VC_Channel)
 
     async def join_voice_task_handler(self, task):
-        await self.send_message_to_channel(835319293981622302, "Joining...")
+        #await self.send_message_to_channel(835319293981622302, "Joining...")
         if self.voiceClient is None:
             try:
                 self.VC_Channel:discord.channel.VoiceChannel = self.get_channel(int(task[5]))
@@ -666,7 +666,7 @@ class Discord_Module(discord.Client):
     async def default_slash_command_handler(self, interaction, author:discord.member.Member, msgChannel, command, inputData):
         reponseText = ""
         if command == "join":
-            await self.send_message_to_channel(835319293981622302, "Join detected")
+            #await self.send_message_to_channel(835319293981622302, "Join detected")
             task = [None, "standalone_discord", "voice", str(time.time()), "join", inputData, author.id]
             #await self.send_message_to_channel(835319293981622302, str(task))
             await self.addTask(task)
@@ -681,7 +681,7 @@ class Discord_Module(discord.Client):
                 #await self.send_message_to_channel(835319293981622302, "Good User")
                 inputArgs = "".join(inputData)
                 newAudio = {}
-                await self.send_message_to_channel(835319293981622302, inputArgs)
+                #await self.send_message_to_channel(835319293981622302, inputArgs)
                 # Determine if inputArgs is either a url, a file, or a string
                 #if utility.contains_url(inputArgs):
                 #    # inputArgs is a url
@@ -695,7 +695,7 @@ class Discord_Module(discord.Client):
                     newAudio["type"] = "tts"
                 newAudio["text"] = inputArgs
                 preppedAudio = newAudio
-                await self.send_message_to_channel(835319293981622302, "Playing Audio: " + str(newAudio["text"]))
+                #await self.send_message_to_channel(835319293981622302, "Playing Audio: " + str(newAudio["text"]))
                 #await self.play_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
                 await self.addTask([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
                 reponseText = "Playing Audio"
