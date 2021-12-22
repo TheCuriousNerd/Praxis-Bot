@@ -664,15 +664,18 @@ class Discord_Module(discord.Client):
             print("something went wrong with a command")
 
     async def default_slash_command_handler(self, interaction, author:discord.member.Member, msgChannel, command, inputData):
+        reponseText = ""
         if command == "join":
             await self.send_message_to_channel(835319293981622302, "Join detected")
             task = [None, "standalone_discord", "voice", str(time.time()), "join", inputData, author.id]
             #await self.send_message_to_channel(835319293981622302, str(task))
             await self.addTask(task)
             #await self.join_voice_task_handler(task)
+            reponseText = "Joining Voice Channel"
         elif command == "leave":
             await self.leave_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
             #await self.addTask([None, "standalone_discord", "voice", str(time.time()), "leave", "", ""])
+            reponseText = "Leaving Voice Channel"
         elif command == "play":
             if await self.isUserAllowed(author.id):
                 #await self.send_message_to_channel(835319293981622302, "Good User")
@@ -695,22 +698,36 @@ class Discord_Module(discord.Client):
                 await self.send_message_to_channel(835319293981622302, "Playing Audio: " + str(newAudio["text"]))
                 #await self.play_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
                 await self.addTask([None, "standalone_discord", "voice", str(time.time()), "play", preppedAudio, author.id])
+                reponseText = "Playing Audio"
         elif command == "pause":
             await self.pause_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "pause", "", ""])
+            reponseText = "Paused Audio"
         elif command == "resume":
             await self.resume_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "resume", "", ""])
+            reponseText = "Resumed Audio"
+        elif command == "stop":
+            await self.stop_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "stop", "", ""])
+            reponseText = "Stopped Audio"
         elif command == "skip":
             await self.skip_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "skip", "", ""])
+            reponseText = "Skipped Audio"
         elif command == "clear":
             await self.clear_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "clear", "", ""])
+            reponseText = "Cleared Audio Queue"
         elif command == "volume":
             await self.volume_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "volume", inputData, ""])
+            reponseText = "Set Volume to " + str(inputData)
         elif command == "loop":
             await self.loop_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "loop", inputData, ""])
+            reponseText = "Set Loop to " + str(inputData)
         elif command == "repeat":
             await self.repeat_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "repeat", inputData, ""])
+            reponseText = "Set Repeat to " + str(inputData)
         elif command == "shuffle":
             await self.shuffle_voice_task_handler([None, "standalone_discord", "voice", str(time.time()), "shuffle", inputData, ""])
+            reponseText = "Set Shuffle to " + str(inputData)
+
+        await interaction.response.send_message(reponseText)
 
     async def isUserAllowed(self, userID):
         goodIDs = [76078763984551936, 276588812539527168]
