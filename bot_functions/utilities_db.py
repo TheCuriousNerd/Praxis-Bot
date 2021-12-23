@@ -94,35 +94,35 @@ class Praxis_DB_Connection():
 
     def deleteItems(self, tableName, columnName, item):
         try:
-            #self.selfAutoStart()
+            self.selfAutoStart()
             query = "DELETE FROM %s WHERE %s = \'%s\';" % (tableName, columnName, item)
             self.dbConnection.execute(query)
             self.closeConnection()
             return True
         except:
-            print("[Praxis_DB_Connection] query error")
+            print("[Praxis_DB_Connection] query deletion error")
             return False
 
     def insertItem(self, tableName, columnName, item):
         try:
-            #self.selfAutoStart()
+            self.selfAutoStart()
             query = "INSERT INTO %s (%s) VALUES (%s);" % (tableName, columnName, item)
             self.dbConnection.execute(query)
             self.closeConnection()
             return True
         except:
-            print("[Praxis_DB_Connection] query error")
+            print("[Praxis_DB_Connection] query insertion error")
             return False
 
     def updateItems(self, tableName, columnName, item, newItem):
         try:
-            #self.selfAutoStart()
+            self.selfAutoStart()
             query = "UPDATE %s SET %s = %s WHERE %s = '%s';" % (tableName, columnName, newItem, columnName, item)
             self.dbConnection.execute(query)
             self.closeConnection()
             return True
         except:
-            print("[Praxis_DB_Connection] query error")
+            print("[Praxis_DB_Connection] query update item row error")
             return False
 
     def getItemRow(self, tableName, columnName, item):
@@ -135,7 +135,7 @@ class Praxis_DB_Connection():
             self.closeConnection()
             return None
         except:
-            print("[Praxis_DB_Connection] query error")
+            print("[Praxis_DB_Connection] get query row error")
             return None
 
     def addAPI_Call(self, APIname, url, method, parameters, response, timeStamp):
@@ -191,7 +191,7 @@ class Praxis_DB_Connection():
             self.closeConnection()
             return results
         except:
-            print("[Praxis_DB_Connection] query error")
+            print("[Praxis_DB_Connection] get query task error")
             return None
 
     def add_taskToQueue(self, target_standalone_system:str, name:str, time:str, command:str, parameters:str, bonus_data:str):
@@ -205,7 +205,7 @@ class Praxis_DB_Connection():
             result = self.dbConnection.execute(query)
             return True
         except:
-            print("[Praxis_DB_Connection] query error")
+            print("[Praxis_DB_Connection] add query task error")
             self.closeConnection()
             return None
 
@@ -213,7 +213,7 @@ class Praxis_DB_Connection():
     import bot_functions.praxis_logging as praxis_logging
     def execQuery(self, query, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
         try:
-            #self.selfAutoStart()
+            self.selfAutoStart()
             #praxis_logger_obj.log("query:")
             #praxis_logger_obj.log(query)
             print("query:")

@@ -94,6 +94,8 @@ class DBStrategy(Enum):
 is_tts_Speaker_Enabled = False
 is_tts_URL_Blocked = True
 
+is_tts_Speaker_forDiscord_Enabled = False
+
 class Speaker(Enum):
     GOOGLE_TEXT_TO_SPEECH = 1
 

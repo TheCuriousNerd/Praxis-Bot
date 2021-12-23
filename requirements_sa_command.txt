@@ -11,3 +11,5 @@ pyparsing
 psycopg2
 paramiko
 numexpr
+gTTS
+playsound

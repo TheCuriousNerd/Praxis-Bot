@@ -205,7 +205,7 @@ def create_basicCommands():
     create_basicCommand("!convertunit", "$(#0) $(#1) = $(math_unitConversion $(#*)) $(#2)")
 
     create_basicCommand("!cryptoprice", "The current price of $(#0) against $(#1) is $(getCryptoPrice $(#0) $(#1))")
-
+    create_basicCommand("!speak", "$(play $(#*))")
     #create_basicCommand("!chyron", "$(chyron $(#*))")
     #create_basicCommand("!roll", "$(roll $(#*))")
     #create_basicCommand("!lights", "$(lights $(#*))")

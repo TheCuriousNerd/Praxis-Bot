@@ -36,7 +36,11 @@ import credentials
 from bot_functions.cooldowns import Cooldown_Module
 import commands.command_base
 import bot_functions.utilities_script as utility
+import bot_functions.utilities_db as utilities_db
 
+from json import dumps, loads
+
+import time
 import os
 import bot_functions.praxis_logging as praxis_logging
 praxis_logger_obj = praxis_logging.praxis_logger()
@@ -59,6 +63,8 @@ class Twitch_Module():
         # If Mod or Op, Twitch Chat limit is 100 per 30 seconds
         self.cooldownModule: Cooldown_Module = Cooldown_Module()
         self.cooldownModule.setupCooldown("twitchChat", 20, 32)
+
+        self.DB_Connection = utilities_db.Praxis_DB_Connection()
 
     def join_channel(self, credential: credentials.Twitch_Credential, channel_name: str):
         channel_name = "#" + channel_name
@@ -211,6 +217,8 @@ class Twitch_Module():
 
         self.eval_command(message)
         self.eval_tts(message)
+        if config.is_tts_Speaker_forDiscord_Enabled:
+            self.addTask_TTS(message.text, message.sender)
 
     def isChannel_inConfigList(self, selectedChannel, selectedList):
         # print(channel)
@@ -220,6 +228,14 @@ class Twitch_Module():
             if twitchChannel == selectedChannel:
                 is_Self = True
         return is_Self
+
+
+    def addTask_TTS(self, inputTTS, author):
+        newAudio = {}
+        newAudio["type"] = "tts"
+        newAudio["text"] = inputTTS
+        preppedAudio = dumps(newAudio)
+        self.DB_Connection.add_taskToQueue("standalone_discord", "voice", str(time.time()), "play", preppedAudio, author)
 
 
 if __name__ == "__main__":
