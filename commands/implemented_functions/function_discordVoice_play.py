@@ -40,7 +40,6 @@ from bot_functions import utilities_script as utility
 from bot_functions import utilities_db
 
 import datetime
-
 class Function_discordVoice_play(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
@@ -76,6 +75,7 @@ class Function_discordVoice_play(AbstractCommandFunction, metaclass=ABCMeta):
         #if utility.contains_url(inputArgs):
         #    # inputArgs is a url
         #    newAudio["type"] = "url"
+        newAudio["text"] = inputArgs
         if utility.contains_pattern(inputArgs, ".*\.(mp3|pcm|wav|aiff|aac|ogg|wma|flac|alac)$"):
             # inputArgs is a file
             newAudio["type"] = "file"

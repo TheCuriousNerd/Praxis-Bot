@@ -45,7 +45,7 @@ from discord import message
 from discord.client import Client
 import asyncio
 
-import bot_functions.tts
+from bot_functions import tts
 
 import config
 
@@ -343,7 +343,7 @@ class Discord_Module(discord.Client):
             return await YTDLSource.from_url(preppedTrack["text"], loop=self.loop)
         elif preppedTrack["type"] == "tts":
             #generate TTS audio to then play
-            filePath = bot_functions.tts.create_speech_file(preppedTrack["text"])
+            filePath = tts.create_speech_file(preppedTrack["text"])[8:] # Removes "/praxis/" from the path
             return discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(filePath))
         else:
             return None
@@ -630,19 +630,21 @@ class Discord_Module(discord.Client):
                 inputData = ""
             #await interaction.response.send_message("%s called %s | %s || FROM %s" % (author.name, cmdName, inputData, msgChannel.name))
             if cmdName == "test":
-                if inputData == "123":
-                    await self.voiceTest()
-                elif inputData == "abc":
-                    await self.move_user_to_voice_channel(interaction.user.id, 663970225821188096)
-                elif inputData == "jump":
-                    await self.move_users_to_voice_channel(
-                        [76078763984551936, 224403903607865344, 516364659327238166, 107729761194782720, 283035826491752449, 144902397477519362, 160953588250705921], 741473571141976096)
+                await interaction.response.send_message("%s called %s FROM %s\nECHO: %s" % (author.name, cmdName, msgChannel.name, inputData))
+            #    if inputData == "123":
+            #        await self.voiceTest()
+            #    elif inputData == "abc":
+            #        await self.move_user_to_voice_channel(interaction.user.id, 663970225821188096)
+            #    elif inputData == "jump":
+            #        await self.move_users_to_voice_channel(
+            #            [76078763984551936, 224403903607865344, 516364659327238166, 107729761194782720, 283035826491752449, 144902397477519362, 160953588250705921], 741473571141976096)
 
             DefaultCommands = ["join", "leave", "play", "pause", "stop", "resume", "skip", "clear", "volume", "loop", "repeat", "shuffle"]
             for command in DefaultCommands:
                 if cmdName == command:
                     #await self.send_message_to_channel(835319293981622302, "About to run handler")
-                    await self.default_slash_command_handler(interaction, author, msgChannel, command, inputData)
+                    resturnString = await self.default_slash_command_handler(interaction, author, msgChannel, command, inputData)
+                    await interaction.response.send_message(resturnString)
             slashV3Commands = ["math"]
             for command in slashV3Commands:
                 if cmdName == command:
