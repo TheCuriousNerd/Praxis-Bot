@@ -131,6 +131,133 @@ def parse_line(message: str):
         rest = message[idx + 1:]
         return command, rest
 
+def miniParser(stringToParse: str):
+    level_dict = {}
+    level_map = {} # Have this so we can know how to rebuild a string from this.
+    level = 0
+    level_char = ''
+    level_mapping = []
+    charPosition = 0
+    for char_ in stringToParse:
+        if char_ == '(':
+            if level not in level_dict:
+                level_dict[level] = [level_char]
+                level_map[level] = [charPosition]
+            elif level_char != '':
+                level_dict[level].append(level_char)
+                level_map[level].append(charPosition)
+            level_char = ''
+            level += 1
+        elif char_ == ')':
+            if level not in level_dict:
+                level_dict[level] = [level_char]
+                level_map[level] = [charPosition]
+            elif level_char != '':
+                level_dict[level].append(level_char)
+                level_map[level].append(charPosition)
+            level_char = ''
+            level -= 1
+        else:
+            level_char += char_
+        charPosition += 1
+    return level_dict, level_map
+
+def miniParserReverser(parseToReverse: dict, parseMap: dict):
+    #This reverses the miniparser results
+    reversedResults = []
+
+    parseKeys = parseToReverse.keys()
+    mapKeys = parseMap.keys()
+
+    curLevel = 0
+    curTargetListEntry = 0
+    targetLevel = 0 # This is the level we want to get to (the next lowest value in the parseMap)
+    targetListEntry = 0 # This is the index of the list entry in the parseMap that we want to get to
+    charCounter = 0
+    charCounterLast = 0
+
+    totalStringsToJoin = 0
+    compiledMapKeys = []
+    for mapKey in mapKeys:
+        tempMapList = parseMap[mapKey]
+        for temp in tempMapList:
+            compiledMapKeys.append(temp)
+    compiledMapKeys.sort()
+
+    totalStringsToJoin = len(compiledMapKeys)
+    #print("totalStringsToJoin: ", totalStringsToJoin)
+    #print("compiledMapKeys: ", compiledMapKeys)
+
+    selectedLevel = 0
+    selectedListEntry = 0
+    curCharKey = 0
+
+    isFullyResolved = False
+    while not isFullyResolved:
+        for mapKey in mapKeys:
+            tempMapList = parseMap[mapKey]
+            for temp in tempMapList:
+                #print("temp: ", temp)
+                if temp == curCharKey:
+                    try:
+                        curCharKey = compiledMapKeys[compiledMapKeys.index(temp)+1]
+                    except:
+                        curCharKey = compiledMapKeys[-1]
+                    #print("curCharKey: ", curCharKey)
+                    selectedLevel = mapKey
+                    selectedListEntry = tempMapList.index(temp)
+                    #print("Found a match at level: ", selectedLevel, " and list entry: ", selectedListEntry)
+
+                    reversedResults.append(parseToReverse[selectedLevel][selectedListEntry])
+                    totalStringsToJoin -= 1
+        if totalStringsToJoin == 0:
+            isFullyResolved = True
+
+
+
+
+    # isFullyResolved = False
+    # while not isFullyResolved:
+    #     curTargetListEntry = 0
+    #     curLevel = 0
+
+    #     for mapKey in mapKeys:
+    #         curMapLevel = parseMap[mapKey]
+    #         curTargetListEntry = 0
+    #         for entry in curMapLevel:
+    #             # print("\n")
+    #             #print("curLevel: ", curLevel)
+    #             # print("curTargetListEntry: ", curTargetListEntry)
+    #             # print("targetLevel: ", targetLevel)
+    #             # print("targetListEntry: ", targetListEntry)
+    #             # print("charCounter: ", charCounter)
+    #             # print("charCounterLast: ", charCounterLast)
+    #             #print("entry: ", entry)
+    #             # print("curMapLevel: ", curMapLevel)
+    #             #print("\n")
+    #             if (entry >= charCounter) and (entry <= charCounterLast):
+    #                 targetLevel = curLevel
+    #                 targetListEntry = curTargetListEntry
+    #                 charCounter = entry
+    #                 charCounterLast = entry
+    #                 print("FOUND LESSER VALUE " + str(entry) + " < " + str(charCounterLast))
+    #             else:
+    #                 charCounterLast = entry
+    #             curTargetListEntry += 1
+    #         curLevel += 1
+
+    #     #print("targetLevel: ", targetLevel)
+    #     #print("targetListEntry: ", targetListEntry)
+    #     reversedResults.append(parseToReverse[targetLevel][targetListEntry])
+
+    #     totalStringsToJoin -= 1
+    #     if totalStringsToJoin == 0:
+    #         isFullyResolved = True
+
+    #return targetLevel
+    #print(''.join(reversedResults))
+    return ''.join(reversedResults)
+
 def isRunningInDocker():
     isD = os.getenv('ISDOCKER')
     if isD is None:
