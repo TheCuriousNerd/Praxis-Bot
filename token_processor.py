@@ -48,6 +48,23 @@ class Token_Processor():
     def setup(self):
         pass
 
+    def new_parseTokenResponse(self, userData, userID, commandRawInput:str, command_returnString, tokenSource):
+        combinedUserData = {}
+        combinedUserData["userData"] = userData
+        combinedUserData["userID"] = userID
+        commandArguments = utility.get_args(commandRawInput)
+        #This removes the command from the arguments
+        commandArguments.pop(0)
+
+    def new_stringFunctionParser(self,
+            input:str = "",
+            arguments:list = [],
+            userData = "",
+            commandRawInput = "",
+            tokenSource = None
+            ):
+            pass
+
     #Commands will call this function to parse tokens in the response string.
     def parseTokenResponse(self, userData, userID, commandRawInput:str, command_returnString, tokenSource):
         combinedUserData = {}
@@ -505,19 +522,25 @@ def lookupCommandResponse(input):
 
 if __name__ == '__main__':
     #parsed = utility.miniParser("ROOT(testA(123))((4525)testB)(testC(2362))")
-    parsed, parseMap = utility.miniParser("(DOOK(testA(123))((4525)testB)(testC(2362))POOF)")
+    #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
+    stringToParse = "(you rolled a ($echo ($roll #*)) with (#0))"
+    parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()
+    print("\n\n")
     for key in parsedKeys:
         print(key)
         print(parsed[key])
+    print("\n\n")
     for map in parsedMapKeys:
         print(map)
         print(parseMap[map])
+    print("\n\n")
+
+    reversedString = utility.miniParserReverser(parsed, parseMap)
 
     print("\n\n")
-    print("(DOOK(testA(123))((4525)testB)(testC(2362))POOF)")
-    reversedString = utility.miniParserReverser(parsed, parseMap)
+    print(stringToParse)
     print(reversedString)
     print("\n\n")
 
