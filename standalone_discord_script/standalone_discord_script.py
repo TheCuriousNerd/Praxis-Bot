@@ -207,6 +207,7 @@ class Discord_Module(discord.Client):
                         required=False
                         )]
         commandsToAdd = [
+            {"name": "raidtime", "description": "Moves the raiders to the raid channel.", "options": []},
             {"name":"play", "description":"Plays TTS audio in voice channel.", "options":defaultOptions},
             {"name":"playnext", "description":"Adds audio to the next slot in the queue.", "options":defaultOptions},
             {"name":"stop", "description":"Stops audio being played in the voice channel.", "options":[]},
@@ -631,13 +632,18 @@ class Discord_Module(discord.Client):
             #await interaction.response.send_message("%s called %s | %s || FROM %s" % (author.name, cmdName, inputData, msgChannel.name))
             if cmdName == "test":
                 await interaction.response.send_message("%s called %s FROM %s\nECHO: %s" % (author.name, cmdName, msgChannel.name, inputData))
-            #    if inputData == "123":
-            #        await self.voiceTest()
-            #    elif inputData == "abc":
-            #        await self.move_user_to_voice_channel(interaction.user.id, 663970225821188096)
-            #    elif inputData == "jump":
-            #        await self.move_users_to_voice_channel(
-            #            [76078763984551936, 224403903607865344, 516364659327238166, 107729761194782720, 283035826491752449, 144902397477519362, 160953588250705921], 741473571141976096)
+            if inputData == "123":
+                await self.voiceTest()
+            elif inputData == "abc":
+                await self.move_user_to_voice_channel(interaction.user.id, 663970225821188096)
+
+            if cmdName == "raidtime":
+                raidTeamIDs = config.raidTeamIDs
+                if author.id in raidTeamIDs:
+                    await self.move_users_to_voice_channel(raidTeamIDs, 741473571141976096)
+                    await interaction.response.send_message("%s moved the Raid Team from %s" % (author.name, msgChannel.name))
+                else:
+                    await interaction.response.send_message("%s cannot call this command." % (author.name))
 
             DefaultCommands = ["join", "leave", "play", "pause", "stop", "resume", "skip", "clear", "volume", "loop", "repeat", "shuffle"]
             for command in DefaultCommands:

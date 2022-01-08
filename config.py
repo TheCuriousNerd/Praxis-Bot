@@ -38,6 +38,11 @@ allowedCommandsList_TwitchPowerUsers = ["thecuriousnerd"]
 allowedTTS_List = ["thecuriousnerd", "<@!76078763984551936>", "<@76078763984551936>", "76078763984551936"]
 adminUsers_List = ["thecuriousnerd", "<@!76078763984551936>", "<@76078763984551936>", "76078763984551936"]
 
+raidTeamIDs = [76078763984551936, 136995405496975362,
+    144902397477519362, 516364659327238166,
+    107729761194782720, 283035826491752449,
+    224403903607865344, 160953588250705921]
+
 #Twitch Module Configs
 block_TwitchChannelsMessaging = [""] # Blocks the ability to send messages to twitch channels
 blockAll_TwitchChatChannelsMessaging = False # Blocks the ability to send messages to twitch channels
