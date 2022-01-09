@@ -208,6 +208,7 @@ class Discord_Module(discord.Client):
                         )]
         commandsToAdd = [
             {"name": "raidtime", "description": "Moves the raiders to the raid channel.", "options": []},
+            {"name": "endraid", "description": "Moves the raiders to the raid channel.", "options": defaultOptions},
             {"name":"play", "description":"Plays TTS audio in voice channel.", "options":defaultOptions},
             {"name":"playnext", "description":"Adds audio to the next slot in the queue.", "options":defaultOptions},
             {"name":"stop", "description":"Stops audio being played in the voice channel.", "options":[]},
@@ -641,6 +642,16 @@ class Discord_Module(discord.Client):
                 raidTeamIDs = config.raidTeamIDs
                 if author.id in raidTeamIDs:
                     await self.move_users_to_voice_channel(raidTeamIDs, 741473571141976096)
+                    await interaction.response.send_message("%s moved the Raid Team from %s" % (author.name, msgChannel.name))
+                else:
+                    await interaction.response.send_message("%s cannot call this command." % (author.name))
+
+            if cmdName == "endraid":
+                if inputData == "":
+                    inputData = 812662889008594944
+                raidTeamIDs = config.raidTeamIDs
+                if author.id in raidTeamIDs:
+                    await self.move_users_to_voice_channel(raidTeamIDs, inputData)
                     await interaction.response.send_message("%s moved the Raid Team from %s" % (author.name, msgChannel.name))
                 else:
                     await interaction.response.send_message("%s cannot call this command." % (author.name))
