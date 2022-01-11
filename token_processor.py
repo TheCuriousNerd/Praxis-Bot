@@ -65,6 +65,55 @@ class Token_Processor():
             ):
             pass
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     #Commands will call this function to parse tokens in the response string.
     def parseTokenResponse(self, userData, userID, commandRawInput:str, command_returnString, tokenSource):
         combinedUserData = {}
@@ -523,7 +572,7 @@ def lookupCommandResponse(input):
 if __name__ == '__main__':
     #parsed = utility.miniParser("ROOT(testA(123))((4525)testB)(testC(2362))")
     #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
-    stringToParse = "(you rolled a ($echo ($roll #*)) with (#0))"
+    stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()

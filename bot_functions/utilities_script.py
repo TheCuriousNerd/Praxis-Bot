@@ -218,11 +218,15 @@ def miniParserReverser(parseToReverse: dict, parseMap: dict, keep_parenthesis: b
                         if mapKey != curLevel:
                             if mapKey < curLevel:
                                 reversedResults[-1] = reversedResults[-1] + (")"*(curLevel - mapKey))
-                                bonusParaCounter -= 1
+                                bonusParaCounter -= (curLevel - mapKey)
                             if mapKey > curLevel:
                                 textToAppend = "(" + textToAppend
                                 bonusParaCounter += 1
+                                if totalStringsToJoin == 1:
+                                    bonusParaCounter += 0
                             curLevel = mapKey
+                        elif mapKey == curLevel and curLevel > 0:
+                            reversedResults[-1] = reversedResults[-1] + (")"*(mapKey - 1)) + ("("*(mapKey - 1))
 
                     reversedResults.append(textToAppend)
                     totalStringsToJoin -= 1
@@ -231,7 +235,7 @@ def miniParserReverser(parseToReverse: dict, parseMap: dict, keep_parenthesis: b
 
     reversedResultsString = "".join(reversedResults)
     if keep_parenthesis:
-        bonusParaCounter = bonusParaCounter - 1
+        #bonusParaCounter = bonusParaCounter - 1
         #print("last bonusParaCounter: ", bonusParaCounter)
         reversedResultsString = reversedResultsString + bonusParaCounter*")"
 
