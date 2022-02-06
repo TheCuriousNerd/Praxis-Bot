@@ -245,7 +245,7 @@ def isRunningInDocker():
     isD = os.getenv('ISDOCKER')
     if isD is None:
         return False
-    return isD == "cat"
+    return isD == True
 
 def hard_shutdown():
     current_system_pid = os.getpid()

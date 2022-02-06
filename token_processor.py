@@ -23,6 +23,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from enum import Enum, auto
+import enum
 import pyparsing
 import shlex
 
@@ -56,6 +57,23 @@ class Token_Processor():
         #This removes the command from the arguments
         commandArguments.pop(0)
 
+        #tempArg = commandRawInput.split("( )")
+        tempArg = re.split("( )", commandRawInput)
+        tempArg.pop(0)
+        try:
+            tempArg.pop(0)
+        except:
+            pass
+        tempArg = self.cleanupTempArgs(tempArg)
+        #print("\ntempArgs:")
+        #for t in tempArg:
+        #    print(t)
+
+        #print("\nCommand Return String:")
+        #print("\n" + str(command_returnString))
+        response = self.new_stringFunctionParser(command_returnString, tempArg, combinedUserData, commandRawInput, tokenSource)
+        return response
+
     def new_stringFunctionParser(self,
             input:str = "",
             arguments:list = [],
@@ -63,54 +81,160 @@ class Token_Processor():
             commandRawInput = "",
             tokenSource = None
             ):
-            pass
+        output = None
+        print("Lets bake this string!!!")
+        print(input)
+        print(arguments)
+        print(userData)
+        print(commandRawInput)
+        print(tokenSource)
+        print("\n")
+
+
+        parsedInput, parsedInputMap = utility.miniParser(input)
+        print("\nParsed Input:")
+        print(parsedInput)
+        print("\nParsed Input Map:")
+        print(parsedInputMap)
+        compiledMapKeys = []
+        for mapKey in parsedInputMap:
+            tempMapList = parsedInputMap[mapKey]
+            for temp in tempMapList:
+                compiledMapKeys.append(temp)
+        totalMapLevels = len(parsedInputMap)
+        compiledMapKeys.sort()
+        print("\nCompiled Map Keys:")
+        print(compiledMapKeys)
+        print("\nTotal Map Levels:")
+        print(str(totalMapLevels) + "\n")
+
+        # This is the main loop that will go through the parsedInput and replace tokens with the appropriate values.
+        # If crazyLoop is true, then it will continue to loop until it finds no more tokens. From the innermost nested token to the outermost.
+        crazyLoop = False
+
+        if crazyLoop == False:
+
+            # The part that handles the arguments ie (#*) and (#0)
+            print("Argument Parsing...")
+            for curMapLevel in parsedInput:
+                parsedInputEntryCount = 0
+                if curMapLevel > 1:
+                    for entry in parsedInput[curMapLevel]:
+                        if "#*" in entry:
+                            print(entry)
+                            parsedInput[curMapLevel][parsedInputEntryCount] = "".join(arguments)
+                        for i in range(0, 10):
+                            if "#%s" % (str(i)) in entry:
+                                print("#%s" % (str(i)))
+                        parsedInputEntryCount += 1
+
+            # The part that handles the variables ie (@variable)
+            print("Variable Parsing...")
+            for curMapLevel in parsedInput:
+                if curMapLevel > 1:
+                    for entry in parsedInput[curMapLevel]:
+                        if "@" in entry:
+                            print(entry)
+
+
+
+            # The part that handles the functions ie ($function)
+            print("Function Parsing...")
+            for curMapLevel in parsedInput:
+                parsedInputEntryCount = 0
+                if curMapLevel > 1:
+                    for entry in parsedInput[curMapLevel]:
+                        if "$" in entry: # Replace this with a comparison to the function list to see if the entry is a valid function
+                            print("\n]>>> Function " + entry)
+                            #print(curMapLevel)
+                            #print(parsedInputEntryCount)
+                            print(parsedInput[curMapLevel][parsedInputEntryCount])
+                            print("Function Starting Point: " + str(parsedInputMap[curMapLevel][parsedInputEntryCount]))
+                            currentInputMapPoint = parsedInputMap[curMapLevel][parsedInputEntryCount]
+                            currentInputMapPoint_max = 0
+                            try:
+                                currentInputMapPoint_max = parsedInputMap[curMapLevel][parsedInputEntryCount + 1]
+                            except:
+                                currentInputMapPoint_max = -1
+                            print("Function Max Allowed Point: " + str(currentInputMapPoint_max))
+                            steps = 0
+                            functionStrings = []
+                            functionStringsMap = []
+                            functionStrings.append(parsedInput[curMapLevel][parsedInputEntryCount])
+                            functionStringsMap.append(parsedInputMap[curMapLevel][parsedInputEntryCount])
+                            functionStringsDict = {}
+                            functionStringsDict[parsedInputMap[curMapLevel][parsedInputEntryCount]] = parsedInput[curMapLevel][parsedInputEntryCount]
+                            def recursiveForwardSearch(steps, currentInputMapPoint):
+                                #print("]>recursiveForwardSearch")
+                                #print("]>steps: " + str(steps))
+                                #print("]>curMapLevel: " + str(curMapLevel))
+                                try:
+                                    #print("Cur: " + str(parsedInput[curMapLevel + steps]))
+                                    tempBlock = False # Temp Block is used in the later if statement to only run once if the condition is true.
+                                    furtherEntryCounter = 0
+                                    for furtherEntry in parsedInput[curMapLevel + steps]:
+                                        #print(furtherEntryList)
+                                        #print(parsedInputMap[entry + steps])
+                                        try:
+                                            try:
+                                                #print("currentInputMapPoint: ")
+                                                #print(currentInputMapPoint)
+                                                #print("parsedInputMap: ")
+                                                #print(parsedInputMap[curMapLevel + steps][furtherEntryCounter])
+                                                newPoint = parsedInputMap[curMapLevel + steps][furtherEntryCounter]
+                                                if (currentInputMapPoint < newPoint) and ((newPoint < currentInputMapPoint_max) or currentInputMapPoint_max == -1):
+                                                    print("results: " + furtherEntry)
+                                                    #functionStrings.append(furtherEntry)
+                                                    print(parsedInputMap[curMapLevel + steps][furtherEntryCounter])
+                                                    #functionStringsMap.append(parsedInputMap[curMapLevel + steps][furtherEntryCounter])
+                                                    functionStringsDict[newPoint] = furtherEntry
+                                                    currentInputMapPoint = parsedInputMap[curMapLevel + steps][furtherEntryCounter]
+                                                    tempBlock = True
+                                            except:
+                                                pass
+                                            #print("Going up...")
+                                            recursiveForwardSearch(steps + 1, currentInputMapPoint)
+                                            tempBlock = False
+                                        except:
+                                            pass
+                                            #print("No further entries")
+                                        furtherEntryCounter += 1
+                                    #print("Going down...")
+                                    steps -= 1
+                                except:
+                                    pass
+                                #print("]>recursiveForwardSearch COMPLETE")
+                            recursiveForwardSearch(steps, currentInputMapPoint)
+                            #print("Steps: " + str(steps))
+                            print("\nFunction Strings: " + str(functionStrings))
+                            print("Function Strings Map: " + str(functionStringsMap))
+                            print("Function Strings Dict: " + str(functionStringsDict))
+                            print("\n")
+                            collectedStringKeys = functionStringsDict.keys()
+                            innerFunctions = []
+                            for key in collectedStringKeys:
+                                if "$" in functionStringsDict[key]:
+                                    print("Inner Function: " + functionStringsDict[key])
+                                    innerFunctions.append(functionStringsDict[key])
+                            
+                        parsedInputEntryCount += 1
+
+            output = utility.miniParserReverser(parsedInput, parsedInputMap, False)
 
 
 
 
 
 
+        if crazyLoop == True:
+            print("Uncharted Waters, be wary of infinite loops!")
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return output
 
 
 
@@ -570,9 +694,11 @@ def lookupCommandResponse(input):
     return response
 
 if __name__ == '__main__':
+    testModule = Token_Processor()
     #parsed = utility.miniParser("ROOT(testA(123))((4525)testB)(testC(2362))")
     #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
-    stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
+    #stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
+    stringToParse = "((#*) = ($math (9+9+ (#*) +1+111)) (@test) ($math (6+6+ (#*) +2+111)))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()
@@ -586,11 +712,17 @@ if __name__ == '__main__':
         print(parseMap[map])
     print("\n\n")
 
-    reversedString = utility.miniParserReverser(parsed, parseMap)
+    reversedString = utility.miniParserReverser(parsed, parseMap, keep_parenthesis=False)
 
     print("\n\n")
     print(stringToParse)
     print(reversedString)
+    print("\n")
+    commandName = "!math"
+    commandRawInput = "%s 3*3 +22" % (commandName)
+    commandResponse = testModule.new_parseTokenResponse("TestUser", None, commandRawInput, stringToParse, None)
+    print("\n\ncommandResponse")
+    print(commandResponse)
     print("\n\n")
 
 
