@@ -60,7 +60,10 @@ class Function_Math(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
-        mathProblem = utility.list_to_string(args)
+        if type(args) is list:
+            mathProblem = utility.list_to_string(args)
+        else:
+            mathProblem = args
 
         mathematician = Mathematician()
         mathResults = mathematician.solve_problem(mathProblem)

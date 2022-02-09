@@ -140,6 +140,7 @@ class Token_Processor():
 
             # The part that handles the functions ie ($function)
             print("Function Parsing...")
+            compiledFunctionsToRun = []
             for curMapLevel in parsedInput:
                 parsedInputEntryCount = 0
                 if curMapLevel > 1:
@@ -183,9 +184,9 @@ class Token_Processor():
                                                 #print(parsedInputMap[curMapLevel + steps][furtherEntryCounter])
                                                 newPoint = parsedInputMap[curMapLevel + steps][furtherEntryCounter]
                                                 if (currentInputMapPoint < newPoint) and ((newPoint < currentInputMapPoint_max) or currentInputMapPoint_max == -1):
-                                                    print("results: " + furtherEntry)
+                                                    #print("results: " + furtherEntry)
                                                     #functionStrings.append(furtherEntry)
-                                                    print(parsedInputMap[curMapLevel + steps][furtherEntryCounter])
+                                                    #print(parsedInputMap[curMapLevel + steps][furtherEntryCounter])
                                                     #functionStringsMap.append(parsedInputMap[curMapLevel + steps][furtherEntryCounter])
                                                     functionStringsDict[newPoint] = furtherEntry
                                                     currentInputMapPoint = parsedInputMap[curMapLevel + steps][furtherEntryCounter]
@@ -209,15 +210,67 @@ class Token_Processor():
                             print("\nFunction Strings: " + str(functionStrings))
                             print("Function Strings Map: " + str(functionStringsMap))
                             print("Function Strings Dict: " + str(functionStringsDict))
-                            print("\n")
+                            compiledFunctionsToRun.append(functionStringsDict)
                             collectedStringKeys = functionStringsDict.keys()
-                            innerFunctions = []
-                            for key in collectedStringKeys:
-                                if "$" in functionStringsDict[key]:
-                                    print("Inner Function: " + functionStringsDict[key])
-                                    innerFunctions.append(functionStringsDict[key])
-                            
+                            # innerFunctions = {}
+                            # for key in collectedStringKeys:
+                            #     if "$" in functionStringsDict[key]:
+                            #         print("Inner Function: " + functionStringsDict[key])
+                            #         innerFunctions[key] = functionStringsDict[key]
+                            # print("Captured Functions: ")
+                            # print(innerFunctions)
+
+
                         parsedInputEntryCount += 1
+
+            # The part that handles the compiled functions ie ($function)
+            print("\nCompiled Functions: ")
+            print(compiledFunctionsToRun)
+            #print(len(compiledFunctionsToRun))
+            for fCount in range(len(compiledFunctionsToRun)):
+                workToDo:dict = compiledFunctionsToRun.pop(-1)
+                print("\nworkToDo: ")
+                print(workToDo.keys())
+                keyList = []
+                for key in workToDo:
+                    keyList.append(key)
+                keyList.sort()
+
+                targetCommand = ""
+                targetCommandParams = ""
+                resultDestination = (0,0)
+
+                targetCommandParamsPrep = []
+                grabbedFunction = False
+                for key in keyList:
+                    if grabbedFunction == False:
+                        resultDestination = utility.parserEntryCoordLookup(parsedInputMap, key)
+                        targetCommand = workToDo[key]
+                        grabbedFunction = True
+                    else:
+                        key_location = utility.parserEntryCoordLookup(parsedInputMap, key)
+                        targetCommandParamsPrep.append(parsedInput[key_location[0]][key_location[1]])
+                        parsedInput[key_location[0]][key_location[1]] = ""
+                    #print(key)
+                    #print(workToDo[key])
+                    #print(utility.parserEntryCoordLookup(parsedInputMap, key))
+                targetCommandParams = " ".join(filter(None, targetCommandParamsPrep))
+                reResultsPrepped_arg = re.split("( )", targetCommandParams)
+                preppedParams = self.cleanupTempArgs(reResultsPrepped_arg)
+
+                targetCommand = targetCommand[1:].strip()
+                print("\nTarget Command: " + targetCommand)
+                print("Target Command Params::" + str(preppedParams) + "::")
+
+                if self.does_function_exist(targetCommand) == True:
+                    print("\nFunction Exists")
+                    functionResults = ""
+                    functionResults = self.run_function(userData, targetCommand, preppedParams, tokenSource)
+                    print("Function Results: " + str(functionResults))
+                    #functionResults = "[FUNCTION COMPLETE]"
+                    parsedInput[resultDestination[0]][resultDestination[1]] = str(functionResults)
+
+
 
             output = utility.miniParserReverser(parsedInput, parsedInputMap, False)
 
@@ -659,15 +712,17 @@ class Token_Processor():
             return False
 
     def run_function(self, user, function, args, tokenSource):
-            try:
-                self.functionCounter.count(function)
+        try:
+            #self.functionCounter.count(function)
 
-                function_:AbstractCommandFunction = self.loadedFunctions[function]
-                if function_ is not None:
-                    function_response = function_.do_function(tokenSource, user, function, args, None)
-                    return function_response
-            except:
-                return "{Function Error}"
+            function_:AbstractCommandFunction = self.loadedFunctions[function]
+            if function_ is not None:
+                function_response = function_.do_function(tokenSource, user, function, args, None)
+                return function_response
+        except Exception as e:
+            print("Exception: ")
+            print(e)
+            return "{Function Error}"
 
 
 def lookupCommandResponse(input):
@@ -698,7 +753,8 @@ if __name__ == '__main__':
     #parsed = utility.miniParser("ROOT(testA(123))((4525)testB)(testC(2362))")
     #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
     #stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
-    stringToParse = "((#*) = ($math (9+9+ (#*) +1+111)) (@test) ($math (6+6+ (#*) +2+111)))"
+    stringToParse = "((#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000)))"
+    stringToParse = "((#*) = ($math_unitConversion(($math (#*))c f) (@test)"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()
@@ -719,7 +775,7 @@ if __name__ == '__main__':
     print(reversedString)
     print("\n")
     commandName = "!math"
-    commandRawInput = "%s 3*3 +22" % (commandName)
+    commandRawInput = "%s 3*3 +1" % (commandName)
     commandResponse = testModule.new_parseTokenResponse("TestUser", None, commandRawInput, stringToParse, None)
     print("\n\ncommandResponse")
     print(commandResponse)

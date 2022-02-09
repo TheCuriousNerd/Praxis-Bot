@@ -49,7 +49,7 @@ def get_args(text: str) -> list:
 
 # This takes all items from a list and puts them into a string, separated by a space
 def list_to_string(list_to_convert):
-    return " ".join(list_to_convert)
+    return " ".join(filter(None, list_to_convert))
 
 def does_contain_OnlyNumbers(text):
     isJustNumbers = False
@@ -240,6 +240,21 @@ def miniParserReverser(parseToReverse: dict, parseMap: dict, keep_parenthesis: b
         reversedResultsString = reversedResultsString + bonusParaCounter*")"
 
     return reversedResultsString
+
+def parserEntryCoordLookup(parsedData: dict, data):
+    level = 0
+    levelEntry = 0
+
+    for parseData_Level in parsedData:
+        levelEntry = 0
+        for parseData_LevelEntry in parsedData[parseData_Level]:
+            if parseData_LevelEntry == data:
+                level = parseData_Level
+                return level, levelEntry
+            else:
+                levelEntry += 1
+
+    return level, levelEntry
 
 def isRunningInDocker():
     isD = os.getenv('ISDOCKER')
