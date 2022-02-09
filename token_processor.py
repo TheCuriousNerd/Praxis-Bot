@@ -49,7 +49,7 @@ class Token_Processor():
     def setup(self):
         pass
 
-    def new_parseTokenResponse(self, userData, userID, commandRawInput:str, command_returnString, tokenSource):
+    def parseTokenResponse(self, userData, userID, commandRawInput:str, command_returnString, tokenSource):
         combinedUserData = {}
         combinedUserData["userData"] = userData
         combinedUserData["userID"] = userID
@@ -292,7 +292,7 @@ class Token_Processor():
 
 
     #Commands will call this function to parse tokens in the response string.
-    def parseTokenResponse(self, userData, userID, commandRawInput:str, command_returnString, tokenSource):
+    def parseTokenResponse_old(self, userData, userID, commandRawInput:str, command_returnString, tokenSource):
         combinedUserData = {}
         combinedUserData["userData"] = userData
         combinedUserData["userID"] = userID
@@ -776,7 +776,7 @@ if __name__ == '__main__':
     print("\n")
     commandName = "!math"
     commandRawInput = "%s 3*3 +1" % (commandName)
-    commandResponse = testModule.new_parseTokenResponse("TestUser", None, commandRawInput, stringToParse, None)
+    commandResponse = testModule.parseTokenResponse("TestUser", None, commandRawInput, stringToParse, None)
     print("\n\ncommandResponse")
     print(commandResponse)
     print("\n\n")

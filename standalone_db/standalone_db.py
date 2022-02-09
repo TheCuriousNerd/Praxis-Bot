@@ -198,14 +198,14 @@ def setup_basicCommands():
 
 def create_basicCommands():
     print("Creating Basic Commands for command_responses_v0")
-    create_basicCommand("!testerino_v3", "A Testerino is Detected $(testFunction $(#*))")
-    create_basicCommand("!math", "$(#*) = $(math $(#*))")
-    create_basicCommand("!presentdaypresenttime", "The current date and time is: $(datetime %Y-%m-%d %H:%M:%S)")
-    create_basicCommand("!curdaytime", "The current date and time is: $(datetime $(#*))")
-    create_basicCommand("!convertunit", "$(#0) $(#1) = $(math_unitConversion $(#*)) $(#2)")
+    create_basicCommand("!testerino_v3", "A Testerino is Detected ($testFunction (#*))")
+    create_basicCommand("!math", "(#*) = ($math (#*))")
+    create_basicCommand("!presentdaypresenttime", "The current date and time is: ($datetime %Y-%m-%d %H:%M:%S)")
+    create_basicCommand("!curdaytime", "The current date and time is: ($datetime $(#*))")
+    create_basicCommand("!convertunit", "(#0) (#1) = ($math_unitConversion (#*)) (#2)")
 
-    create_basicCommand("!cryptoprice", "The current price of $(#0) against $(#1) is $(getCryptoPrice $(#0) $(#1))")
-    create_basicCommand("!speak", "$(play $(#*))")
+    create_basicCommand("!cryptoprice", "The current price of (#0) against (#1) is ($getCryptoPrice (#0) (#1))")
+    create_basicCommand("!speak", "($play (#*))")
     #create_basicCommand("!chyron", "$(chyron $(#*))")
     #create_basicCommand("!roll", "$(roll $(#*))")
     #create_basicCommand("!lights", "$(lights $(#*))")
