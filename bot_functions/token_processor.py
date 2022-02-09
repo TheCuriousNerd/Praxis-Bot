@@ -122,10 +122,11 @@ class Token_Processor():
                     for entry in parsedInput[curMapLevel]:
                         if "#*" in entry:
                             print(entry)
-                            parsedInput[curMapLevel][parsedInputEntryCount] = "".join(arguments)
+                            parsedInput[curMapLevel][parsedInputEntryCount] = " ".join(filter(None, arguments))
                         for i in range(0, 10):
                             if "#%s" % (str(i)) in entry:
                                 print("#%s" % (str(i)))
+                                parsedInput[curMapLevel][parsedInputEntryCount] = arguments[i]
                         parsedInputEntryCount += 1
 
             # The part that handles the variables ie (@variable)

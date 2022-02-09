@@ -61,11 +61,11 @@ class Function_getCryptoPrice(AbstractCommandFunction, metaclass=ABCMeta):
 
     def do_work(self, user, functionName, args, bonusData):
         targetCrypto = args[0]
-        targetCrypto = targetCrypto.upper()
+        targetCrypto = targetCrypto.upper().strip()
 
         # Get the current price of the target crypto USD (or other currency)
         cryptoToCompareAgainst = args[1]
-        cryptoToCompareAgainst = cryptoToCompareAgainst.upper()
+        cryptoToCompareAgainst = cryptoToCompareAgainst.upper().strip()
         Searcher = CryptoStats.CryptoStats()
 
         results = Searcher.getCryptoPrice(targetCrypto, cryptoToCompareAgainst)
