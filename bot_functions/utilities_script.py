@@ -132,6 +132,7 @@ def parse_line(message: str):
         return command, rest
 
 def miniParser(stringToParse: str):
+    stringToParse = "(%s)" % stringToParse
     level_dict = {}
     level_map = {} # Have this so we can know how to rebuild a string from this.
     level = 0

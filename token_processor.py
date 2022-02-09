@@ -753,8 +753,8 @@ if __name__ == '__main__':
     #parsed = utility.miniParser("ROOT(testA(123))((4525)testB)(testC(2362))")
     #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
     #stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
-    stringToParse = "((#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000)))"
-    stringToParse = "((#*) = ($math_unitConversion(($math (#*))c f) (@test)"
+    #stringToParse = "(#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000))"
+    stringToParse = "(#*) = ($math_unitConversion(($math (#*))c f) (@test)"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()
