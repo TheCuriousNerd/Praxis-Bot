@@ -8,7 +8,8 @@ services:
       - praxisbot
     volumes:
       - "../logs:/Praxis/logs"
-      - "../credentials:/Praxis/credentials"
+      - "../credentials:/Praxis/standalone_twitch_pubsub/credentials"
+      - "../config.py:/Praxis/standalone_twitch_pubsub/config.py"
 networks:
   praxisbot:
     name: praxisbot

@@ -38,10 +38,7 @@ allowedCommandsList_TwitchPowerUsers = ["thecuriousnerd"]
 allowedTTS_List = ["thecuriousnerd", "<@!76078763984551936>", "<@76078763984551936>", "76078763984551936"]
 adminUsers_List = ["thecuriousnerd", "<@!76078763984551936>", "<@76078763984551936>", "76078763984551936"]
 
-raidTeamIDs = [76078763984551936, 136995405496975362,
-    144902397477519362, 516364659327238166,
-    107729761194782720, 283035826491752449,
-    224403903607865344, 160953588250705921]
+raidTeamIDs = [76078763984551936]
 
 #Twitch Module Configs
 block_TwitchChannelsMessaging = [""] # Blocks the ability to send messages to twitch channels
@@ -94,7 +91,6 @@ class DBStrategy(Enum):
 #OLD CONFIGS WILL BE DELETED SOON
 #dbStrategy = DBStrategy.SQLite
 
-
 #TTS Configs
 is_tts_Speaker_Enabled = False
 is_tts_URL_Blocked = True
@@ -105,6 +101,32 @@ class Speaker(Enum):
     GOOGLE_TEXT_TO_SPEECH = 1
 
 currentSpeaker = Speaker.GOOGLE_TEXT_TO_SPEECH
+
+
+#Networking Configs (Unused are commented out)
+standalone_channelrewards_address = "standalone_channelrewards"
+standalone_channelrewards_port = "42069"
+standalone_command_address = "standalone_command"
+standalone_command_port = "42010"
+standalone_db_address = "standalone_db"
+standalone_db_port = "42002"
+#standalone_discord_script_address = "standalone_discord_script"
+#standalone_discord_script_port = "NONE"
+standalone_eventLog_address = "standalone_eventlog"
+standalone_eventLog_port = "42008"
+standalone_lights_address = "standalone_lights"
+standalone_lights_port = "42042"
+#standalone_obsWebSocket_address = "standalone_obsWebSocket"
+#standalone_obsWebSocket_port = "NONE"
+standalone_tts_core_address = "standalone_tts_core"
+standalone_tts_core_port = "42064"
+#standalone_twitch_script_address = "standalone_twitch_script"
+#standalone_twitch_script_port = "NONE"
+#standalone_twitch_pubsub_address = "standalone_twitch_pubsub"
+#standalone_twitch_pubsub_port = "NONE"
+standalone_user_client_address = "standalone_user_client"
+standalone_user_client_port = "42055"
+standalone_websource_address = "standalone_websource"
 
 
 #Misc Configs

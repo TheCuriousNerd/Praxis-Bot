@@ -55,8 +55,11 @@ class Twitch_Credential_Maker():
 
         if token is not None: print("found token")
         if refresh_token is not None: print("found refresh_token\n")
-        print("token: ", token)
-        print("refresh_token: ", refresh_token)
+
+        tokenPRINT = len(token) * "*"
+        print("token: ", tokenPRINT)
+        refresh_tokenPRINT = len(refresh_token) * "*"
+        print("refresh_token: ", refresh_tokenPRINT)
         print("")
         return token, refresh_token
 

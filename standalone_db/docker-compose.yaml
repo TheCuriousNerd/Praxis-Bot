@@ -37,7 +37,8 @@ services:
       - praxisbot
     volumes:
       - "../logs:/Praxis/logs"
-      - "../credentials:/Praxis/credentials"
+      - "../credentials:/Praxis/standalone_db/credentials"
+      - "../config.py:/Praxis/standalone_db/config.py"
 networks:
   praxisbot:
     name: praxisbot

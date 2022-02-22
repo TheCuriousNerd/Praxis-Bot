@@ -11,7 +11,8 @@ services:
     volumes:
       - "../stream_sources:/Praxis/stream_sources/"
       - "../logs:/Praxis/logs"
-      - "../credentials:/Praxis/credentials"
+      - "../credentials:/Praxis/standalone_command/credentials"
+      - "../config.py:/Praxis/standalone_command/config.py"
 networks:
   praxisbot:
     name: praxisbot
