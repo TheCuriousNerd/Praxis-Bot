@@ -22,8 +22,10 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import config as config
+
 import flask
-from flask import request
+from flask import Config, request
 
 from json import loads
 from urllib.parse import urlencode
@@ -48,7 +50,7 @@ def send_text(tts_sender, tts_text):
     #Play Text
     params = urlencode({'tts_sender': tts_sender, 'tts_text': tts_text})
 
-    url = "http://192.168.191.208:40085/api/v1/tts/speech?%s" % params
+    url = "http://%s:%s/api/v1/tts/speech?%s" % (config.tts_speaker_address, config.tts_speaker_port, params)
     resp = requests.get(url)
     if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
