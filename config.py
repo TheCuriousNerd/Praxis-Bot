@@ -110,8 +110,7 @@ standalone_command_address = "standalone_command"
 standalone_command_port = "42010"
 standalone_db_address = "standalone_db"
 standalone_db_port = "42002"
-#standalone_discord_script_address = "standalone_discord_script"
-#standalone_discord_script_port = "NONE"
+
 standalone_eventLog_address = "standalone_eventlog"
 standalone_eventLog_port = "42008"
 
@@ -126,11 +125,13 @@ tts_speaker_address = "192.168.191.208"
 tts_speaker_port = "40085"
 tts_speakers = [{"ip":"192.168.191.208", "port":"40085"}]
 
-
 #standalone_twitch_script_address = "standalone_twitch_script"
 #standalone_twitch_script_port = "NONE"
 #standalone_twitch_pubsub_address = "standalone_twitch_pubsub"
 #standalone_twitch_pubsub_port = "NONE"
+
+#standalone_discord_script_address = "standalone_discord_script"
+#standalone_discord_script_port = "NONE"
 
 standalone_user_client_address = "standalone_user_client"
 standalone_user_client_port = "42055"
