@@ -118,8 +118,13 @@ standalone_lights_address = "standalone_lights"
 standalone_lights_port = "42042"
 #standalone_obsWebSocket_address = "standalone_obsWebSocket"
 #standalone_obsWebSocket_port = "NONE"
+
 standalone_tts_core_address = "standalone_tts_core"
 standalone_tts_core_port = "42064"
+tts_speaker_address = "192.168.191.208"
+tts_speaker_port = "40085"
+tts_speakers = [{"ip":"192.168.191.208", "port":"40085"}]
+
 #standalone_twitch_script_address = "standalone_twitch_script"
 #standalone_twitch_script_port = "NONE"
 #standalone_twitch_pubsub_address = "standalone_twitch_pubsub"
