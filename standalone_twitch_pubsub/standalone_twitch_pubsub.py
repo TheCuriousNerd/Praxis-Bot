@@ -195,7 +195,7 @@ class Twitch_Pubsub():
         clean_param = urlencode({'reward_name': rewardName, 'reward_type':rewardType})
         print(rewardName, rewardType)
         #standalone_channelrewards
-        url = "http://standalone_channelrewards:42069/api/v1/reward?%s" % clean_param
+        url = "http://%s:%s/api/v1/reward?%s" % (config.standalone_channelrewards_address[0].get("ip"), config.standalone_channelrewards_address[0].get("port"), clean_param)
         resp = requests.get(url)
         return resp.status_code == 200
 
@@ -210,7 +210,7 @@ class Twitch_Pubsub():
             'bonus_data': realMessage})
 
         #standalone_channelrewards
-        url = "http://standalone_channelrewards:42069/api/v1/exec_reward?%s" % params
+        url = "http://%s:%s/api/v1/exec_reward?%s" % (config.standalone_channelrewards_address[0].get("ip"), config.standalone_channelrewards_address[0].get("port"), params)
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -231,7 +231,7 @@ class Twitch_Pubsub():
             'event_type': eventType,
             'eventSender': eventSender,
             'event_data': eventData})
-        url = "http://standalone_eventlog:42008/api/v1/event_log/add_event?%s" % params
+        url = "http://%s:%s/api/v1/event_log/add_event?%s" % (config.standalone_eventLog_address[0].get("ip"), config.standalone_eventLog_address[0].get("port"), params)
         resp = requests.get(url)
 
         if resp.status_code == 200:

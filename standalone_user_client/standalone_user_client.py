@@ -112,7 +112,7 @@ def request_get_list(serviceName, servicePort):
 
 def request_get_eventlist(params):
     try:
-        url = "http://standalone_eventlog:42008/api/v1/event_log/get_events?%s" % params
+        url = "http://%s:%s/api/v1/event_log/get_events?%s" % (config.standalone_eventLog_address[0].get("ip"), config.standalone_eventLog_address[0].get("port"), params)
         resp = requests.get(url)
 
         if resp.status_code == 200:
@@ -136,7 +136,7 @@ def request_reRunEvent(eventName, eventTime, eventType, eventSender, eventData):
             'eventType': eventType,
             'eventSender': eventSender,
             'eventData': eventData})
-        url = "http://standalone_eventlog:42008/api/v1/event_log/reRunEvent?%s" % params
+        url = "http://%s:%s/api/v1/event_log/reRunEvent?%s" % (config.standalone_eventLog_address[0].get("ip"), config.standalone_eventLog_address[0].get("port"), params)
         resp = requests.get(url)
 
         if resp.status_code == 200:

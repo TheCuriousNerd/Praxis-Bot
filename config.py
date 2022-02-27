@@ -104,38 +104,29 @@ currentSpeaker = Speaker.GOOGLE_TEXT_TO_SPEECH
 
 
 #Networking Configs (Unused are commented out)
-standalone_channelrewards_address = "standalone_channelrewards"
-standalone_channelrewards_port = "42069"
-standalone_command_address = "standalone_command"
-standalone_command_port = "42010"
-standalone_db_address = "standalone_db"
-standalone_db_port = "42002"
+standalone_channelrewards_address = [{"ip":"standalone_channelrewards", "port":"42069"}]
+standalone_command_address = [{"ip":"standalone_command", "port":"42010"}]
 
-standalone_eventLog_address = "standalone_eventlog"
-standalone_eventLog_port = "42008"
+standalone_db_address = [{"ip":"standalone_db", "port":"42002"}]
+standalone_eventLog_address = [{"ip":"standalone_eventlog", "port":"42008"}]
 
-standalone_lights_address = "standalone_lights"
-standalone_lights_port = "42042"
-#standalone_obsWebSocket_address = "standalone_obsWebSocket"
-#standalone_obsWebSocket_port = "NONE"
+standalone_lights_address = [{"ip":"standalone_lights", "port":"42042"}]
 
-standalone_tts_core_address = "standalone_tts_core"
-standalone_tts_core_port = "42064"
+#standalone_obsWebSocket_address = [{"ip":"standalone_obsWebSocket", "port":"None"}]
+
+standalone_tts_core_address = [{"ip":"standalone_tts_core", "port":"42064"}]
 tts_speaker_address = "192.168.191.208"
 tts_speaker_port = "40085"
 tts_speakers = [{"ip":"192.168.191.208", "port":"40085"}]
 
-#standalone_twitch_script_address = "standalone_twitch_script"
-#standalone_twitch_script_port = "NONE"
-#standalone_twitch_pubsub_address = "standalone_twitch_pubsub"
-#standalone_twitch_pubsub_port = "NONE"
+#standalone_twitch_script_address = [{"ip":"standalone_twitch_script", "port":"None"}]
+#standalone_twitch_pubsub_address = [{"ip":"standalone_twitch_pubsub", "port":"None"}]
 
-#standalone_discord_script_address = "standalone_discord_script"
-#standalone_discord_script_port = "NONE"
+#standalone_discord_script_address = [{"ip":"standalone_discord_script", "port":"None"}]
 
-standalone_user_client_address = "standalone_user_client"
-standalone_user_client_port = "42055"
-standalone_websource_address = "standalone_websource"
+standalone_user_client_address = [{"ip":"standalone_user_client", "port":"42055"}]
+
+standalone_websource_address = [{"ip":"standalone_websource", "port":"42012"}]
 
 
 #Misc Configs

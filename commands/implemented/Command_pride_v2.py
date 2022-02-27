@@ -95,7 +95,7 @@ class Command_pride_v2(AbstractCommand, metaclass=ABCMeta):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
         #standalone_lights
-        url = "http://standalone_lights:42042/api/v1/exec_lights?%s" % params
+        url = "http://%s:%s/api/v1/exec_lights?%s" % (config.standalone_lights_address[0].get("ip"), config.standalone_lights_address[0].get("port"), params)
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -111,7 +111,7 @@ class Command_pride_v2(AbstractCommand, metaclass=ABCMeta):
     def send_TTS(self, username, message):
         params = urlencode({'tts_sender': username, 'tts_text': message})
         #standalone_tts_core
-        url = "http://standalone_tts_core:42064/api/v1/tts/send_text?%s" % params
+        url = "http://%s:%s/api/v1/tts/send_text?%s" % (config.standalone_tts_core_address[0].get("ip"), config.standalone_tts_core_address[0].get("port"), params)
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)

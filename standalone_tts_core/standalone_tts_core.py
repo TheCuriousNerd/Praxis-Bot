@@ -50,7 +50,7 @@ def send_text(tts_sender, tts_text):
     #Play Text
     params = urlencode({'tts_sender': tts_sender, 'tts_text': tts_text})
 
-    url = "http://%s:%s/api/v1/tts/speech?%s" % (config.tts_speaker_address, config.tts_speaker_port, params)
+    url = "http://%s:%s/api/v1/tts/speech?%s" % (config.tts_speakers[0].get("ip"), config.tts_speakers[0].get("port"), params)
     resp = requests.get(url)
     if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
