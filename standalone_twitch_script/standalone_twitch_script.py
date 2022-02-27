@@ -122,7 +122,7 @@ class Twitch_Module():
     def is_command(self, word: str) -> bool:
         # todo need to url-escape word
         clean_param = urlencode({'name': word})
-        url = "http://standalone_command:42010/api/v1/command?%s" % clean_param
+        url = "http://%s:%s/api/v1/command?%s" % (config.standalone_command_address[0].get("ip"), config.standalone_command_address[0].get("port"), clean_param)
         resp = requests.get(url)
         return resp.status_code == 200
 
@@ -135,7 +135,7 @@ class Twitch_Module():
             'rest': rest,
             'bonus_data': realMessage})
         #standalone_command
-        url = "http://standalone_command:42010/api/v1/exec_command?%s" % params
+        url = "http://%s:%s/api/v1/exec_command?%s" % (config.standalone_command_address[0].get("ip"), config.standalone_command_address[0].get("port"), params)
         resp = requests.get(url)
         if resp.status_code == 200:
             print("Got the following message: %s" % resp.text)
@@ -175,7 +175,7 @@ class Twitch_Module():
             'event_type': eventType,
             'eventSender': eventSender,
             'event_data': rest})
-        url = "http://standalone_eventlog:42008/api/v1/event_log/add_event?%s" % params
+        url = "http://%s:%s/api/v1/event_log/add_event?%s" % (config.standalone_eventLog_address[0].get("ip"), config.standalone_eventLog_address[0].get("port"), params)
         resp = requests.get(url)
 
         if resp.status_code == 200:

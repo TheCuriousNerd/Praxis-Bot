@@ -8,8 +8,8 @@ services:
       - praxisbot
     volumes:
       - "../logs:/Praxis/logs"
-      - "../credentials:/Praxis/standalone_discord_script/credentials"
-      - "../config.py:/Praxis/standalone_discord_script/config.py"
+      - "../credentials:/Praxis/credentials"
+      - "../config.py:/Praxis/config.py"
 networks:
   praxisbot:
     name: praxisbot
