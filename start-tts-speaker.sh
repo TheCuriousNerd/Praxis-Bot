@@ -1,2 +1,2 @@
 #!/bin/bash
-python "./standalone_tts_speaker.py"
+python3 "./standalone_tts_speaker.py"
