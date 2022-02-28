@@ -37,12 +37,12 @@ Use the following command to start up all the standalone containers based on the
 To Start:
 
 Windows: `start.bat`<br>
-Linux: `start.sh`<br>
+Linux / macOS: `start.sh`<br>
 
 To Stop:
 
 Windows: `stop.bat`<br>
-Linux: `start.sh`<br>
+Linux / macOS: `start.sh`<br>
 
 <br>
 
