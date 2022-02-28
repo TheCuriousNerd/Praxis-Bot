@@ -27,7 +27,7 @@ To install Docker for windows visit: https://www.docker.com/get-started
 Use the following command in the terminal to setup all the images after you make the credentials.
 
 Windows: `setup.bat`<br>
-Linux: `setup.sh`
+Linux / macOS: `setup.sh`
 
 
 ## Docker-Compose Info:
@@ -55,8 +55,8 @@ To receive audio from standalone_tt_core.py launch standalone_tts_speaker.py.
 
 or
 
-windows: `praxis-tts-speaker.bat`<br>
-linux: `praxis-tts-speaker.sh`<br>
+Windows: `praxis-tts-speaker.bat`<br>
+Linux / macOS: `praxis-tts-speaker.sh`<br>
 *(Modify these to match the correct directory! Or no work for YOU!!!)*<br>
 *(Also be sure to have requirements setup!!!)*<br>
 <br>
