@@ -42,13 +42,13 @@ class Chyron_Module():
             "► Weekdays:   ",
             "Daily Dev Streams starting around 12:30pm EST")
         self.addItem(
-            "FriSat",
+            "ThuFriSat",
             "► Friday & Saturday:   ",
-            "FFxiv (Express Delivery Raid Team) Fri @ 8pm EST   &   Sat @ 7pm EST")
+            "FFxiv (Express Delivery Raid Team) Thu, Fri, Sat @ 7pm EST")
         self.addItem(
             "Commands",
             "► Commands:   ",
-            "!animal,   !climateclock,   !discord,   !github,   !lights,   !roll")
+            "!animal,   !climateclock,   !discord,   !github,   !lights,   !math,   !roll")
         #self.addItem(
         #    "Website",
         #    "► Want to read about my various projects?  visit:   ",
