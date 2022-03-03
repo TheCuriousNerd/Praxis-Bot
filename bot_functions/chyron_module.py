@@ -40,7 +40,7 @@ class Chyron_Module():
         self.addItem(
             "WeekDays",
             "► Weekdays:   ",
-            "Daily Dev Streams starting around 12:30pm EST")
+            "Daily Dev Streams starting around 3:30pm EST")
         self.addItem(
             "ThuFriSat",
             "► Friday & Saturday:   ",
