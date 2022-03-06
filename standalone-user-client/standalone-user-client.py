@@ -164,6 +164,41 @@ def handle_request_set(requestName, requestType, requestData):
         if requestName == "Commands":
             pass
 
+
+def handle_get_container_status():
+    try:
+        currentStatus = {}
+        # standalone_db
+        # standalone_eventlog
+        # standalone_user_client
+        # standalone_websource
+        # standalone_lights
+        # standalone_tts_core
+        # standalone_channelrewards
+        # standalone_command
+        # standalone_discord_script
+        # standalone_twitch_script
+        # standalone_twitch_pubsub
+        params = urlencode(
+        {'standalone_db': currentStatus.get("standalone_db"),
+        'standalone_eventlog': currentStatus.get("standalone_eventlog"),
+        'standalone_user_client': currentStatus.get("standalone_user_client"),
+        'standalone_websource': currentStatus.get("standalone_websource"),
+        'standalone_lights': currentStatus.get("standalone_lights"),
+        'standalone_tts_core': currentStatus.get("standalone_tts_core"),
+        'standalone_channelrewards': currentStatus.get("standalone_channelrewards"),
+        'standalone_command': currentStatus.get("standalone_command"),
+        'standalone_discord_script': currentStatus.get("standalone_discord_script"),
+        'standalone_twitch_script': currentStatus.get("standalone_twitch_script"),
+        'standalone_twitch_pubsub': currentStatus.get("standalone_twitch_pubsub")
+        })
+        response = request_get_eventlist(params)
+        return flask.make_response("{\"message\": \"%s\"}" % response, 200, {"Content-Type": "application/json"})
+    except:
+        return flask.make_response("{\"message\": \"%s\"}" % "Something went wrong getting the status", 400, {"Content-Type": "application/json"})
+
+
+
 @api.route('/')
 def bot_StatusIcon():
     @after_this_request
@@ -220,6 +255,13 @@ def EventLog_reRunEvent():
     #return flask.make_response("test", 200)
     return request_reRunEvent(request.args['eventName'], sentTime, request.args['eventType'], request.args['eventSender'], request.args['eventData'])
 
+@api.route('/api/v1/user_client/containers/get_status', methods=['GET'])
+def get_containers_status():
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    return handle_get_container_status()
 
 if __name__ == "__main__":
     init()

@@ -22,13 +22,30 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import threading
 import config
 from bot_functions import utilities_script as utilities
+import flask
+from flask import Flask
 
-class Container_Networking():
-    def __init__(self):
-        super().__init__()
+api:Flask = Flask(__name__)
+api.config["DEBUG"] = False
 
 
-    def main(self):
-        pass
+
+def main():
+    thread = threading.Thread(target=Networking_Module_Main)
+    thread.start()
+    print("API is running on port 42024")
+
+def Networking_Module_Main():
+    api.run(host="0.0.0.0", port = 42024)
+
+@api.route('/api/v1/ping')
+def ping():
+    return "pong"
+    #return flask.make_response("{\"message\":\"%s\"}" % "pong", 200, {"Content-Type": "application/json"})
+
+
+if __name__ == "__main__":
+    main()

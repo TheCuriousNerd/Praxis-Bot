@@ -119,10 +119,10 @@ tts_speaker_address = "192.168.191.208"
 tts_speaker_port = "40085"
 tts_speakers = [{"ip":"192.168.191.208", "port":"40085"}]
 
-#standalone_twitch_script_address = [{"ip":"standalone-twitch-script", "port":"None"}]
-#standalone_twitch_pubsub_address = [{"ip":"standalone-twitch-pubsub", "port":"None"}]
+standalone_twitch_script_address = [{"ip":"standalone-twitch-script", "port":"None"}]
+standalone_twitch_pubsub_address = [{"ip":"standalone-twitch-pubsub", "port":"None"}]
 
-#standalone_discord_script_address = [{"ip":"standalone-discord-script", "port":"None"}]
+standalone_discord_script_address = [{"ip":"standalone-discord-script", "port":"None"}]
 
 standalone_user_client_address = [{"ip":"standalone-user-client", "port":"42055"}]
 
