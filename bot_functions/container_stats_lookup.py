@@ -74,8 +74,12 @@ class Container_Stats_Lookup:
         return self.current_stats
 
     def get_container_stats(self, targetContainer):
-        url = "http://%s:%s/api/v1/ping" % (targetContainer[0].get("ip"), 42024)
-        resp = requests.get(url)
+        try:
+            url = "http://%s:%s/api/v1/ping" % (targetContainer[0].get("ip"), 42024)
+            resp = requests.get(url)
+            return "Online"
+        except:
+            return "Unknown"
 
 if __name__ == "__main__":
     container_stats_lookup = Container_Stats_Lookup()
