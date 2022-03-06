@@ -1,34 +1,34 @@
 #!/bin/bash
-cd "standalone_user_client"
+cd "standalone-user-client"
 docker-compose up -d
 cd ".."
-cd "standalone_db"
+cd "standalone-db"
 docker-compose up -d
 cd ".."
-cd "standalone_eventLog"
+cd "standalone-eventlog"
 docker-compose up -d
 cd ".."
-cd "standalone_command"
+cd "standalone-command"
 docker-compose up -d
 cd ".."
-cd "standalone_channelrewards"
+cd "standalone-channelrewards"
 docker-compose up -d
 cd ".."
-cd "standalone_lights"
+cd "standalone-lights"
 docker-compose up -d
 cd ".."
-cd "standalone_tts_core"
+cd "standalone-tts-core"
 docker-compose up -d
 cd ".."
-cd "standalone_websource"
+cd "standalone-websource"
 docker-compose up -d
 cd ".."
-cd "standalone_discord_script"
+cd "standalone-discord-script"
 docker-compose up -d
 cd ".."
-cd "standalone_twitch_script"
+cd "standalone-twitch-script"
 docker-compose up -d
 cd ".."
-cd "standalone_twitch_pubsub"
+cd "standalone-twitch-pubsub"
 docker-compose up -d
 cd ".."

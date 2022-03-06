@@ -35,7 +35,7 @@ class CryptoStats():
     def __init__(self):
         self.tokenRefreshTime:float = 60
         self.db = utilities_db.Praxis_DB_Connection()
-        #self.db.connectionString = "postgresql://PRAXIS_BOT:PRAXISPRAXISPRAXIS@standalone_db_main/PRAXIS_BOT_DB"
+        #self.db.connectionString = "postgresql://PRAXIS_BOT:PRAXISPRAXISPRAXIS@standalone-db-main/PRAXIS_BOT_DB"
         self.db.startConnection()
         self.lastAPI_Response = ""
         self.lastAPI_ResponseTime = None

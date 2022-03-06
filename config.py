@@ -104,29 +104,29 @@ currentSpeaker = Speaker.GOOGLE_TEXT_TO_SPEECH
 
 
 #Networking Configs (Unused are commented out)
-standalone_channelrewards_address = [{"ip":"standalone_channelrewards", "port":"42069"}]
-standalone_command_address = [{"ip":"standalone_command", "port":"42010"}]
+standalone_channelrewards_address = [{"ip":"standalone-channelrewards", "port":"42069"}]
+standalone_command_address = [{"ip":"standalone-command", "port":"42010"}]
 
-standalone_db_address = [{"ip":"standalone_db", "port":"42002"}]
-standalone_eventLog_address = [{"ip":"standalone_eventlog", "port":"42008"}]
+standalone_db_address = [{"ip":"standalone-db", "port":"42002"}]
+standalone_eventlog_address = [{"ip":"standalone-eventlog", "port":"42008"}]
 
-standalone_lights_address = [{"ip":"standalone_lights", "port":"42042"}]
+standalone_lights_address = [{"ip":"standalone-lights", "port":"42042"}]
 
 #standalone_obsWebSocket_address = [{"ip":"standalone_obsWebSocket", "port":"None"}]
 
-standalone_tts_core_address = [{"ip":"standalone_tts_core", "port":"42064"}]
+standalone_tts_core_address = [{"ip":"standalone-tts-core", "port":"42064"}]
 tts_speaker_address = "192.168.191.208"
 tts_speaker_port = "40085"
 tts_speakers = [{"ip":"192.168.191.208", "port":"40085"}]
 
-#standalone_twitch_script_address = [{"ip":"standalone_twitch_script", "port":"None"}]
-#standalone_twitch_pubsub_address = [{"ip":"standalone_twitch_pubsub", "port":"None"}]
+#standalone_twitch_script_address = [{"ip":"standalone-twitch-script", "port":"None"}]
+#standalone_twitch_pubsub_address = [{"ip":"standalone-twitch-pubsub", "port":"None"}]
 
-#standalone_discord_script_address = [{"ip":"standalone_discord_script", "port":"None"}]
+#standalone_discord_script_address = [{"ip":"standalone-discord-script", "port":"None"}]
 
-standalone_user_client_address = [{"ip":"standalone_user_client", "port":"42055"}]
+standalone_user_client_address = [{"ip":"standalone-user-client", "port":"42055"}]
 
-standalone_websource_address = [{"ip":"standalone_websource", "port":"42012"}]
+standalone_websource_address = [{"ip":"standalone-websource", "port":"42012"}]
 
 
 #Misc Configs

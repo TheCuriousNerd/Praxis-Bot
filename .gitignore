@@ -9,4 +9,4 @@ stream_sources/brb.txt
 timers/
 event_logs/logs/
 logs/event_logs/
-standalone_db/db_data/
+standalone-db/db_data/

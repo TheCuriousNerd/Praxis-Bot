@@ -130,7 +130,7 @@ class Command_Text_v2(AbstractCommand, metaclass=ABCMeta):
     def send_Lights_Command(self, username, light_group, command, rest):
         # todo need to url-escape command and rest
         params = urlencode({'user_name': username, 'light_group': light_group, 'command': command, 'rest':rest})
-        #standalone_lights
+        #standalone-lights
         url = "http://%s:%s/api/v1/exec_lights?%s" % (config.standalone_lights_address[0].get("ip"), config.standalone_lights_address[0].get("port"), params)
         resp = requests.get(url)
         if resp.status_code == 200:

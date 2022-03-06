@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  standalone-channelrewards:
+    image: standalone-channelrewards
+    ports:
+      - 42069:42069
+    environment:
+      - ISDOCKER=cat
+    networks:
+      - praxisbot
+    volumes:
+      - "../logs:/Praxis/logs"
+      - "../credentials:/Praxis/credentials"
+      - "../config.py:/Praxis/config.py"
+networks:
+  praxisbot:
+    name: praxisbot

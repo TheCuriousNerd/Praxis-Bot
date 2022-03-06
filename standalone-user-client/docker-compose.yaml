@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  standalone-user-client:
+    image: standalone-user-client
+    ports:
+      - 42055:42055
+    environment:
+      - ISDOCKER=cat
+    networks:
+      - praxisbot
+    volumes:
+      - "../logs:/Praxis/logs"
+      - "../credentials:/Praxis/credentials"
+      - "../config.py:/Praxis/config.py"
+networks:
+  praxisbot:
+    name: praxisbot
