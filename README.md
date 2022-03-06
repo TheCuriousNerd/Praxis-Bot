@@ -32,7 +32,7 @@ Linux / macOS: `setup.sh`
 
 ## Docker-Compose Info:
 
-Use the following command to start up all the standalone containers based on the images you just created.
+Use the following command to start up all the standalone containers based on the images you just created after you clone the repository.
 
 To Start:
 
