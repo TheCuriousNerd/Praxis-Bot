@@ -1,0 +1,31 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} PG Admin {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div>
+<div class="card">
+<div class="card-header">
+<h4 class="card-title">PG Admin Browser</h4>
+<p class="card-category"> Looks like you're here early! 👀</p>
+<p> This page will get fixed in a future update, for now click on the link below, or in the side bar to get to the browser.</p>
+<p class="card-category">
+    <br>
+<a href="http://127.0.0.1:42099/browser/" class="btn bg-gradient-dark" target="_blank">PG Admin Browser</a>
+</p>
+</div>
+</div>
+<!--<iframe src="http://127.0.0.1:42099/browser/" style="border:0px #ffffff none;" name="pgAdmin 4" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="800px" width="100%"></iframe>
+--></div>
+
+{% include "includes/footer.html" %}
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}

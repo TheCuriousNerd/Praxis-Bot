@@ -1,0 +1,111 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Chyron {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h6>Chyron</h6>
+          </div>
+
+          <table class="table align-items-center overflow-scroll">
+            <thead>
+              <form method="post" action="/chyron.html">
+                {% csrf_token %}
+                <h4 class="card-header">New Chyron Entry</h4>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">text<br>{{ chyron_form.text }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">tag<br>{{ chyron_form.tag }}</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled<br>{{ chyron_form.isEnabled }}</th>
+                <th class="text-secondary opacity-7 bg"><input type="submit" value="New Entry" name="newChyronEntry_Btn" class="btn btn-primary bg-gradient-faded-info"></input></th>
+              </tr>
+            </form>
+            </thead>
+            </table>
+
+
+      <br>
+
+      <table class="table align-items-center overflow-scroll">
+        <thead>
+          <h4 class="card-header">Chyron Entries</h4>
+          <tr>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">text</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">tag</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled</th>
+            <th class="text-secondary opacity-7"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ch in chyron_list %}
+
+
+
+
+
+          <tr class="align-middle text-center">
+            <form method="post" action="/chyron.html">
+            {% csrf_token %}
+            <td>
+            <input type="text" name="text" class="w-100" value="{{ ch.text }}">
+            </td>
+            <td>
+            <input type="text" name="tag" class="w-100" value="{{ ch.tag }}">
+            </td>
+            <td>
+              {% if ch.isEnabled == True %}
+              <input type="checkbox" name="isEnabled" value="True" checked>
+              {% endif %}
+              {% if ch.isEnabled != True %}
+              <input type="checkbox" name="isEnabled" value="True">
+              {% endif %}
+
+
+            </td>
+            <td>
+            <input type="hidden" name="hidden_id" value="{{ ch.id }}">
+            <input type="submit" value="Update" name="Updatebtn" class="btn btn-primary bg-gradient-faded-warning"></input>
+            </form>
+
+            <td class="align-middle text-center">
+              <a href="#" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Delete item">
+                <form action="" method="get">
+                  {% csrf_token %}
+                  <input type="hidden" name="hidden_id" value="{{ ch.id }}">
+                  <input type="submit" value="Delete" name="Deletebtn" class="btn btn-outline-danger"></input>
+                </form>
+              </a>
+            </td>
+
+          </tr>
+
+
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
+<div>
+
+
+
+
+    </div>
+
+    {% include "includes/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}

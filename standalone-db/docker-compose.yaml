@@ -12,7 +12,7 @@ services:
     networks:
       - praxisbot
   standalone-db-main:
-    image: postgres:13.3-alpine
+    image: postgres:13.4-alpine
     restart: always
     ports:
       - 5432:5432
@@ -27,6 +27,7 @@ services:
       - "../logs:/Praxis/logs"
     networks:
       - praxisbot
+      - praxisbot_inner
   standalone-db-manager:
     image: standalone-db
     ports:
@@ -39,6 +40,36 @@ services:
       - "../logs:/Praxis/logs"
       - "../credentials:/Praxis/credentials"
       - "../config.py:/Praxis/config.py"
+  praxis-app:
+    container_name: praxis_app
+    command: python manage.py runserver 0.0.0.0:85
+    restart: always
+    depends_on:
+      - standalone-db-main
+    networks:
+      - praxisbot_inner
+      - praxisbot_outer
+    ports:
+      - 8000:85
+    env_file: ./user_client/v2/.env
+    build: ./user_client/v2
+  nginx:
+    container_name: nginx
+    restart: always
+    image: "nginx:latest"
+    ports:
+      - 42808:85
+    volumes:
+      - ./user_client/v2/nginx/:/etc/nginx/conf.d
+    networks:
+      - praxisbot
+      - praxisbot_outer
+    depends_on:
+      - praxis-app
 networks:
   praxisbot:
     name: praxisbot
+  praxisbot_inner:
+    name: praxisbot_inner
+  praxisbot_outer:
+    name: praxisbot_outer
