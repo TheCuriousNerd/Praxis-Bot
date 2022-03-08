@@ -40,9 +40,12 @@ services:
       - "../logs:/Praxis/logs"
       - "../credentials:/Praxis/credentials"
       - "../config.py:/Praxis/config.py"
+
+  #Django server
   praxis-app:
     container_name: praxis_app
-    command: python manage.py runserver 0.0.0.0:85
+    environment:
+      - POSTGRES_PASSWORD=PraxisPraxisPraxis
     restart: always
     depends_on:
       - standalone-db-main
@@ -53,6 +56,10 @@ services:
       - 8000:85
     env_file: ./user_client/v2/.env
     build: ./user_client/v2
+    command: python manage.py runserver 0.0.0.0:85
+    #command: "bash -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:85'"
+
+ #Nginx
   nginx:
     container_name: nginx
     restart: always
@@ -62,7 +69,6 @@ services:
     volumes:
       - ./user_client/v2/nginx/:/etc/nginx/conf.d
     networks:
-      - praxisbot
       - praxisbot_outer
     depends_on:
       - praxis-app

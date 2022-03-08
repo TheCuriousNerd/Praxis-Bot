@@ -22,6 +22,9 @@ from .forms import Chyron_EntryForm, PraxisBot_Commands_v0_Form
 def index(request):
     context = {'segment': 'index'}
 
+    load_template = request.path.split('/')[-1]
+    context = index_dashboard(request, context, load_template)
+
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 

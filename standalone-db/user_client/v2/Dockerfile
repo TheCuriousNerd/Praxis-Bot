@@ -13,8 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # running migrations
 #RUN python manage.py makemigrations
-RUN python manage.py migrate
+#RUN python manage.py migrate # If you use this, option you will currently not be able to connect to the database for some reason.
 
 # gunicorn
-CMD ["gunicorn", "--config", "gunicorn-cfg.py", "core.wsgi"]
-
+#CMD ["gunicorn", "--config", "gunicorn-cfg.py", "core.wsgi"] # If you use this, option you will currently not be able to connect to the database for some reason.
+CMD ["python", "manage.py", "runserver 0.0.0.0:85"]
