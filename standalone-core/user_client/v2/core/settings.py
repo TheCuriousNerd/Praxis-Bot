@@ -6,6 +6,11 @@ Copyright (c) 2019 - present AppSeed.us
 import os
 from decouple import config
 from unipath import Path
+# import mimetypes
+
+# mimetypes.add_type("text/css", ".css", True)
+# mimetypes.add_type("text/html", ".css", True)
+# mimetypes.add_type("application/javascript", ".js", True)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).parent
@@ -65,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
+#WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -119,6 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(CORE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+# Static files currently get weird if you set the .env debug to False
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (

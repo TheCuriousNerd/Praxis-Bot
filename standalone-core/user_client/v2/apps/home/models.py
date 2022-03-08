@@ -10,6 +10,13 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class PraxisBot_Settings(models.Model):
+    """
+    PraxisBot Settings
+    """
+    id = models.AutoField(primary_key=True)
+
+
 class Chyron_Entry(models.Model):
     """
     This model will hold the data for the Chyron

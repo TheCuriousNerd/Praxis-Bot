@@ -70,17 +70,18 @@ def testerino():
 
 
 def index_dashboard(request, context:dict, load_template):
-    context['standalone_db'] = "test"
-    context['standalone_eventlog'] = "test"
-    context['standalone_user_client'] = "test"
-    context['standalone_websource'] = "test"
-    context['standalone_lights'] = "test"
-    context['standalone_tts_core'] = "test"
-    context['standalone_channelrewards'] = "test"
-    context['standalone_command'] = "test"
-    context['standalone_discord_script'] = "test"
-    context['standalone_twitch_script'] = "test"
-    context['standalone_twitch_pubsub'] = "test"
+    errorStatusText = "unknown status"
+    context['standalone_core_manager'] = errorStatusText
+    context['standalone_eventlog'] = errorStatusText
+    context['standalone_user_client'] = errorStatusText
+    context['standalone_websource'] = errorStatusText
+    context['standalone_lights'] = errorStatusText
+    context['standalone_tts_core'] = errorStatusText
+    context['standalone_channelrewards'] = errorStatusText
+    context['standalone_command'] = errorStatusText
+    context['standalone_discord_script'] = errorStatusText
+    context['standalone_twitch_script'] = errorStatusText
+    context['standalone_twitch_pubsub'] = errorStatusText
 
 
     # Various Bot tips and tricks for the user in the dashboard

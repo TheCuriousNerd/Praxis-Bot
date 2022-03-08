@@ -9,4 +9,5 @@ stream_sources/brb.txt
 timers/
 event_logs/logs/
 logs/event_logs/
-standalone-db/db_data/
+standalone-core/db_data/
+standalone-core/pgadmin_data/

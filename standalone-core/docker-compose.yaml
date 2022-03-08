@@ -3,6 +3,8 @@ services:
   standalone_pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
@@ -21,15 +23,14 @@ services:
       - POSTGRES_DB=PRAXIS_BOT_DB
       - POSTGRES_USER=PRAXIS_BOT
       - POSTGRES_PASSWORD=PraxisPraxisPraxis
-      - PGDATA=/Praxis/standalone-db/db_data
+      - PGDATA=/Praxis/standalone-core/db_data
     volumes:
-      - "./db_data:/Praxis/standalone-db/db_data"
+      - "./db_data:/Praxis/standalone-core/db_data"
       - "../logs:/Praxis/logs"
     networks:
       - praxisbot
-      - praxisbot_inner
-  standalone-db-manager:
-    image: standalone-db
+  standalone-core-manager:
+    image: standalone-core
     ports:
       - 42002:42002
     environment:
@@ -50,13 +51,13 @@ services:
     depends_on:
       - standalone-db-main
     networks:
-      - praxisbot_inner
-      - praxisbot_outer
+      - praxisbot
     ports:
       - 8000:85
     env_file: ./user_client/v2/.env
     build: ./user_client/v2
-    command: python manage.py runserver 0.0.0.0:85
+    #command: "bash -c 'python manage.py runserver 0.0.0.0:85'"
+    command: "bash -c 'python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:85'"
     #command: "bash -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:85'"
 
  #Nginx
@@ -69,13 +70,13 @@ services:
     volumes:
       - ./user_client/v2/nginx/:/etc/nginx/conf.d
     networks:
-      - praxisbot_outer
+      - praxisbot
     depends_on:
       - praxis-app
 networks:
   praxisbot:
     name: praxisbot
-  praxisbot_inner:
-    name: praxisbot_inner
-  praxisbot_outer:
-    name: praxisbot_outer
+  # praxisbot_inner:
+  #   name: praxisbot_inner
+  # praxisbot_outer:
+  #   name: praxisbot_outer

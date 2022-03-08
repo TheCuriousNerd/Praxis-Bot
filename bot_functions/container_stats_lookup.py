@@ -29,7 +29,7 @@ import requests
 class Container_Stats_Lookup:
     def __init__(self):
         super().__init__()
-        # standalone_db
+        # standalone_db_manager
         # standalone_eventlog
         # standalone_user_client
         # standalone_websource
@@ -41,7 +41,7 @@ class Container_Stats_Lookup:
         # standalone_twitch_script
         # standalone_twitch_pubsub
         self.containerList = [
-            "standalone_db",
+            "standalone_db_manager",
             "standalone_eventlog",
             "standalone_user_client",
             "standalone_websource",
@@ -54,7 +54,7 @@ class Container_Stats_Lookup:
             "standalone_twitch_pubsub"
         ]
         self.containerAddresses = {
-            "standalone_db": config.standalone_db_address,
+            "standalone_db_manager": config.standalone_db_manager_address,
             "standalone_eventlog": config.standalone_eventlog_address,
             "standalone_user_client": config.standalone_user_client_address,
             "standalone_websource": config.standalone_websource_address,

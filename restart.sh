@@ -1,8 +1,8 @@
 #!/bin/bash
-cd "standalone-user-client"
+cd "standalone-core"
 docker-compose restart
 cd ".."
-cd "standalone-db"
+cd "standalone-user-client"
 docker-compose restart
 cd ".."
 cd "standalone-eventlog"

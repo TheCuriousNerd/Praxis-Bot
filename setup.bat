@@ -1,7 +1,7 @@
 echo "Creating Praxis Bot Images..."
 
+start powershell docker build --file ./standalone-core/Dockerfile --tag standalone-core .
 start powershell docker build --file ./standalone-user-client/Dockerfile --tag standalone-user-client .
-start powershell docker build --file ./standalone-db/Dockerfile --tag standalone-db .
 start powershell docker build --file ./standalone-eventlog/Dockerfile --tag standalone-eventlog .
 start powershell docker build --file ./standalone-channelrewards/Dockerfile --tag standalone-channelrewards .
 start powershell docker build --file ./standalone-command/Dockerfile --tag standalone-command .

@@ -36,24 +36,19 @@
   <link href="/static/assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="/static/assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
-  <link href="/static/assets/css/praxis-bot.css" rel="stylesheet" />
+  <link href="/static/assets/css/praxis-bot.css" rel="stylesheet" type="text/css" />
 
   <!-- Specific CSS goes HERE -->
   {% block stylesheets %}{% endblock stylesheets %}
 
 </head>
-<body class="g-sidenav-show  bg-gray-100">
+<body class="">
 
+  {% include "includes/navigation-fullscreen.html" %}
 
-  <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+  {% block content %}{% endblock content %}
 
-    {% include "includes/navigation-empty.html" %}
-
-    {% block content %}{% endblock content %}
-
-  </main>
-
-  {% include "includes/fixed-plugin.html" %}
+  {% include "includes/footer-fullscreen.html" %}
 
   {% include "includes/scripts.html" %}
 

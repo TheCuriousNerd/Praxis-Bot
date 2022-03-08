@@ -1,6 +1,6 @@
 #!/bin/bash
+docker build --file ./standalone-core/Dockerfile --tag standalone-core .
 docker build --file ./standalone-user-client/Dockerfile --tag standalone-user-client .
-docker build --file ./standalone-db/Dockerfile --tag standalone-db .
 docker build --file ./standalone-eventlog/Dockerfile --tag standalone-eventlog .
 docker build --file ./standalone-command/Dockerfile --tag standalone-command .
 docker build --file ./standalone-channelrewards/Dockerfile --tag standalone-channelrewards .

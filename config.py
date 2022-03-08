@@ -107,7 +107,7 @@ currentSpeaker = Speaker.GOOGLE_TEXT_TO_SPEECH
 standalone_channelrewards_address = [{"ip":"standalone-channelrewards", "port":"42069"}]
 standalone_command_address = [{"ip":"standalone-command", "port":"42010"}]
 
-standalone_db_address = [{"ip":"standalone-db", "port":"42002"}]
+standalone_db_manager_address = [{"ip":"standalone-core-manager", "port":"42002"}]
 standalone_eventlog_address = [{"ip":"standalone-eventlog", "port":"42008"}]
 
 standalone_lights_address = [{"ip":"standalone-lights", "port":"42042"}]

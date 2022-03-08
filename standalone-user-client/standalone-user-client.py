@@ -168,7 +168,7 @@ def handle_request_set(requestName, requestType, requestData):
 def handle_get_container_status():
     try:
         currentStatus = {}
-        # standalone_db
+        # standalone_db_manager
         # standalone_eventlog
         # standalone_user_client
         # standalone_websource
@@ -180,7 +180,7 @@ def handle_get_container_status():
         # standalone_twitch_script
         # standalone_twitch_pubsub
         params = urlencode(
-        {'standalone_db': currentStatus.get("standalone_db"),
+        {'standalone_db_manager': currentStatus.get("standalone_db_manager"),
         'standalone_eventlog': currentStatus.get("standalone_eventlog"),
         'standalone_user_client': currentStatus.get("standalone_user_client"),
         'standalone_websource': currentStatus.get("standalone_websource"),
