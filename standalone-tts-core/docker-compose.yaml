@@ -5,6 +5,7 @@ services:
     ports:
       - 42064:42064
     environment:
+      - CONTAINER_NAME=standalone-tts-core
       - ISDOCKER=cat
     networks:
       - praxisbot

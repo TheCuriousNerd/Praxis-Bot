@@ -5,6 +5,7 @@ services:
     ports:
       - 42008:42008
     environment:
+      - CONTAINER_NAME=standalone-eventlog
       - ISDOCKER=cat
     networks:
       - praxisbot

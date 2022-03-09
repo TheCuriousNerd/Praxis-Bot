@@ -28,23 +28,55 @@ from bot_functions import utilities_script as utilities
 import flask
 from flask import Flask
 
+import time
+
+import requests
+from urllib.parse import urlencode
+
 api:Flask = Flask(__name__)
 api.config["DEBUG"] = False
 
 
 
 def main():
+    pass
+    thread_updater = threading.Thread(target=core_Status_Updater)
+    thread_updater.start()
+    #thread_updater.join()
     thread = threading.Thread(target=Networking_Module_Main)
     thread.start()
-    print("API is running on port 42024")
+    # thread.join()
+    # print("API is running on port " + str(config.standalone_ping_port))
+
+def core_Status_Updater():
+    loopBool = True
+    while loopBool:
+        try:
+            print("Pinging Core")
+            params = urlencode(
+                {'container_name': utilities.getContainerName()})
+            print("params made")
+            url = "http://%s:%s/api/v1/containers/container/ping?%s" % (
+                config.standalone_core_manager_address[0].get("ip"),
+                config.standalone_core_manager_address[0].get("port"),
+                params)
+            print("url made")
+            resp = requests.get(url)
+            print("resp made")
+            time.sleep(config.standalone_ping_interval)
+        except:
+            print("Error in core_Status_Updater")
+            time.sleep(config.standalone_ping_interval)
+            #loopBool = False
+    return None
 
 def Networking_Module_Main():
-    api.run(host="0.0.0.0", port = 42024)
+    api.run(host="0.0.0.0", port = config.standalone_ping_port)
 
 @api.route('/api/v1/ping')
 def ping():
-    return "pong"
-    #return flask.make_response("{\"message\":\"%s\"}" % "pong", 200, {"Content-Type": "application/json"})
+    #return "pong"
+    return flask.make_response("{\"message\":\"%s\"}" % "pong", 200, {"Content-Type": "application/json"})
 
 
 if __name__ == "__main__":

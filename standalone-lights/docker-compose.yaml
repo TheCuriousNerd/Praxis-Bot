@@ -5,6 +5,7 @@ services:
     ports:
       - 42042:42042
     environment:
+      - CONTAINER_NAME=standalone-lights
       - ISDOCKER=cat
     networks:
       - praxisbot

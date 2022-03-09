@@ -3,6 +3,7 @@ services:
   standalone-discord-script:
     image: standalone-discord-script
     environment:
+      - CONTAINER_NAME=standalone-discord-script
       - ISDOCKER=cat
     networks:
       - praxisbot

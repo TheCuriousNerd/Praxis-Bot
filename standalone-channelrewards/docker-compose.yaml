@@ -5,6 +5,7 @@ services:
     ports:
       - 42069:42069
     environment:
+      - CONTAINER_NAME=standalone-channelrewards
       - ISDOCKER=cat
     networks:
       - praxisbot

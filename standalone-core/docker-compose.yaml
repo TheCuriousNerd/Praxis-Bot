@@ -7,8 +7,9 @@ services:
       - ./pgadmin_data:/var/lib/pgadmin
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
+      - CONTAINER_NAME=pgadmin4_container
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
     ports:
      - 42099:80
     networks:
@@ -19,6 +20,7 @@ services:
     ports:
       - 5432:5432
     environment:
+      - CONTAINER_NAME=standalone-db-main
       - ISDOCKER=cat
       - POSTGRES_DB=PRAXIS_BOT_DB
       - POSTGRES_USER=PRAXIS_BOT
@@ -34,6 +36,7 @@ services:
     ports:
       - 42002:42002
     environment:
+      - CONTAINER_NAME=standalone-core-manager
       - ISDOCKER=cat
     networks:
       - praxisbot
@@ -46,6 +49,8 @@ services:
   praxis-app:
     container_name: praxis_app
     environment:
+      - CONTAINER_NAME=praxis_app
+      - ISDOCKER=cat
       - POSTGRES_PASSWORD=PraxisPraxisPraxis
     restart: always
     depends_on:
@@ -65,6 +70,9 @@ services:
     container_name: nginx
     restart: always
     image: "nginx:latest"
+    environment:
+      - CONTAINER_NAME=nginx
+      - ISDOCKER=cat
     ports:
       - 42808:85
     volumes:

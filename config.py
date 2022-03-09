@@ -104,10 +104,15 @@ currentSpeaker = Speaker.GOOGLE_TEXT_TO_SPEECH
 
 
 #Networking Configs (Unused are commented out)
+standalone_ping_port = 42024
+standalone_ping_timeout = (0.05, 0.05)
+standalone_ping_interval = 20
+standalone_ping_listen_interval = 60
+
 standalone_channelrewards_address = [{"ip":"standalone-channelrewards", "port":"42069"}]
 standalone_command_address = [{"ip":"standalone-command", "port":"42010"}]
 
-standalone_db_manager_address = [{"ip":"standalone-core-manager", "port":"42002"}]
+standalone_core_manager_address = [{"ip":"standalone-core-manager", "port":"42002"}]
 standalone_eventlog_address = [{"ip":"standalone-eventlog", "port":"42008"}]
 
 standalone_lights_address = [{"ip":"standalone-lights", "port":"42042"}]

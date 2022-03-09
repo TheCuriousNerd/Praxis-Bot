@@ -75,9 +75,15 @@ class Praxis_DB_Connection():
     def doesItemExist(self, tableName, columnName, item):
         try:
             print("Searching for item")
-            #self.selfAutoStart()
+            print(item)
+            self.selfAutoStart()
             query = "SELECT * FROM %s WHERE %s = '%s';" % (tableName, columnName, item)
-            result = self.dbConnection.execute(query)
+            try:
+                result = self.dbConnection.execute(query)
+            except Exception as e:
+                print("[Praxis_DB_Connection] query error while looking for item")
+                print(e)
+                return False
             print(result)
             for r in result:
                 print(r)

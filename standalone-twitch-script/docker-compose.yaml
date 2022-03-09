@@ -3,6 +3,7 @@ services:
   standalone-twitch-script:
     image: standalone-twitch-script
     environment:
+      - CONTAINER_NAME=standalone-twitch-script
       - ISDOCKER=cat
     networks:
       - praxisbot

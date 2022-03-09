@@ -26,10 +26,15 @@ import config
 from bot_functions import utilities_script as utilities
 import requests
 
+import signal
+from contextlib import contextmanager
+
+class TimeoutException(Exception): pass
+
 class Container_Stats_Lookup:
     def __init__(self):
         super().__init__()
-        # standalone_db_manager
+        # standalone_core_manager
         # standalone_eventlog
         # standalone_user_client
         # standalone_websource
@@ -41,43 +46,65 @@ class Container_Stats_Lookup:
         # standalone_twitch_script
         # standalone_twitch_pubsub
         self.containerList = [
-            "standalone_db_manager",
-            "standalone_eventlog",
-            "standalone_user_client",
-            "standalone_websource",
-            "standalone_lights",
-            "standalone_tts_core",
-            "standalone_channelrewards",
-            "standalone_command",
-            "standalone_discord_script",
-            "standalone_twitch_script",
-            "standalone_twitch_pubsub"
+            "standalone-core-manager",
+            "standalone-eventlog",
+            "standalone-user-client",
+            "standalone-websource",
+            "standalone-lights",
+            "standalone-tts-core",
+            "standalone-channelrewards",
+            "standalone-command",
+            "standalone-discord-script",
+            "standalone-twitch-script",
+            "standalone-twitch-pubsub"
         ]
         self.containerAddresses = {
-            "standalone_db_manager": config.standalone_db_manager_address,
-            "standalone_eventlog": config.standalone_eventlog_address,
-            "standalone_user_client": config.standalone_user_client_address,
-            "standalone_websource": config.standalone_websource_address,
-            "standalone_lights": config.standalone_lights_address,
-            "standalone_tts_core": config.standalone_tts_core_address,
-            "standalone_channelrewards": config.standalone_channelrewards_address,
-            "standalone_command": config.standalone_command_address,
-            "standalone_discord_script": config.standalone_discord_script_address,
-            "standalone_twitch_script": config.standalone_twitch_script_address,
-            "standalone_twitch_pubsub": config.standalone_twitch_pubsub_address
+            "standalone-core-manager": config.standalone_core_manager_address,
+            "standalone-eventlog": config.standalone_eventlog_address,
+            "standalone-user-client": config.standalone_user_client_address,
+            "standalone-websource": config.standalone_websource_address,
+            "standalone-lights": config.standalone_lights_address,
+            "standalone-tts-core": config.standalone_tts_core_address,
+            "standalone-channelrewards": config.standalone_channelrewards_address,
+            "standalone-command": config.standalone_command_address,
+            "standalone-discord-script": config.standalone_discord_script_address,
+            "standalone-twitch-script": config.standalone_twitch_script_address,
+            "standalone-twitch-pubsub": config.standalone_twitch_pubsub_address
         }
+        self.containerLastPingTime = {}
         self.current_stats = {}
+
+    def init(self):
+        for name in self.containerList:
+            self.current_stats[name] = "No Ping Yet"
+            self.containerLastPingTime[name] = 0
+        return self.current_stats
 
     def main(self):
         for name in self.containerList:
-            self.current_stats[name] = self.get_container_stats(self.containerAddresses[name])
+            if name != "standalone-core-manager":
+                self.current_stats[name] = self.get_container_stats(self.containerAddresses[name])
         return self.current_stats
+
+    # @contextmanager
+    # def time_limit(self, seconds):
+    #     def signal_handler(sig, frame):
+    #         raise TimeoutException("Timed out!")
+    #     signal.signal(signal.SIGALRM, signal_handler)
+    #     signal.alarm(seconds)
+    #     try:
+    #         yield
+    #     finally:
+    #         signal.alarm(0)
 
     def get_container_stats(self, targetContainer):
         try:
-            url = "http://%s:%s/api/v1/ping" % (targetContainer[0].get("ip"), 42024)
-            resp = requests.get(url)
+            url = "http://%s:%s/api/v1/ping" % (targetContainer[0].get("ip"), config.standalone_ping_port)
+
+            resp = requests.get(url, verify=False)
             return "Online"
+        except TimeoutException:
+            return "Lookup Error"
         except:
             return "Unknown"
 

@@ -3,9 +3,12 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+import json
+from logging import exception
 import random
 from tkinter import E
 from urllib import response
+from urllib.parse import urlencode
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -16,7 +19,7 @@ from django.core.handlers.wsgi import WSGIRequest
 
 from .models import Chyron_Entry, PraxisBot_Commands_v0
 from .forms import Chyron_EntryForm, PraxisBot_Commands_v0_Form
-
+import requests
 
 @login_required(login_url="/login/")
 def index(request):
@@ -70,18 +73,43 @@ def testerino():
 
 
 def index_dashboard(request, context:dict, load_template):
-    errorStatusText = "unknown status"
-    context['standalone_core_manager'] = errorStatusText
-    context['standalone_eventlog'] = errorStatusText
-    context['standalone_user_client'] = errorStatusText
-    context['standalone_websource'] = errorStatusText
-    context['standalone_lights'] = errorStatusText
-    context['standalone_tts_core'] = errorStatusText
-    context['standalone_channelrewards'] = errorStatusText
-    context['standalone_command'] = errorStatusText
-    context['standalone_discord_script'] = errorStatusText
-    context['standalone_twitch_script'] = errorStatusText
-    context['standalone_twitch_pubsub'] = errorStatusText
+
+    try:
+        url = "http://%s:%s/api/v1/containers/get_status" % ("standalone-core-manager", str(42002))
+        results = requests.get(url)
+        data = results.text
+        print(data)
+        print(type(data))
+        loaded_data = json.loads(data)
+        print(loaded_data)
+        print(type(loaded_data))
+        #print(json.loads(msg))
+        errorStatusText = "unknown status"
+        context['standalone_core_manager'] = loaded_data['standalone-core-manager']
+        context['standalone_eventlog'] = loaded_data['standalone-eventlog']
+        context['standalone_user_client'] = loaded_data['standalone-user-client']
+        context['standalone_websource'] = loaded_data['standalone-websource']
+        context['standalone_lights'] = loaded_data['standalone-lights']
+        context['standalone_tts_core'] = loaded_data['standalone-tts-core']
+        context['standalone_channelrewards'] = loaded_data['standalone-channelrewards']
+        context['standalone_command'] = loaded_data['standalone-command']
+        context['standalone_discord_script'] = loaded_data['standalone-discord-script']
+        context['standalone_twitch_script'] = loaded_data['standalone-twitch-script']
+        context['standalone_twitch_pubsub'] = loaded_data['standalone-twitch-pubsub']
+    except Exception as e:
+        print(e)
+        errorStatusText = "unknown status"
+        context['standalone_core_manager'] = errorStatusText
+        context['standalone_eventlog'] = errorStatusText
+        context['standalone_user_client'] = errorStatusText
+        context['standalone_websource'] = errorStatusText
+        context['standalone_lights'] = errorStatusText
+        context['standalone_tts_core'] = errorStatusText
+        context['standalone_channelrewards'] = errorStatusText
+        context['standalone_command'] = errorStatusText
+        context['standalone_discord_script'] = errorStatusText
+        context['standalone_twitch_script'] = errorStatusText
+        context['standalone_twitch_pubsub'] = errorStatusText
 
 
     # Various Bot tips and tricks for the user in the dashboard

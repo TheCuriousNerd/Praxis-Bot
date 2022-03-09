@@ -32,6 +32,7 @@ from flask import Flask, request, after_this_request
 import sqlalchemy as db
 
 import requests
+from urllib.parse import urlencode
 
 import credentials
 
@@ -40,6 +41,8 @@ import config
 import os
 import bot_functions.praxis_logging as praxis_logging
 from bot_functions import utilities_db as db_utility
+
+import bot_functions.container_stats_lookup
 
 praxis_logger_obj = praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
@@ -216,7 +219,8 @@ def create_basicCommand(commandName:str, commandReponse:str):
     #global db_obj
     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     result = db_obj.doesItemExist("command_responses_v0", "command", commandName)
-    if (db_obj.doesTableExist("command_responses_v0") == True) and (result == False):
+    print(result)
+    if (result == False):
         praxis_logger_obj.log("Creating Basic Command:")
         praxis_logger_obj.log(commandName)
         print("Creating Basic Command:")
@@ -289,6 +293,72 @@ def add_taskToQueue(target_standalone_system:str, name:str, time:str, command:st
     except:
         return 'Insertion Failed'
 
+
+
+import json
+Container_Checker:bot_functions.container_stats_lookup.Container_Stats_Lookup = bot_functions.container_stats_lookup.Container_Stats_Lookup()
+Container_Checker.init()
+def handle_get_container_status():
+    try:
+        currentStatus = {}
+        # standalone_core_manager
+        # standalone_eventlog
+        # standalone_user_client
+        # standalone_websource
+        # standalone_lights
+        # standalone_tts_core
+        # standalone_channelrewards
+        # standalone_command
+        # standalone_discord_script
+        # standalone_twitch_script
+        # standalone_twitch_pubsub
+        checkerResults = Container_Checker.current_stats
+        for key in checkerResults:
+            lastPing = Container_Checker.containerLastPingTime[key]
+            if (lastPing == 0):
+                checkerResults[key] = "Unknown"
+            elif (lastPing + config.standalone_ping_listen_interval < time.time()):
+                checkerResults[key] = "Offline"
+            elif (lastPing + config.standalone_ping_listen_interval > time.time()):
+                checkerResults[key] = "Online"
+        checkerResults['standalone-core-manager'] = "Online"
+
+        # {'standalone-core-manager': checkerResults.get("standalone-core-manager", UnknownStatusText),
+        # 'standalone-eventlog': checkerResults.get("standalone-eventlog", UnknownStatusText),
+        # 'standalone-user-client': checkerResults.get("standalone-user-client", UnknownStatusText),
+        # 'standalone-websource': checkerResults.get("standalone-websource", UnknownStatusText),
+        # 'standalone-lights': checkerResults.get("standalone-lights", UnknownStatusText),
+        # 'standalone-tts-core': checkerResults.get("standalone-tts-core", UnknownStatusText),
+        # 'standalone-channelrewards': checkerResults.get("standalone-channelrewards", UnknownStatusText),
+        # 'standalone-command': checkerResults.get("standalone-command", UnknownStatusText),
+        # 'standalone-discord-script': checkerResults.get("standalone-discord-script", UnknownStatusText),
+        # 'standalone-twitch-script': checkerResults.get("standalone-twitch-script", UnknownStatusText),
+        # 'standalone-twitch-pubsub': checkerResults.get("standalone-twitch-pubsub", UnknownStatusText)
+        # }
+
+
+        UnknownStatusText = "Unknown"
+        params = json.dumps(checkerResults, sort_keys=True, indent=4)
+        response = params
+        return flask.make_response(response, 200, {"Content-Type": "application/json"})
+    except:
+        return flask.make_response("{\"message\": \"%s\"}" % "Something went wrong getting the status", 400, {"Content-Type": "application/json"})
+
+
+def handle_set_container_status_ping(containerName):
+    try:
+        praxis_logger_obj.log("[Container Status Ping]: %s" % containerName)
+        containerList = Container_Checker.containerList
+        if containerName in containerList:
+            praxis_logger_obj.log("[Container Found in List]: %s" % containerName)
+            Container_Checker.current_stats[containerName] = "Online"
+            Container_Checker.containerLastPingTime[containerName] = int(time.time())
+        return flask.make_response("{\"message\": \"%s\"}" % "Pong", 200, {"Content-Type": "application/json"})
+    except:
+        return flask.make_response("{\"message\": \"%s\"}" % "Something went wrong getting the ping", 400, {"Content-Type": "application/json"})
+
+
+
 # API Stuff
 
 @api.route('/api/v1/add_taskToQueue', methods=['GET'])
@@ -332,6 +402,20 @@ def set_data():
         return flask.make_response('{\"text\":"Argument \'var_string\' not in request"}', 400)
     result = set_basic_data(request.args['key_name'], request.args['var_string'])
     return flask.make_response("{\"message\":\"%s\"}" % result, 200, {"Content-Type": "application/json"})
+
+
+@api.route('/api/v1/containers/get_status', methods=['GET'])
+def get_containers_status():
+
+    return handle_get_container_status()
+
+@api.route('/api/v1/containers/container/ping', methods=['GET'])
+def containers_status_ping():
+    print("Container Ping Received")
+    if 'container_name' not in request.args:
+        return flask.make_response('{\"message\":"Argument \'container_name\' not in request"}', 400)
+
+    return handle_set_container_status_ping(request.args['container_name'])
 
 @api.route('/', methods=['GET'])
 def command_check():

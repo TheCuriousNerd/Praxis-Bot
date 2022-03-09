@@ -5,3 +5,4 @@ art
 requests
 SQLAlchemy
 psycopg2
+flask

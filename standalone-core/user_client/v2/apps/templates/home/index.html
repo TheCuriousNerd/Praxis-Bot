@@ -16,9 +16,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0 font-weight-bold">standalone-core-manager</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_core_manager }}
-                    </h5>
+                    {% if standalone_core_manager == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_core_manager }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_core_manager }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -37,9 +43,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-eventlog</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_eventlog }}
-                    </h5>
+                    {% if standalone_eventlog == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_eventlog }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_eventlog }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -58,9 +70,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-user-client</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_user_client }}
-                    </h5>
+                    {% if standalone_user_client == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_user_client }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_user_client }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -79,9 +97,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-websource</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_websource }}
-                    </h5>
+                    {% if standalone_websource == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_websource }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_websource }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -103,9 +127,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-lights</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_lights }}
-                    </h5>
+                    {% if standalone_lights == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_lights }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_lights }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -124,9 +154,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-tts-core</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_tts_core }}
-                    </h5>
+                    {% if standalone_tts_core == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_tts_core }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_tts_core }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -145,9 +181,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-channelrewards</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_channelrewards }}
-                    </h5>
+                    {% if standalone_channelrewards == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_channelrewards }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_channelrewards }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -166,9 +208,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-command</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_command }}
-                    </h5>
+                    {% if standalone_command == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_command }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_command }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -191,9 +239,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-discord-script</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_discord_script }}
-                    </h5>
+                    {% if standalone_discord_script == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_discord_script }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_discord_script }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -212,9 +266,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-twitch-script</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_twitch_script }}
-                    </h5>
+                    {% if standalone_twitch_script == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_twitch_script }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_twitch_script }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -233,9 +293,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-twitch-pubsub</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_twitch_pubsub }}
-                    </h5>
+                    {% if standalone_twitch_pubsub == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_twitch_pubsub }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_twitch_pubsub }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -254,9 +320,15 @@
                 <div class="col-8">
                   <div class="numbers">
                     <p class="text-sm mb-0  font-weight-bold">standalone-command</p>
-                    <h5 class="font-weight-bolder mb-0 text-warning">
-                      {{ standalone_command }}
-                    </h5>
+                    {% if standalone_command == "Online" %}
+                      <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_command }}
+                      </h5>
+                    {% else %}
+                      <h5 class="font-weight-bolder mb-0 text-warning">
+                        {{ standalone_command }}
+                      </h5>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="col-4 text-end">
