@@ -118,8 +118,8 @@ def init():
     #global db_obj
     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     setup_basic_data()
-    setup_basicCommands()
-    create_basicCommands()
+    #setup_basicCommands()
+    #create_basicCommands()
 
     createExternalAPI_Tables()
     setup_taskQueue()
@@ -179,60 +179,60 @@ def set_basic_data(key, var):
 
 # Basic Commands Table Functions
 
-def setup_basicCommands():
-    #global db_obj
-    #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
-    try:
-        #db_obj.execQuery('DROP TABLE command_responses_v0')
-        if db_obj.doesTableExist("command_responses_v0") == False:
-            print("Making setup_basicCommands Table")
-            query = (
-                'CREATE TABLE command_responses_v0 ('
-                'id SERIAL, '
-                'command TEXT, '
-                'response TEXT);'
-                )
-            #print(query)
-            results = db_obj.execQuery(query)
-            praxis_logger_obj.log("[Table Created]: (command_responses_v0)")
-    except exception:
-        praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (command_responses_v0)")
-        praxis_logger_obj.log(exception)
+# def setup_basicCommands():
+#     #global db_obj
+#     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+#     try:
+#         #db_obj.execQuery('DROP TABLE command_responses_v0')
+#         if db_obj.doesTableExist("command_responses_v0") == False:
+#             print("Making setup_basicCommands Table")
+#             query = (
+#                 'CREATE TABLE command_responses_v0 ('
+#                 'id SERIAL, '
+#                 'command TEXT, '
+#                 'response TEXT);'
+#                 )
+#             #print(query)
+#             results = db_obj.execQuery(query)
+#             praxis_logger_obj.log("[Table Created]: (command_responses_v0)")
+#     except exception:
+#         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (command_responses_v0)")
+#         praxis_logger_obj.log(exception)
 
-def create_basicCommands():
-    print("Creating Basic Commands for command_responses_v0")
-    create_basicCommand("!testerino_v3", "A Testerino is Detected ($testFunction (#*))")
-    create_basicCommand("!math", "(#*) = ($math (#*))")
-    create_basicCommand("!presentdaypresenttime", "The current date and time is: ($datetime (%Y-%m-%d %H:%M:%S))")
-    create_basicCommand("!curdaytime", "The current date and time is: ($datetime (#*))")
-    create_basicCommand("!convertunit", "(#0) (#1) = ($math_unitConversion (#*)) (#2)")
+# def create_basicCommands():
+#     print("Creating Basic Commands for command_responses_v0")
+#     create_basicCommand("!testerino_v3", "A Testerino is Detected ($testFunction (#*))")
+#     create_basicCommand("!math", "(#*) = ($math (#*))")
+#     create_basicCommand("!presentdaypresenttime", "The current date and time is: ($datetime (%Y-%m-%d %H:%M:%S))")
+#     create_basicCommand("!curdaytime", "The current date and time is: ($datetime (#*))")
+#     create_basicCommand("!convertunit", "(#0) (#1) = ($math_unitConversion (#*)) (#2)")
 
-    create_basicCommand("!cryptoprice", "The current price of (#0) against (#1) is ($getCryptoPrice ((#0) (#1)))")
-    create_basicCommand("!speak", "($play (#*))")
-    #create_basicCommand("!chyron", "$(chyron $(#*))")
-    #create_basicCommand("!roll", "$(roll $(#*))")
-    #create_basicCommand("!lights", "$(lights $(#*))")
-    #create_basicCommand("!text", "$(text $(#*))")
-    #create_basicCommand("!tts", "$(tts $(#*))")
+#     create_basicCommand("!cryptoprice", "The current price of (#0) against (#1) is ($getCryptoPrice ((#0) (#1)))")
+#     create_basicCommand("!speak", "($play (#*))")
+#     #create_basicCommand("!chyron", "$(chyron $(#*))")
+#     #create_basicCommand("!roll", "$(roll $(#*))")
+#     #create_basicCommand("!lights", "$(lights $(#*))")
+#     #create_basicCommand("!text", "$(text $(#*))")
+#     #create_basicCommand("!tts", "$(tts $(#*))")
 
-def create_basicCommand(commandName:str, commandReponse:str):
-    #global db_obj
-    #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
-    result = db_obj.doesItemExist("command_responses_v0", "command", commandName)
-    print(result)
-    if (result == False):
-        praxis_logger_obj.log("Creating Basic Command:")
-        praxis_logger_obj.log(commandName)
-        print("Creating Basic Command:")
-        print(commandName)
-        query = (
-                'INSERT INTO command_responses_v0 '
-                '(command, response) '
-                'VALUES (\'%s\',\'%s\');' % (commandName, commandReponse)
-                )
-        #print(query)
-        results = db_obj.execQuery(query)
-        #print(str(results))
+# def create_basicCommand(commandName:str, commandReponse:str):
+#     #global db_obj
+#     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+#     result = db_obj.doesItemExist("command_responses_v0", "command", commandName)
+#     print(result)
+#     if (result == False):
+#         praxis_logger_obj.log("Creating Basic Command:")
+#         praxis_logger_obj.log(commandName)
+#         print("Creating Basic Command:")
+#         print(commandName)
+#         query = (
+#                 'INSERT INTO command_responses_v0 '
+#                 '(command, response) '
+#                 'VALUES (\'%s\',\'%s\');' % (commandName, commandReponse)
+#                 )
+#         #print(query)
+#         results = db_obj.execQuery(query)
+#         #print(str(results))
 
 # External Api Functions
 def createExternalAPI_Tables():

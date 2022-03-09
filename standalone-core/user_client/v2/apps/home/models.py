@@ -15,6 +15,7 @@ class PraxisBot_Settings(models.Model):
     PraxisBot Settings
     """
     id = models.AutoField(primary_key=True)
+    initialSetup = models.BooleanField(default=False)
 
 
 class Chyron_Entry(models.Model):

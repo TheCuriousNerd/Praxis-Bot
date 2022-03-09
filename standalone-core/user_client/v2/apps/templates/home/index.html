@@ -20,6 +20,10 @@
                       <h5 class="font-weight-bolder mb-0 text-success">
                         {{ standalone_core_manager }}
                       </h5>
+                    {% elif standalone_core_manager == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
+                        {{ standalone_core_manager }}
+                      </h5>
                     {% else %}
                       <h5 class="font-weight-bolder mb-0 text-warning">
                         {{ standalone_core_manager }}
@@ -45,6 +49,10 @@
                     <p class="text-sm mb-0  font-weight-bold">standalone-eventlog</p>
                     {% if standalone_eventlog == "Online" %}
                       <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_eventlog }}
+                      </h5>
+                    {% elif standalone_eventlog == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
                         {{ standalone_eventlog }}
                       </h5>
                     {% else %}
@@ -74,6 +82,10 @@
                       <h5 class="font-weight-bolder mb-0 text-success">
                         {{ standalone_user_client }}
                       </h5>
+                    {% elif standalone_user_client == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
+                        {{ standalone_user_client }}
+                      </h5>
                     {% else %}
                       <h5 class="font-weight-bolder mb-0 text-warning">
                         {{ standalone_user_client }}
@@ -99,6 +111,10 @@
                     <p class="text-sm mb-0  font-weight-bold">standalone-websource</p>
                     {% if standalone_websource == "Online" %}
                       <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_websource }}
+                      </h5>
+                    {% elif standalone_websource == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
                         {{ standalone_websource }}
                       </h5>
                     {% else %}
@@ -131,6 +147,10 @@
                       <h5 class="font-weight-bolder mb-0 text-success">
                         {{ standalone_lights }}
                       </h5>
+                    {% elif standalone_lights == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
+                        {{ standalone_lights }}
+                      </h5>
                     {% else %}
                       <h5 class="font-weight-bolder mb-0 text-warning">
                         {{ standalone_lights }}
@@ -156,6 +176,10 @@
                     <p class="text-sm mb-0  font-weight-bold">standalone-tts-core</p>
                     {% if standalone_tts_core == "Online" %}
                       <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_tts_core }}
+                      </h5>
+                    {% elif standalone_tts_core == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
                         {{ standalone_tts_core }}
                       </h5>
                     {% else %}
@@ -185,6 +209,10 @@
                       <h5 class="font-weight-bolder mb-0 text-success">
                         {{ standalone_channelrewards }}
                       </h5>
+                    {% elif standalone_channelrewards == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
+                        {{ standalone_channelrewards }}
+                      </h5>
                     {% else %}
                       <h5 class="font-weight-bolder mb-0 text-warning">
                         {{ standalone_channelrewards }}
@@ -210,6 +238,10 @@
                     <p class="text-sm mb-0  font-weight-bold">standalone-command</p>
                     {% if standalone_command == "Online" %}
                       <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_command }}
+                      </h5>
+                    {% elif standalone_command == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
                         {{ standalone_command }}
                       </h5>
                     {% else %}
@@ -243,6 +275,10 @@
                       <h5 class="font-weight-bolder mb-0 text-success">
                         {{ standalone_discord_script }}
                       </h5>
+                    {% elif standalone_discord_script == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
+                        {{ standalone_discord_script }}
+                      </h5>
                     {% else %}
                       <h5 class="font-weight-bolder mb-0 text-warning">
                         {{ standalone_discord_script }}
@@ -268,6 +304,10 @@
                     <p class="text-sm mb-0  font-weight-bold">standalone-twitch-script</p>
                     {% if standalone_twitch_script == "Online" %}
                       <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_twitch_script }}
+                      </h5>
+                    {% elif standalone_twitch_script == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
                         {{ standalone_twitch_script }}
                       </h5>
                     {% else %}
@@ -297,6 +337,10 @@
                       <h5 class="font-weight-bolder mb-0 text-success">
                         {{ standalone_twitch_pubsub }}
                       </h5>
+                    {% elif standalone_twitch_pubsub == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
+                        {{ standalone_twitch_pubsub }}
+                      </h5>
                     {% else %}
                       <h5 class="font-weight-bolder mb-0 text-warning">
                         {{ standalone_twitch_pubsub }}
@@ -322,6 +366,10 @@
                     <p class="text-sm mb-0  font-weight-bold">standalone-command</p>
                     {% if standalone_command == "Online" %}
                       <h5 class="font-weight-bolder mb-0 text-success">
+                        {{ standalone_command }}
+                      </h5>
+                    {% elif standalone_command == "Offline" %}
+                      <h5 class="font-weight-bolder mb-0 text-danger">
                         {{ standalone_command }}
                       </h5>
                     {% else %}

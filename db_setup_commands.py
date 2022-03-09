@@ -7,17 +7,18 @@ from bot_functions import utilities_db as db_utility
 loadedCommands = {}
 
 
-def db_setup():
-    db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
-    db_obj.dbConnection.execute('DROP TABLE command_responses_v0')
-    if db_obj.doesTableExist("command_responses_v0") == False:
-        print("Making Table")
-        results = db_obj.execQuery(
-            'CREATE TABLE command_responses_v0 ('
-            'id SERIAL, '
-            'command TEXT, '
-            'response TEXT);')
-    db_obj.closeConnection()
+# DEPERCATED
+# def db_setup():
+#     db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+#     db_obj.dbConnection.execute('DROP TABLE command_responses_v0')
+#     if db_obj.doesTableExist("command_responses_v0") == False:
+#         print("Making Table")
+#         results = db_obj.execQuery(
+#             'CREATE TABLE command_responses_v0 ('
+#             'id SERIAL, '
+#             'command TEXT, '
+#             'response TEXT);')
+#     db_obj.closeConnection()
 
 
 # def create_basicCommands():

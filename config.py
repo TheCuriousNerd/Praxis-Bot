@@ -107,7 +107,7 @@ currentSpeaker = Speaker.GOOGLE_TEXT_TO_SPEECH
 standalone_ping_port = 42024
 standalone_ping_timeout = (0.05, 0.05)
 standalone_ping_interval = 20
-standalone_ping_listen_interval = 60
+standalone_ping_listen_interval = 60 # ie Max time before the standalone-core will assume the service is unreachable.
 
 standalone_channelrewards_address = [{"ip":"standalone-channelrewards", "port":"42069"}]
 standalone_command_address = [{"ip":"standalone-command", "port":"42010"}]

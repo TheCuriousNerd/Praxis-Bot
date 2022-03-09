@@ -17,9 +17,10 @@ from django.template import loader
 from django.urls import reverse
 from django.core.handlers.wsgi import WSGIRequest
 
-from .models import Chyron_Entry, PraxisBot_Commands_v0
-from .forms import Chyron_EntryForm, PraxisBot_Commands_v0_Form
+from .models import Chyron_Entry, PraxisBot_Commands_v0, PraxisBot_Settings
+from .forms import Chyron_EntryForm, PraxisBot_Commands_v0_Form, PraxisBot_Settings_Form
 import requests
+import initial_model_entries
 
 @login_required(login_url="/login/")
 def index(request):
@@ -75,6 +76,22 @@ def testerino():
 def index_dashboard(request, context:dict, load_template):
 
     try:
+        print("PraxisBot_Settings lookup")
+        print(PraxisBot_Settings.objects.filter(id=1))
+        settingsLookup = PraxisBot_Settings.objects.get(id=1)
+        print(settingsLookup.initialSetup)
+        if settingsLookup.initialSetup == False:
+            initial_model_entries.main_setup()
+            settingsLookup.initialSetup = True
+            settingsLookup.save()
+    except:
+        print("PraxisBot_Settings making a new one")
+        settings = PraxisBot_Settings()
+        settings.id = 1
+        settings.initialSetup = False
+        settings.save()
+
+    try:
         url = "http://%s:%s/api/v1/containers/get_status" % ("standalone-core-manager", str(42002))
         results = requests.get(url)
         data = results.text
@@ -98,7 +115,7 @@ def index_dashboard(request, context:dict, load_template):
         context['standalone_twitch_pubsub'] = loaded_data['standalone-twitch-pubsub']
     except Exception as e:
         print(e)
-        errorStatusText = "unknown status"
+        errorStatusText = "Core Missing! 😰"
         context['standalone_core_manager'] = errorStatusText
         context['standalone_eventlog'] = errorStatusText
         context['standalone_user_client'] = errorStatusText
