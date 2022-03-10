@@ -65,7 +65,8 @@ forceAll_DiscordChatChannelsTTS = False # forceAll supersedes the blockAll bool 
 blockAll_TTS_URL_UserModule = True
 
 #Chyron Module Configs
-chyronListSpaceCount = 25
+chyronListSpaceCount = 160 #Old value was 25?
+chyronListSpacerCount = 30
 
 #Lights Module Configs
 colorParse_maxDigits = 4

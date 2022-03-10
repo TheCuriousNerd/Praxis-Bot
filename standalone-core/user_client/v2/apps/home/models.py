@@ -23,7 +23,8 @@ class Chyron_Entry(models.Model):
     This model will hold the data for the Chyron
     """
     id = models.AutoField(primary_key=True)
-    text = models.CharField(max_length=500)
+    prefix = models.CharField(max_length=500, blank=True, null=False, default="")
+    text = models.CharField(max_length=1000, blank=True, null=False, default="")
     tag = models.CharField(max_length=200)
     isEnabled = models.BooleanField(default=False)
 

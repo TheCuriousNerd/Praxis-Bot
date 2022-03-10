@@ -17,7 +17,7 @@ class PraxisBot_Settings_Form(ModelForm):
 class Chyron_EntryForm(ModelForm):
     class Meta:
         model = Chyron_Entry
-        fields = ('text', 'tag', 'isEnabled')
+        fields = ('prefix', 'text', 'tag', 'isEnabled')
 
 class PraxisBot_Commands_v0_Form(ModelForm):
     class Meta:

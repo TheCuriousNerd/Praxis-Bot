@@ -3,6 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from distutils.command import config
 import json
 from logging import exception
 import random
@@ -193,6 +194,18 @@ def chyron(request:WSGIRequest, context, load_template):
                 print("chyron_page error")
                 context['chyron_form'] = e
 
+
+            #updateChyron_Btn
+            try:
+                if request.POST.get('updateChyron_Btn'):
+                    print(request)
+                    print(request.POST)
+                    url="http://%s:%s/api/v1/chyron/update_file" % ("standalone-command", str(42010))
+                    resp = requests.get(url)
+
+            except Exception as e:
+                context['chyron_form'] = e
+
             try:
                 context['chyron_form'] = Chyron_EntryForm()
                 if request.POST.get('Updatebtn'):
@@ -201,6 +214,7 @@ def chyron(request:WSGIRequest, context, load_template):
                     print(request.POST)
 
                     isItEnabled = request.POST.get('isEnabled')
+                    prefix = request.POST.get('prefix')
                     text = request.POST.get('text')
                     tag = request.POST.get('tag')
                     id = request.POST.get('hidden_id')
@@ -213,7 +227,7 @@ def chyron(request:WSGIRequest, context, load_template):
                         isItEnabled = True
                     else:
                         isItEnabled = False
-                    Chyron_Entry.objects.filter(id=targetID).update(text=text, tag=tag, isEnabled=isItEnabled)
+                    Chyron_Entry.objects.filter(id=targetID).update(prefix=prefix, text=text, tag=tag, isEnabled=isItEnabled)
 
 
             except Exception as e:

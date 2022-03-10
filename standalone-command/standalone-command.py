@@ -25,6 +25,7 @@
 import json
 import flask
 from flask import Flask, request, after_this_request
+from bot_functions.chyron_module import Chyron_Module
 
 from commands import loader as command_loader
 from commands import loader_functions as function_loader
@@ -177,6 +178,12 @@ def handle_get_list():
     praxis_logger_obj.log(payload)
     return flask.make_response("{\"message\":\"%s\"}" % payload.decode(), 200, {"Content-Type": "application/json"})
 
+
+# ======================================================================================================================
+# API ENDPOINTS
+# ======================================================================================================================
+
+
 @api.route('/api/v1/command', methods=['GET'])
 def command_check():
     if 'name' in request.args:
@@ -216,6 +223,28 @@ def get_list():
         return response
 
     return handle_get_list()
+
+
+
+@api.route('/api/v1/chyron/get', methods=['GET'])
+def get_chyron():
+    # if 'chyron_name' not in request.args: # This is for later when we have multiple chyron types
+    #     pass
+    #     #return flask.make_response('{\"text\":"Argument \'chyron_name\' not in request"}', 400)
+    module = Chyron_Module()
+    chyronString = module.getChyronString()
+    return flask.make_response(chyronString, 200)
+
+@api.route('/api/v1/chyron/update_file', methods=['GET'])
+def update_chyron_file():
+    # if 'chyron_name' not in request.args: # This is for later when we have multiple chyron types
+    #     pass
+    #     #return flask.make_response('{\"text\":"Argument \'chyron_name\' not in request"}', 400)
+    module = Chyron_Module()
+    module.updateChyronFile()
+    return flask.make_response("done", 200)
+
+
 
 if __name__ == '__main__':
     init()

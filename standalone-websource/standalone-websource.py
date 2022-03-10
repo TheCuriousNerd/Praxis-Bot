@@ -23,11 +23,13 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from enum import Enum
+from operator import mod
 from os import F_OK
 import bot_functions.tempText_Module as tempText_Module
 import time
 import config as config
 
+import flask
 from flask import Flask
 
 import credentials
@@ -60,25 +62,42 @@ def init():
 def hello_world():
     return 'I can see your Ghost!'
 
-@api.route('/chyron')
-def textSource_chyron():
-    tempModule = chyron_module.Chyron_Module()
-    return tempModule.getChyronFile()
 
-@api.route('/text/<file_name>/')
+
+@api.route('/api/v1/chyron/get', methods=['GET'])
+def get_chyron():
+    # if 'chyron_name' not in request.args: # This is for later when we have multiple chyron types
+    #     pass
+    #     #return flask.make_response('{\"text\":"Argument \'chyron_name\' not in request"}', 400)
+    module = chyron_module.Chyron_Module()
+    chyronString = module.getChyronString()
+    return flask.make_response(chyronString, 200)
+
+@api.route('/api/v1/chyron/update_file', methods=['GET'])
+def update_chyron_file():
+    # if 'chyron_name' not in request.args: # This is for later when we have multiple chyron types
+    #     pass
+    #     #return flask.make_response('{\"text\":"Argument \'chyron_name\' not in request"}', 400)
+    module = chyron_module.Chyron_Module()
+    chyronString = module.getChyronString()
+    module.updateChyronFileManually(chyronString)
+    return flask.make_response(chyronString, 200)
+
+
+@api.route('/api/v1/text_file/<file_name>/')
 def textSource_tempText(file_name):
     print("trying file: ", file_name)
     tempModule = tempText_Module.tempText_Module()
     return tempModule.getTempTextFile(file_name)
 
-@api.route('/timer/status/<timer_name>/')
+@api.route('/api/v1/timer/status/<timer_name>/')
 def textSource_timerStatus(timer_name):
     tempModule = timers_module.Timers_Module()
     result = tempModule.checkTimerStatus_fromFiles(timer_name)
     returnString = "Timer %s is %s" % (timer_name, result)
     return returnString
 
-@api.route('/timer/time/<timer_name>/')
+@api.route('/api/v1/timer/time/<timer_name>/')
 def textSource_timerTime(timer_name):
     tempModule = timers_module.Timers_Module()
     result = tempModule.checkTime_fromFiles(timer_name)

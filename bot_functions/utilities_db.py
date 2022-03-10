@@ -215,6 +215,20 @@ class Praxis_DB_Connection():
             self.closeConnection()
             return None
 
+    def get_chyronString(self, chyronName = ""):
+        try:
+            self.selfAutoStart()
+            query = "SELECT * FROM home_chyron_entry ORDER BY id ASC"
+            result = self.dbConnection.execute(query)
+            results = []
+            for r in result:
+                results.append(r)
+            self.closeConnection()
+            return results
+        except:
+            print("[Praxis_DB_Connection] get query chyron error")
+            return "None"
+
 
     import bot_functions.praxis_logging as praxis_logging
     def execQuery(self, query, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):

@@ -44,6 +44,7 @@ services:
       - "../logs:/Praxis/logs"
       - "../credentials:/Praxis/credentials"
       - "../config.py:/Praxis/config.py"
+      - "../stream_sources:/Praxis/stream_sources/"
 
   #Django server
   praxis-app:

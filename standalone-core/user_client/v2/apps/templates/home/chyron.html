@@ -21,6 +21,7 @@
                 {% csrf_token %}
                 <h4 class="card-header">New Chyron Entry</h4>
               <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">prefix<br>{{ chyron_form.prefix }}</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">text<br>{{ chyron_form.text }}</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">tag<br>{{ chyron_form.tag }}</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled<br>{{ chyron_form.isEnabled }}</th>
@@ -30,6 +31,21 @@
             </thead>
             </table>
 
+      <br>
+
+      <table class="table align-items-center overflow-scroll">
+        <thead>
+          <tr>
+          <th><div class="" style="padding: 10px;">
+            <form method="post" action="/chyron.html">
+              {% csrf_token %}
+              <input type="hidden" name="hidden_id" value="0">
+              <input type="submit" value="Update Chyron" name="updateChyron_Btn" class="btn btn-primary bg-gradient-faded-info" />
+            </form>
+          </div></th>
+          </tr>
+        </thead>
+      </table>
 
       <br>
 
@@ -37,6 +53,7 @@
         <thead>
           <h4 class="card-header">Chyron Entries</h4>
           <tr>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">prefix</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">text</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">tag</th>
             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled</th>
@@ -54,8 +71,11 @@
             <form method="post" action="/chyron.html">
             {% csrf_token %}
             <td>
-            <input type="text" name="text" class="w-100" value="{{ ch.text }}">
+            <input type="text" name="prefix" class="w-100" value="{{ ch.prefix }}">
             </td>
+            <td>
+              <input type="text" name="text" class="w-100" value="{{ ch.text }}">
+              </td>
             <td>
             <input type="text" name="tag" class="w-100" value="{{ ch.tag }}">
             </td>
