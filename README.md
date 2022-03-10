@@ -42,7 +42,7 @@ Linux / macOS: `start.sh`<br>
 To Stop:
 
 Windows: `stop.bat`<br>
-Linux / macOS: `start.sh`<br>
+Linux / macOS: `stop.sh`<br>
 
 <br>
 
