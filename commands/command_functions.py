@@ -85,7 +85,10 @@ class Abstract_Function_Helpers():
             dbResults = db_obj.execQuery(query, praxis_logger_obj)
             #praxis_logger_obj.log("dbResults:")
             #praxis_logger_obj.log(str(dbResults))
-            returns = dbResults[2]
+            if str(dbResults[3]) == "True":
+                returns = dbResults[2]
+            else:
+                returns = None
 
             return returns
 
