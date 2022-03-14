@@ -60,7 +60,7 @@ class PraxisBot_Commands_v0(models.Model):
         return self.command + " " + self.response + " " + str(self.isEnabled)
 
 
-class PraxisBot_CommandSyntax_v0_StoredVariables(models.Model):
+class PraxisBot_Commands_v0_SavedVariables(models.Model):
     """
     This model will hold the data for the Command Syntax
     """

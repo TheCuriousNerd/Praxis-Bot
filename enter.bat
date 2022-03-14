@@ -1,0 +1,1 @@
+start call .\test.bat

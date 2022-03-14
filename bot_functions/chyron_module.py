@@ -134,7 +134,7 @@ class Chyron_Module():
                 if str(entry[4]) == "True":
                     stringParts.append(entry[1]+entry[2]+spacer)
             chyronString = "".join(stringParts)
-            return chyronString + spacer
+            return chyronString
         except Exception as e:
             print("Error getting chyron string: ", e)
             return str(e)

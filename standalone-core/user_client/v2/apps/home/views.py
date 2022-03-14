@@ -23,6 +23,8 @@ from .forms import Chyron_EntryForm, PraxisBot_Commands_v0_Form, PraxisBot_Setti
 import requests
 import initial_model_entries
 
+from django.contrib.auth.models import User
+
 @login_required(login_url="/login/")
 def index(request):
     context = {'segment': 'index'}
@@ -53,6 +55,8 @@ def pages(request):
             context = chyron(request, context, load_template)
         if 'commands' in load_template:
             context = commands(request, context, load_template)
+        if 'settings' in load_template:
+            context = settings(request, context, load_template)
 
         html_template = loader.get_template('home/' + load_template)
         return HttpResponse(html_template.render(context, request))
@@ -307,5 +311,21 @@ def commands(request:WSGIRequest, context, load_template):
             except Exception as e:
                 print("commands_page error")
                 context['commands_form'] = e
+
+    return context
+
+
+def settings(request:WSGIRequest, context:dict, load_template):
+    if 'settings' in load_template:
+        curUser = request.user
+        context['userName'] = curUser
+
+        if request.POST.get('UpdateUserAccount_Btn'):
+            newPass = request.POST.get('password_account_settings')
+            print(newPass)
+            targetUser:User = User.objects.get(username__exact=curUser)
+            targetUser.set_password(newPass)
+            targetUser.save()
+
 
     return context

@@ -68,50 +68,50 @@ def test_init():
     global db_obj
     db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
 
-    try:
-        db_obj.execQuery(
-            'DROP TABLE users'
-        )
-    except:
-        praxis_logger_obj.log("Couldn't Drop it")
+    # try:
+    #     db_obj.execQuery(
+    #         'DROP TABLE users'
+    #     )
+    # except:
+    #     praxis_logger_obj.log("Couldn't Drop it")
 
-    try:
-        db_obj.execQuery(
-        'CREATE TABLE users ('
-        'id SERIAL, '
-        'name TEXT);'
-    )
-    except:
-        praxis_logger_obj.log("Couldn't Make it")
+    # try:
+    #     db_obj.execQuery(
+    #     'CREATE TABLE users ('
+    #     'id SERIAL, '
+    #     'name TEXT);'
+    # )
+    # except:
+    #     praxis_logger_obj.log("Couldn't Make it")
 
-    try:
-        db_obj.execQuery(
-            'DELETE FROM users WHERE id = 1;'
-        )
-    except:
-        pass
+    # try:
+    #     db_obj.execQuery(
+    #         'DELETE FROM users WHERE id = 1;'
+    #     )
+    # except:
+    #     pass
 
 
-    try:
-        for x in range(10):
-            db_obj.execQuery(
-            'INSERT INTO users '
-            '(name) '
-            'VALUES (\'Test Name\');'
-            )
-    except:
-        pass
+    # try:
+    #     for x in range(10):
+    #         db_obj.execQuery(
+    #         'INSERT INTO users '
+    #         '(name) '
+    #         'VALUES (\'Test Name\');'
+    #         )
+    # except:
+    #     pass
 
-    try:
-        results = db_obj.execQuery(
-            'SELECT * FROM '
-            'users;'
-        )
+    # try:
+    #     results = db_obj.execQuery(
+    #         'SELECT * FROM '
+    #         'users;'
+    #     )
 
-        for item in results:
-            praxis_logger_obj.log(item)
-    except:
-        pass
+    #     for item in results:
+    #         praxis_logger_obj.log(item)
+    # except:
+    #     pass
 
 
 def init():
@@ -124,6 +124,30 @@ def init():
     createExternalAPI_Tables()
     setup_taskQueue()
 
+
+def delete_django_related_data():
+    try:
+        tablesToDrop = [
+            'auth_group',
+            'auth_group_permissions',
+            'auth_permission',
+            'auth_user',
+            'auth_user_groups',
+            'auth_user_user_permissions',
+            'django_admin_log',
+            'django_content_type',
+            'django_migrations',
+            'django_session',
+            'home_praxisbot_commands_v0',
+            'home_praxisbot_commands_v0_savedvariables',
+            'home_praxisbot_eventlog',
+            'home_praxisbot_settings']
+        for table in tablesToDrop:
+            db_obj.execQuery('DROP TABLE ' + table)
+        return "Dropped"
+    except:
+        praxis_logger_obj.log("Couldn't Drop it")
+        return "Couldn't Drop it"
 
 # Basic Data Table Functions
 
@@ -402,6 +426,17 @@ def set_data():
         return flask.make_response('{\"text\":"Argument \'var_string\' not in request"}', 400)
     result = set_basic_data(request.args['key_name'], request.args['var_string'])
     return flask.make_response("{\"message\":\"%s\"}" % result, 200, {"Content-Type": "application/json"})
+
+
+@api.route('/api/v1/user_client/drop_tables_all', methods=['GET'])
+def drop_user_client_tables_all():
+    if 'drop_tables_pin' not in request.args:
+        return flask.make_response('{\"text\":"Argument \'drop_tables_pin\' not in request"}', 400)
+
+    if str(request.args['drop_tables_pin']) == "DROP_DJANGO_TABLES_PIN23344":
+        drop_return_ = delete_django_related_data()
+        drop_return_ = delete_django_related_data() # Double tap just incase
+    return flask.make_response("{\"message\":\"%s\"}" % drop_return_, 200, {"Content-Type": "application/json"})
 
 
 @api.route('/api/v1/containers/get_status', methods=['GET'])
