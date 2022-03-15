@@ -31,6 +31,21 @@ def index(request):
 
     load_template = request.path.split('/')[-1]
     context = index_dashboard(request, context, load_template)
+    try:
+        print("PraxisBot_Settings lookup")
+        print(PraxisBot_Settings.objects.filter(id=1))
+        settingsLookup = PraxisBot_Settings.objects.get(id=1)
+        print(settingsLookup.initialSetup)
+        if settingsLookup.initialSetup == False:
+            initial_model_entries.main_setup()
+            settingsLookup.initialSetup = True
+            settingsLookup.save()
+    except:
+        print("PraxisBot_Settings making a new one")
+        settings = PraxisBot_Settings()
+        settings.id = 1
+        settings.initialSetup = False
+        settings.save()
 
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))

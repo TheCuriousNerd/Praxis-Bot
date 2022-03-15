@@ -1,7 +1,7 @@
 
 echo "Starting Praxis Bot Services..."
 
-start powershell cd "standalone-core" ; docker-compose up -d ; cd ".."
+start /wait powershell cd "standalone-core" ; docker-compose up -d ; cd ".."
 start powershell cd "standalone-user-client" ; docker-compose up -d ; cd ".."
 start powershell cd "standalone-eventlog" ; docker-compose up -d ; cd ".."
 start powershell cd "standalone-command" ; docker-compose up -d ; cd ".."
