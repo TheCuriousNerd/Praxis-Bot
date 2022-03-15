@@ -1,7 +1,7 @@
 echo "Restarting Praxis Bot Services..."
 
+start powershell cd "standalone-core" ; docker-compose restart ; cd ".."
 start powershell cd "standalone-user-client" ; docker-compose restart ; cd ".."
-start powershell cd "standalone-db" ; docker-compose restart ; cd ".."
 start powershell cd "standalone-eventlog" ; docker-compose restart ; cd ".."
 start powershell cd "standalone-command" ; docker-compose restart ; cd ".."
 start powershell cd "standalone-channelrewards" ; docker-compose restart ; cd ".."

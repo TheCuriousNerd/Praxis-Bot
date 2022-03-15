@@ -80,12 +80,15 @@ class Abstract_Function_Helpers():
             returns = None
             #praxis_logger_obj.log("Getting Command ReturnString")
 
-            query = "SELECT * FROM command_responses_v0 WHERE command = \'%s\';" % (command)
+            query = "SELECT * FROM home_praxisbot_commands_v0 WHERE command = \'%s\';" % (command)
             #praxis_logger_obj.log(query)
             dbResults = db_obj.execQuery(query, praxis_logger_obj)
             #praxis_logger_obj.log("dbResults:")
             #praxis_logger_obj.log(str(dbResults))
-            returns = dbResults[2]
+            if str(dbResults[3]) == "True":
+                returns = dbResults[2]
+            else:
+                returns = None
 
             return returns
 

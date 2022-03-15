@@ -3,6 +3,7 @@ services:
   standalone-twitch-pubsub:
     image: standalone-twitch-pubsub
     environment:
+      - CONTAINER_NAME=standalone-twitch-pubsub
       - ISDOCKER=cat
     networks:
       - praxisbot

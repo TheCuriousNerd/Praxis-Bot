@@ -5,6 +5,7 @@ services:
     ports:
       - 42010:42010
     environment:
+      - CONTAINER_NAME=standalone-command
       - ISDOCKER=cat
     networks:
       - praxisbot

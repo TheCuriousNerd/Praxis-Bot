@@ -1,7 +1,7 @@
 echo "Stopping Praxis Bot Services..."
 
+start powershell cd "standalone-core" ; docker-compose down ; cd ".."
 start powershell cd "standalone-user-client" ; docker-compose down ; cd ".."
-start powershell cd "standalone-db" ; docker-compose down ; cd ".."
 start powershell cd "standalone-eventlog" ; docker-compose down ; cd ".."
 start powershell cd "standalone-command" ; docker-compose down ; cd ".."
 start powershell cd "standalone-channelrewards" ; docker-compose down ; cd ".."

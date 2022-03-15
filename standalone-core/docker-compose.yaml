@@ -1,0 +1,93 @@
+version: '3.7'
+services:
+  standalone_pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
+    restart: always
+    environment:
+      - CONTAINER_NAME=pgadmin4_container
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+     - 42099:80
+    networks:
+      - praxisbot
+  standalone-db-main:
+    image: postgres:13.4-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - CONTAINER_NAME=standalone-db-main
+      - ISDOCKER=cat
+      - POSTGRES_DB=PRAXIS_BOT_DB
+      - POSTGRES_USER=PRAXIS_BOT
+      - POSTGRES_PASSWORD=PraxisPraxisPraxis
+      - PGDATA=/Praxis/standalone-core/db_data
+    volumes:
+      - "./db_data:/Praxis/standalone-core/db_data"
+      - "../logs:/Praxis/logs"
+    networks:
+      - praxisbot
+  standalone-core-manager:
+    image: standalone-core
+    ports:
+      - 42002:42002
+    environment:
+      - CONTAINER_NAME=standalone-core-manager
+      - ISDOCKER=cat
+    networks:
+      - praxisbot
+    volumes:
+      - "../logs:/Praxis/logs"
+      - "../credentials:/Praxis/credentials"
+      - "../config.py:/Praxis/config.py"
+      - "../stream_sources:/Praxis/stream_sources/"
+
+  #Django server
+  praxis-app:
+    container_name: praxis_app
+    environment:
+      - CONTAINER_NAME=praxis_app
+      - ISDOCKER=cat
+      - POSTGRES_PASSWORD=PraxisPraxisPraxis
+    restart: always
+    depends_on:
+      - standalone-db-main
+    volumes:
+      - "./apps/home/migrations:/apps/home/migrations"
+    networks:
+      - praxisbot
+    ports:
+      - 8000:85
+    env_file: ./user_client/v2/.env
+    build: ./user_client/v2
+    #command: "bash -c 'python manage.py runserver 0.0.0.0:85'"
+    command: "bash -c 'python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:85'"
+    #command: "bash -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:85'"
+
+ #Nginx
+  nginx:
+    container_name: nginx
+    restart: always
+    image: "nginx:latest"
+    environment:
+      - CONTAINER_NAME=nginx
+      - ISDOCKER=cat
+    ports:
+      - 42808:85
+    volumes:
+      - ./user_client/v2/nginx/:/etc/nginx/conf.d
+    networks:
+      - praxisbot
+    depends_on:
+      - praxis-app
+networks:
+  praxisbot:
+    name: praxisbot
+  # praxisbot_inner:
+  #   name: praxisbot_inner
+  # praxisbot_outer:
+  #   name: praxisbot_outer

@@ -26,6 +26,7 @@ from asyncio.tasks import sleep
 import os
 import sys
 import re
+from tkinter.messagebox import NO
 import psutil
 import subprocess
 import platform
@@ -262,6 +263,12 @@ def isRunningInDocker():
     if isD is None:
         return False
     return isD == True
+
+def getContainerName():
+    try:
+        return os.getenv('CONTAINER_NAME')
+    except:
+        return None
 
 def hard_shutdown():
     current_system_pid = os.getpid()

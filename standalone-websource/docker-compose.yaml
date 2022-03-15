@@ -5,6 +5,7 @@ services:
     ports:
       - 42012:42012
     environment:
+      - CONTAINER_NAME=standalone-websource
       - ISDOCKER=cat
     networks:
       - praxisbot

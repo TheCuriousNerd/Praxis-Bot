@@ -50,6 +50,10 @@ import event_logs.event_log_Module
 
 import os
 import bot_functions.praxis_logging as praxis_logging
+
+import bot_functions.container_stats_api as container_stats_api
+container_stats_api.main()
+
 praxis_logger_obj = bot_functions.praxis_logging.praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))
 praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))

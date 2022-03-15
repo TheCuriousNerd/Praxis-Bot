@@ -25,6 +25,7 @@
 import config
 from bot_functions import utilities_script as utilities
 import os
+from bot_functions import utilities_db as db_utility
 
 class Chyron_Module():
     def __init__(self):
@@ -64,11 +65,12 @@ class Chyron_Module():
 
     def chyron_stringUpdater(self):
         newString = ""
-        for c in self.chyron_items:
-            c.item_stringUpdater()
-            newString = newString + c.itemComputedString
-            for x in range(config.chyronListSpaceCount):
-                newString = newString + " "
+        # for c in self.chyron_items:
+        #     c.item_stringUpdater()
+        #     newString = newString + c.itemComputedString
+        newString = self.getChyronString()
+        if len(newString) < config.chyronListSpaceCount:
+            newString = newString + " " * (config.chyronListSpaceCount - len(newString))
         self.chyron_computedString = newString
         return newString
 
@@ -94,18 +96,48 @@ class Chyron_Module():
         file.write(chyron)
         file.close
 
-    def getChyronFile(self):
+    def updateChyronFileManually(self, chyron:str):
         dir = utilities.get_dir("stream_sources")
         script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
         script_dir = ""
         relative_path = "../Praxis/stream_sources/chyron.txt"
         real_file_path = os.path.join(script_dir, relative_path)
 
-        file = open(real_file_path, "rb")
-        text = file.read()
-        #print(text)
+        file = open(real_file_path, "wb")
+        file.write(chyron.encode("utf8"))
         file.close
-        return text
+
+    def getChyronFile(self):
+        return self.getChyronString()
+        # dir = utilities.get_dir("stream_sources")
+        # script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
+        # script_dir = ""
+        # relative_path = "../Praxis/stream_sources/chyron.txt"
+        # real_file_path = os.path.join(script_dir, relative_path)
+
+        # file = open(real_file_path, "rb")
+        # text = file.read()
+        # #print(text)
+        # file.close
+        # return text
+
+    def getChyronString(self):
+        # Connects to DB and generates the chyron string
+        print("[Chyron] Getting chyron string from DB")
+        try:
+            print("[Chyron] Getting chyron string from DB")
+            db_obj = db_utility.Praxis_DB_Connection()
+            db_results = db_obj.get_chyronString()
+            stringParts = []
+            spacer = " " * (config.chyronListSpacerCount)
+            for entry in db_results:
+                if str(entry[4]) == "True":
+                    stringParts.append(entry[1]+entry[2]+spacer)
+            chyronString = "".join(stringParts)
+            return chyronString
+        except Exception as e:
+            print("Error getting chyron string: ", e)
+            return str(e)
 
 
 class ChyronItem():

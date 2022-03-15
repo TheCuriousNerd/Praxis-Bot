@@ -65,7 +65,8 @@ forceAll_DiscordChatChannelsTTS = False # forceAll supersedes the blockAll bool 
 blockAll_TTS_URL_UserModule = True
 
 #Chyron Module Configs
-chyronListSpaceCount = 25
+chyronListSpaceCount = 160 #Old value was 25?
+chyronListSpacerCount = 30
 
 #Lights Module Configs
 colorParse_maxDigits = 4
@@ -104,10 +105,15 @@ currentSpeaker = Speaker.GOOGLE_TEXT_TO_SPEECH
 
 
 #Networking Configs (Unused are commented out)
+standalone_ping_port = 42024
+standalone_ping_timeout = (0.05, 0.05)
+standalone_ping_interval = 20
+standalone_ping_listen_interval = 60 # ie Max time before the standalone-core will assume the service is unreachable.
+
 standalone_channelrewards_address = [{"ip":"standalone-channelrewards", "port":"42069"}]
 standalone_command_address = [{"ip":"standalone-command", "port":"42010"}]
 
-standalone_db_address = [{"ip":"standalone-db", "port":"42002"}]
+standalone_core_manager_address = [{"ip":"standalone-core-manager", "port":"42002"}]
 standalone_eventlog_address = [{"ip":"standalone-eventlog", "port":"42008"}]
 
 standalone_lights_address = [{"ip":"standalone-lights", "port":"42042"}]
@@ -119,10 +125,10 @@ tts_speaker_address = "192.168.191.208"
 tts_speaker_port = "40085"
 tts_speakers = [{"ip":"192.168.191.208", "port":"40085"}]
 
-#standalone_twitch_script_address = [{"ip":"standalone-twitch-script", "port":"None"}]
-#standalone_twitch_pubsub_address = [{"ip":"standalone-twitch-pubsub", "port":"None"}]
+standalone_twitch_script_address = [{"ip":"standalone-twitch-script", "port":"None"}]
+standalone_twitch_pubsub_address = [{"ip":"standalone-twitch-pubsub", "port":"None"}]
 
-#standalone_discord_script_address = [{"ip":"standalone-discord-script", "port":"None"}]
+standalone_discord_script_address = [{"ip":"standalone-discord-script", "port":"None"}]
 
 standalone_user_client_address = [{"ip":"standalone-user-client", "port":"42055"}]
 

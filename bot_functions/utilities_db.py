@@ -75,9 +75,15 @@ class Praxis_DB_Connection():
     def doesItemExist(self, tableName, columnName, item):
         try:
             print("Searching for item")
-            #self.selfAutoStart()
+            print(item)
+            self.selfAutoStart()
             query = "SELECT * FROM %s WHERE %s = '%s';" % (tableName, columnName, item)
-            result = self.dbConnection.execute(query)
+            try:
+                result = self.dbConnection.execute(query)
+            except Exception as e:
+                print("[Praxis_DB_Connection] query error while looking for item")
+                print(e)
+                return False
             print(result)
             for r in result:
                 print(r)
@@ -208,6 +214,20 @@ class Praxis_DB_Connection():
             print("[Praxis_DB_Connection] add query task error")
             self.closeConnection()
             return None
+
+    def get_chyronString(self, chyronName = ""):
+        try:
+            self.selfAutoStart()
+            query = "SELECT * FROM home_chyron_entry ORDER BY id ASC"
+            result = self.dbConnection.execute(query)
+            results = []
+            for r in result:
+                results.append(r)
+            self.closeConnection()
+            return results
+        except:
+            print("[Praxis_DB_Connection] get query chyron error")
+            return "None"
 
 
     import bot_functions.praxis_logging as praxis_logging

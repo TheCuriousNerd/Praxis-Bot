@@ -62,11 +62,11 @@ class Command_chyron_v2(AbstractCommand, metaclass=ABCMeta):
 
                     try:
                         returnString = user + " has updated the chyron!"
-                        chyron_ = chyron_module.Chyron_Module()
+                        # chyron_ = chyron_module.Chyron_Module()
 
-                        chyron_.main(rest)
-                        chyron_.chyron_stringUpdater()
-                        chyron_.updateChyronFile()
+                        # chyron_.main(rest)
+                        # chyron_.chyron_stringUpdater()
+                        # chyron_.updateChyronFile()
                     except:
                         returnString = user + " has attempted to update the chyron but an error may have occurred!"
                     #returnString = chyron_.chyron_computedString
@@ -75,7 +75,7 @@ class Command_chyron_v2(AbstractCommand, metaclass=ABCMeta):
         except:
             returnString = user + " has attempted to update the chyron but an error may have occurred further on!!!"
 
-
+        returnString = "Command is temporarily disabled, please use the dashboard to update the chyron for now."
         return returnString
 
     def send_Lights_Command(self, username, light_group, command, rest):

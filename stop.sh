@@ -1,8 +1,8 @@
 #!/bin/bash
-cd "standalone-user-client"
+cd "standalone-core"
 docker-compose down
 cd ".."
-cd "standalone-db"
+cd "standalone-user-client"
 docker-compose down
 cd ".."
 cd "standalone-eventlog"
