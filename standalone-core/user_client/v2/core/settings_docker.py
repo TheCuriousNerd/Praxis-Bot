@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'PRAXIS_BOT_DB',
         'USER': 'PRAXIS_BOT',
         'PASSWORD': 'PraxisPraxisPraxis',
-        'HOST': '127.0.0.1',
+        'HOST': 'standalone-db-main',
         'PORT': '5432'
     }
 }

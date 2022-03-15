@@ -138,6 +138,7 @@ def delete_django_related_data():
             'django_content_type',
             'django_migrations',
             'django_session',
+            'home_chyron_entry',
             'home_praxisbot_commands_v0',
             'home_praxisbot_commands_v0_savedvariables',
             'home_praxisbot_eventlog',

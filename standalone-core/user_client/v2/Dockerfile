@@ -1,6 +1,7 @@
 FROM python:3.9
 
 COPY . .
+COPY /core/settings_docker.py /core/settings.py
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
