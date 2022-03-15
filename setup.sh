@@ -1,7 +1,7 @@
 #!/bin/bash
 docker build --file ./standalone-core/Dockerfile --tag standalone-core .
 cd "standalone-core"
-docker-compose up -d
+docker-compose up -d --build
 cd ".."
 bash migrate_django_tables.sh
 cd "standalone-core"
