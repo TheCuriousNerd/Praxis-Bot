@@ -228,7 +228,18 @@ class Token_Processor():
             print("\nCompiled Functions: ")
             print(compiledFunctionsToRun)
             #print(len(compiledFunctionsToRun))
+
             for fCount in range(len(compiledFunctionsToRun)):
+                # If statement function handling
+                # This will check for an if statement and if it is true it will allow the inner functions to run and be returned.
+
+                # Random function handling
+                # This will check for the random function and if it has one, it will randomly clear all the inputs, except for one.
+
+                # Threading function handling
+                # This will check for the threading function and if it has one, it will create threads for each input it receives.
+
+
                 workToDo:dict = compiledFunctionsToRun.pop(-1)
                 print("\nworkToDo: ")
                 print(workToDo.keys())
@@ -236,6 +247,8 @@ class Token_Processor():
                 for key in workToDo:
                     keyList.append(key)
                 keyList.sort()
+                print("\nkeyList: ")
+                print(keyList)
 
                 targetCommand = ""
                 targetCommandParams = ""
@@ -259,8 +272,9 @@ class Token_Processor():
                 reResultsPrepped_arg = re.split("( )", targetCommandParams)
                 preppedParams = self.cleanupTempArgs(reResultsPrepped_arg)
 
-                targetCommand = targetCommand[1:].strip()
                 print("\nTarget Command: " + targetCommand)
+                targetCommand = targetCommand[1:].strip() # Removes the $
+                print("Target Command: " + targetCommand)
                 print("Target Command Params::" + str(preppedParams) + "::")
 
                 if self.does_function_exist(targetCommand) == True:
@@ -406,7 +420,7 @@ if __name__ == '__main__':
     #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
     #stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
     #stringToParse = "(#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000))"
-    stringToParse = "($user)"
+    stringToParse = "test1: ($range((0)($math(2+30))))" #test2: ($range((0)($math(2+30))))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()
