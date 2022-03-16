@@ -62,9 +62,9 @@ Linux / macOS: `praxis-tts-speaker.sh`<br>
 <br>
 ___
 
-# User Web Client:
+# Dashboard:
 
-Once Praxis Bot is setup, to access the User Client visit `index.html` from `\user_client\v1\` in your browser.<br>
+Once Praxis Bot is setup, to access the Dashboard visit `localhost:42808`(NGINX) or `localhost:8000`(Django) in your browser.<br>
 <br>
 ___
 
