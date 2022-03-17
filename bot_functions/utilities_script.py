@@ -52,6 +52,12 @@ def get_args(text: str) -> list:
 def list_to_string(list_to_convert):
     return " ".join(filter(None, list_to_convert))
 
+def nextGreaterElementInList(list, integer): # This assumes list is ordered?
+    try:
+        return next(x for x in list if x > integer), False
+    except:
+        return list[-1], True
+
 def does_contain_OnlyNumbers(text):
     isJustNumbers = False
     print("checking numbers")
@@ -164,7 +170,7 @@ def miniParser(stringToParse: str):
         charPosition += 1
     return level_dict, level_map
 
-def miniParserReverser(parseToReverse: dict, parseMap: dict, keep_parenthesis: bool = True):
+def miniParserReverser(parseToReverse: dict, parseMap: dict, keep_parenthesis: bool = False):
     #This reverses the miniparser results
     reversedResults = []
     reversedResultsString = ""

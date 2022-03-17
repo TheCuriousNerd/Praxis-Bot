@@ -33,6 +33,8 @@ from commands.command_functions import AbstractCommandFunction, Abstract_Functio
 
 import re
 
+from simpleeval import simple_eval
+
 class TokenType(Enum):
     NONE = auto()
     ARGUMENT = auto()
@@ -227,17 +229,103 @@ class Token_Processor():
             # The part that handles the compiled functions ie ($function)
             print("\nCompiled Functions: ")
             print(compiledFunctionsToRun)
-            #print(len(compiledFunctionsToRun))
+            print("\n")
+
             for fCount in range(len(compiledFunctionsToRun)):
+                print("\n Work Loop Start")
+
+                specialFunctionFound = False
+                specialFunction = {"name":"", "startPoint":0}
+                specialFunctionList = []
+                compiledWork = compiledFunctionsToRun[0]
+                specialFunctionTypes = ["if", "random", "thread"]
+                for work_ in compiledWork:
+                    print("found work")
+                    #print(compiledWork[work_])
+                    # If statement function handling
+                    # This will check for an if statement and if it is true it will allow the inner functions to run and be returned.
+                    if "if" in compiledWork[work_]:
+                        # print("This is an if statement: ")
+                        # print(compiledWork[work_])
+                        # print(str(work_))
+                        specialFunctionFound = True
+                        specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
+                        specialFunction["startPoint"] = work_
+                        specialFunctionList.append(specialFunction)
+
+
+                    # Random function handling
+                    # This will check for the random function and if it has one, it will randomly clear all the inputs, except for one.
+                    if "random" in compiledWork[work_]:
+                        # print("This is a random statement: ")
+                        # print(compiledWork[work_])
+                        # print(str(work_))
+                        specialFunctionFound = True
+                        specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
+                        specialFunction["startPoint"] = work_
+                        specialFunctionList.append(specialFunction)
+
+                    # Threading function handling
+                    # This will check for the threading function and if it has one, it will create threads for each input it receives.
+                    if "thread" in compiledWork[work_]:
+                        # print("This is a thread statement: ")
+                        # print(compiledWork[work_])
+                        # print(str(work_))
+                        specialFunctionFound = True
+                        specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
+                        specialFunction["startPoint"] = work_
+                        specialFunctionList.append(specialFunction)
+
+
+
                 workToDo:dict = compiledFunctionsToRun.pop(-1)
                 print("\nworkToDo: ")
+                print(workToDo)
                 print(workToDo.keys())
                 keyList = []
                 for key in workToDo:
                     keyList.append(key)
                 keyList.sort()
+                print("\nkeyList: ")
+                print(keyList)
+
+
+
+
+                # if specialFunctionFound:
+                    # print("Special Function Found: ")
+                    # print(specialFunction["name"])
+                    # print("Starting Point: ")
+                    # print(specialFunction["startPoint"])
+                    # print("\n")
+                    # This will run the special function and return the results.
+                    # This will also run the inner functions.
+                    # for specialFunctionWork in specialFunctionList:
+                    #     pass
+                        # if "if" in specialFunctionWork["name"]:
+                        #     print("\nHandling the if statement: ")
+                        #     print("Starting Point: ")
+                        #     print(specialFunctionWork["startPoint"])
+                        #     targetLogicPoint = utility.nextGreaterElementInList(keyList, specialFunctionWork["startPoint"])
+                        #     targetLogicPoint = utility.nextGreaterElementInList(keyList, targetLogicPoint)
+                        #     print("Target Logic Point: ")
+                        #     print(targetLogicPoint)
+                        #     targetResultsPoint = utility.nextGreaterElementInList(keyList, targetLogicPoint)
+                        #     print("Target Results Point: ")
+                        #     print(targetResultsPoint)
+
+
+                        #     logicToEval = workToDo[targetLogicPoint]
+                        #     print("Logic To Eval: ")
+                        #     print(logicToEval)
+                        #     if str(logicToEval).lower() == "true":
+                        #         pass
+
+
+
 
                 targetCommand = ""
+                targetCommandKey = 0
                 targetCommandParams = ""
                 resultDestination = (0,0)
 
@@ -247,11 +335,15 @@ class Token_Processor():
                     if grabbedFunction == False:
                         resultDestination = utility.parserEntryCoordLookup(parsedInputMap, key)
                         targetCommand = workToDo[key]
+                        targetCommandKey = key
+                        #workToDo[key] = "resultsNotSet"
                         grabbedFunction = True
                     else:
-                        key_location = utility.parserEntryCoordLookup(parsedInputMap, key)
-                        targetCommandParamsPrep.append(parsedInput[key_location[0]][key_location[1]])
-                        parsedInput[key_location[0]][key_location[1]] = ""
+                        if targetCommand[1:].strip() not in specialFunctionTypes:
+                            key_location = utility.parserEntryCoordLookup(parsedInputMap, key)
+                            targetCommandParamsPrep.append(parsedInput[key_location[0]][key_location[1]])
+                            parsedInput[key_location[0]][key_location[1]] = "" # This will clear the entry in the dict so that the results can be displayed.
+                            workToDo[key] = ""
                     #print(key)
                     #print(workToDo[key])
                     #print(utility.parserEntryCoordLookup(parsedInputMap, key))
@@ -259,8 +351,9 @@ class Token_Processor():
                 reResultsPrepped_arg = re.split("( )", targetCommandParams)
                 preppedParams = self.cleanupTempArgs(reResultsPrepped_arg)
 
-                targetCommand = targetCommand[1:].strip()
                 print("\nTarget Command: " + targetCommand)
+                targetCommand = targetCommand[1:].strip() # Removes the $
+                print("Target Command: " + targetCommand)
                 print("Target Command Params::" + str(preppedParams) + "::")
 
                 if self.does_function_exist(targetCommand) == True:
@@ -270,6 +363,52 @@ class Token_Processor():
                     print("Function Results: " + str(functionResults))
                     #functionResults = "[FUNCTION COMPLETE]"
                     parsedInput[resultDestination[0]][resultDestination[1]] = str(functionResults)
+                    workToDo[targetCommandKey] = str(functionResults)
+
+                if "if" in targetCommand:
+                    specialFunctionWork = specialFunctionList[0]
+                    print("\nHandling the if statement: ")
+                    print("Starting Point: ")
+                    print(specialFunctionWork["startPoint"])
+                    targetLogicPoint, isEnd  = utility.nextGreaterElementInList(keyList, specialFunctionWork["startPoint"])
+                    #targetLogicPoint, isEnd = utility.nextGreaterElementInList(keyList, targetLogicPoint)
+                    print("Target Logic Point: ")
+                    print(targetLogicPoint)
+                    targetResultsPoint, isEnd = utility.nextGreaterElementInList(keyList, targetLogicPoint)
+                    print("Target Results Point: ")
+                    print(targetResultsPoint)
+
+
+                    logicToEval = workToDo[targetLogicPoint]
+                    print(workToDo)
+                    print("Logic To Eval: ")
+                    print(logicToEval)
+                    print("Result:")
+                    print(simple_eval(str(logicToEval)))
+                    if str(simple_eval(str(logicToEval))).lower() == "true":
+                        thingsToAdd = []
+
+                        for key in keyList:
+                            if key >= targetResultsPoint:
+                                thingsToAdd.append(workToDo[key])
+                            if key >= targetLogicPoint:
+                                targetDestination = utility.parserEntryCoordLookup(parsedInputMap, key)
+                                parsedInput[targetDestination[0]][targetDestination[1]] = "" # This will clear the entry in the dict so that the results can be displayed.
+
+                        print("Function Results: " + str(thingsToAdd))
+                        parsedInput[resultDestination[0]][resultDestination[1]] = "".join(filter(None, thingsToAdd))
+
+                # This forwards the data to the next function.
+                for key in keyList:
+                    funcCounter = 0
+                    for workToDo_ in compiledFunctionsToRun:
+                        for w_ in workToDo_:
+                            if w_ == key:
+                                print("\nForwarding data to next function: ")
+                                print("target key: " + str(key))
+                                workToDo_[w_] = workToDo[w_]
+                        funcCounter += 1
+                        print(workToDo_)
 
 
 
@@ -406,7 +545,7 @@ if __name__ == '__main__':
     #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
     #stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
     #stringToParse = "(#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000))"
-    stringToParse = "($user)"
+    stringToParse = "($if (True)(($math (#*)) ($math (#*))))" # If Statement example
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()
@@ -427,7 +566,7 @@ if __name__ == '__main__':
     print(reversedString)
     print("\n")
     commandName = "!test"
-    commandRawInput = "%s 5 10" % (commandName)
+    commandRawInput = "%s 5+10" % (commandName)
     commandResponse = testModule.parseTokenResponse("TestUser_Alex", None, commandRawInput, stringToParse, "Test_Source")
     print("\n\ncommandResponse")
     print(commandResponse)
