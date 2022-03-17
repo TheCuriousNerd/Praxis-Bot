@@ -47,6 +47,10 @@ class Praxis_DB_Connection():
         print("starting engine with: \n" + self.connectionString)
         self.dbConnection = db.create_engine(self.connectionString)
 
+    def startLocalConnection(self):
+        self.connectionString = "postgresql://%s:%s@%s/%s" % (self.dbCert.username, self.dbCert.password, "127.0.0.1", self.dbCert.databaseName)
+        self.startConnection()
+
     def closeConnection(self):
         self.dbConnection.dispose()
         self.dbConnection = None
@@ -120,10 +124,10 @@ class Praxis_DB_Connection():
             print("[Praxis_DB_Connection] query insertion error")
             return False
 
-    def updateItems(self, tableName, columnName, item, newItem):
+    def updateItems(self, tableName, columnName, item, newItem_columnName, newItem):
         try:
             self.selfAutoStart()
-            query = "UPDATE %s SET %s = %s WHERE %s = '%s';" % (tableName, columnName, newItem, columnName, item)
+            query = "UPDATE %s SET %s = %s WHERE %s = '%s';" % (tableName, newItem_columnName, newItem, columnName, item)
             self.dbConnection.execute(query)
             self.closeConnection()
             return True
@@ -133,15 +137,16 @@ class Praxis_DB_Connection():
 
     def getItemRow(self, tableName, columnName, item):
         try:
-            #self.selfAutoStart()
+            self.selfAutoStart()
             query = "SELECT * FROM %s WHERE %s = '%s';" % (tableName, columnName, item)
             result = self.dbConnection.execute(query)
+            print(result)
+            self.closeConnection()
             for r in result:
                 return r
-            self.closeConnection()
-            return None
-        except:
+        except Exception as e:
             print("[Praxis_DB_Connection] get query row error")
+            print(str(e))
             return None
 
     def addAPI_Call(self, APIname, url, method, parameters, response, timeStamp):

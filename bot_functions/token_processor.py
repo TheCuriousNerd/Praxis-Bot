@@ -28,6 +28,7 @@ import pyparsing
 import shlex
 
 from bot_functions import utilities_script as utility
+from bot_functions import utilities_db
 from commands import loader_functions as function_loader
 from commands.command_functions import AbstractCommandFunction, Abstract_Function_Helpers
 
@@ -132,12 +133,25 @@ class Token_Processor():
                         parsedInputEntryCount += 1
 
             # The part that handles the variables ie (@variable)
-            print("Variable Parsing...")
+            print("Variable Parsing...\n")
             for curMapLevel in parsedInput:
+                parsedInputEntryCount = 0
                 if curMapLevel > 1:
                     for entry in parsedInput[curMapLevel]:
                         if "@" in entry:
-                            print(entry)
+                            try:
+                                targetVarName = entry[1:]
+                                print(entry)
+                                db = utilities_db.Praxis_DB_Connection(autoConnect=True)
+                                tableName = "home_praxisbot_commands_v0_savedvariables"
+                                results = db.getItemRow(tableName, "name", targetVarName)
+                                print(results)
+                                varData = str(results[2])
+                            except:
+                                print("Error: Variable not found.\n")
+                                varData = ""
+                                parsedInput[curMapLevel][parsedInputEntryCount] = varData
+                        parsedInputEntryCount += 1
 
 
 
@@ -545,7 +559,8 @@ if __name__ == '__main__':
     #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
     #stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
     #stringToParse = "(#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000))"
-    stringToParse = "($if (True)(($math (#*)) ($math (#*))))" # If Statement example
+    #stringToParse = "($if (True)(($math (#*)) ($math (#*))))" # If Statement example
+    stringToParse = "(@test) ($math($math(#*)*2+1000))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()
