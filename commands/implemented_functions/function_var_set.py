@@ -34,22 +34,23 @@ from commands.command_functions import AbstractCommandFunction
 from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
+from bot_functions import utilities_db
 
 
-class Function_User(AbstractCommandFunction, metaclass=ABCMeta):
+class Function_VarSet(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "user"
+    functionName = "setVar"
     helpText = ["This is a v0 function.",
         "\nExample:","testFunction"]
 
     def __init__(self):
         super().__init__(
-            functionName = Function_User.functionName,
+            functionName = Function_VarSet.functionName,
             n_args = 0,
             functionType = AbstractCommandFunction.FunctionType.ver0,
-            helpText = Function_User.helpText,
+            helpText = Function_VarSet.helpText,
             bonusFunctionData = None
             )
 
@@ -59,8 +60,17 @@ class Function_User(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
-        print(user)
-        print(type(user))
+        tableName = "home_praxisbot_commands_v0_savedvariables"
 
+        try:
+            targetVar = args[0]
+            newData = args
+            newData.pop(0)
+            newData = " ".join(newData)
+            db = utilities_db.Praxis_DB_Connection(autoConnect=True)
+            #db.startLocalConnection()
+            results = str(db.updateItems(tableName, "name", targetVar, "data", newData))
+        except:
+            results = "[Error updating variable]"
 
-        return str(user["userName"])
+        return results
