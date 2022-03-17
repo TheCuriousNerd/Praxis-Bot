@@ -33,6 +33,8 @@ from commands.command_functions import AbstractCommandFunction, Abstract_Functio
 
 import re
 
+from simpleeval import simple_eval
+
 class TokenType(Enum):
     NONE = auto()
     ARGUMENT = auto()
@@ -381,7 +383,9 @@ class Token_Processor():
                     print(workToDo)
                     print("Logic To Eval: ")
                     print(logicToEval)
-                    if str(logicToEval).lower() == "true":
+                    print("Result:")
+                    print(simple_eval(str(logicToEval)))
+                    if str(simple_eval(str(logicToEval))).lower() == "true":
                         thingsToAdd = []
 
                         for key in keyList:
