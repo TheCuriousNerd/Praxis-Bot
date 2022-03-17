@@ -61,10 +61,16 @@ class Function_VarSet(AbstractCommandFunction, metaclass=ABCMeta):
 
     def do_work(self, user, functionName, args, bonusData):
         tableName = "home_praxisbot_commands_v0_savedvariables"
-        targetVar = ""
-        newData = ""
 
-        db = utilities_db.Praxis_DB_Connection(autoConnect=True)
-        results = db.updateItems(tableName, "name", targetVar, "data", newData)
+        try:
+            targetVar = args[0]
+            newData = args
+            newData.pop(0)
+            newData = " ".join(newData)
+            db = utilities_db.Praxis_DB_Connection(autoConnect=True)
+            #db.startLocalConnection()
+            results = str(db.updateItems(tableName, "name", targetVar, "data", newData))
+        except:
+            results = "[Error updating variable]"
 
-        return str(user["userName"])
+        return results

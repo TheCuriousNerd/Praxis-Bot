@@ -127,13 +127,13 @@ class Praxis_DB_Connection():
     def updateItems(self, tableName, columnName, item, newItem_columnName, newItem):
         try:
             self.selfAutoStart()
-            query = "UPDATE %s SET %s = %s WHERE %s = '%s';" % (tableName, newItem_columnName, newItem, columnName, item)
+            query = "UPDATE %s SET %s = '%s' WHERE %s = '%s';" % (tableName, newItem_columnName, newItem, columnName, item)
             self.dbConnection.execute(query)
             self.closeConnection()
             return True
-        except:
+        except Exception as e:
             print("[Praxis_DB_Connection] query update item row error")
-            return False
+            return None
 
     def getItemRow(self, tableName, columnName, item):
         try:
