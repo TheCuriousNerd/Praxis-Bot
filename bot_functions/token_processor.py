@@ -147,6 +147,7 @@ class Token_Processor():
                                 results = db.getItemRow(tableName, "name", targetVarName)
                                 print(results)
                                 varData = str(results[2])
+                                parsedInput[curMapLevel][parsedInputEntryCount] = varData
                             except:
                                 print("Error: Variable not found.\n")
                                 varData = ""
@@ -560,7 +561,8 @@ if __name__ == '__main__':
     #stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
     #stringToParse = "(#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000))"
     #stringToParse = "($if (True)(($math (#*)) ($math (#*))))" # If Statement example
-    stringToParse = "(@test) ($math($math(#*)*2+1000))"
+    #stringToParse = "(@test) ($math($math(#*)*2+1000))"
+    stringToParse = "(@test) ($setvar(test)(varData))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()
