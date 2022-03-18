@@ -25,9 +25,10 @@
 import asyncio
 import simpleobsws
 import json
+import config
 
 loop = asyncio.get_event_loop()
-ws = simpleobsws.obsws(host='127.0.0.1', port=4444, password='MYSecurePassword', loop=loop) # Every possible argument has been passed, but none are required. See lib code for defaults.
+ws = simpleobsws.obsws(host=config.obsWebSocket_address["ip"], port=config.obsWebSocket_address["port"], password=config.obsWebSocket_address["password"], loop=loop) # Every possible argument has been passed, but none are required. See lib code for defaults.
 
 
 async def default_request():
