@@ -110,6 +110,8 @@ standalone_ping_timeout = (0.05, 0.05)
 standalone_ping_interval = 20
 standalone_ping_listen_interval = 60 # ie Max time before the standalone-core will assume the service is unreachable.
 
+obsWebSocket_address = [{"ip":"192.168.191.208", "port":"4444", "password":"wnP1tMfxGUxRsXZ9"}]
+
 standalone_channelrewards_address = [{"ip":"standalone-channelrewards", "port":"42069"}]
 standalone_command_address = [{"ip":"standalone-command", "port":"42010"}]
 
