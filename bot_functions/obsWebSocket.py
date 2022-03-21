@@ -71,20 +71,21 @@ async def make_custom_request(request, data=None):
 
             print(request)
             if request == "SetSceneItemEnabled":
-                sceneItemList = ("GetSceneItemList",{'sceneName':data.get('sceneName')})
-                requestList = simpleobsws.Request(sceneItemList[0], sceneItemList[1])
-                resultList:simpleobsws.RequestResponse = await ws.call(requestList)
-                if resultList.ok():
-                    items = resultList.responseData.get("sceneItems")
-                    for i in items:
-                        print(i)
-                        print(i.get("sourceName"))
-                        if i.get("sourceName") == data.get("sourceName"):
-                            id = i.get("sceneItemId")
-                            print("Found source: " + data.get("sourceName"))
-                            print("Source ID: " + str(id))
-                            data["sceneItemId"] = id
-                            break
+                if data.get("sceneItemId") == None:
+                    sceneItemList = ("GetSceneItemList",{'sceneName':data.get('sceneName')})
+                    requestList = simpleobsws.Request(sceneItemList[0], sceneItemList[1])
+                    resultList:simpleobsws.RequestResponse = await ws.call(requestList)
+                    if resultList.ok():
+                        items = resultList.responseData.get("sceneItems")
+                        for i in items:
+                            #print(i)
+                            #print(i.get("sourceName"))
+                            if i.get("sourceName") == data.get("sourceName"):
+                                id = i.get("sceneItemId")
+                                #print("Found source: " + data.get("sourceName"))
+                                #print("Source ID: " + str(id))
+                                data["sceneItemId"] = id
+                                break
 
 
             requestObj = simpleobsws.Request(request, data)
