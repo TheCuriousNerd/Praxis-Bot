@@ -562,7 +562,9 @@ if __name__ == '__main__':
     #stringToParse = "(#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000))"
     #stringToParse = "($if (True)(($math (#*)) ($math (#*))))" # If Statement example
     #stringToParse = "(@test) ($math($math(#*)*2+1000))"
-    stringToParse = "(@test) ($setVar(test)(varData)) (@test)"
+    #stringToParse = "(@test) ($setVar(test)(varData)) (@test)"
+    stringToParse = "test ($obsWebSocket ((SetSceneItemEnabled)({\"sourceName\":\"Color Callibration\", \"sceneItemEnabled\": true, \"sceneName\":\"Cam feed [Main] INFOBOX\"})))"
+    #stringToParse = "test ($obsWebSocket ((GetVersion)({})))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()

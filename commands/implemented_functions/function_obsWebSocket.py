@@ -23,6 +23,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from abc import ABCMeta
+from ast import arg
 
 from json import loads
 from urllib.parse import urlencode
@@ -34,7 +35,7 @@ from commands.command_functions import AbstractCommandFunction
 from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
-from bot_functions import obsWebSocket as obsWebSocket
+import json
 
 class Function_obsWebSocket(AbstractCommandFunction, metaclass=ABCMeta):
     """
@@ -59,11 +60,22 @@ class Function_obsWebSocket(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
+        print(args)
+        # newData:list = args
+        # newData.pop(0)
+        # newData = " ".join(newData)
+        # newDataDict = json.loads(newData)
+        #return str(type(return_stuff))
         try:
-            newData = args
-            newData.pop(0)
+            from bot_functions import obsWebSocket as obsWebSocket
+
+            newData:list = args
+            requestType = newData.pop(0)
             newData = " ".join(newData)
-            output = obsWebSocket.makeRequest(args[0], newData)
+            newDataDict = json.loads(newData)
+            output = obsWebSocket.makeRequest(requestType, newDataDict)
+            print(output)
             return ""
         except Exception as e:
+            #return "[obs websocket error][Error: %s]" % e
             return "[obs websocket error]"
