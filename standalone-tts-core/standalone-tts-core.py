@@ -67,7 +67,7 @@ def send_text(tts_sender, tts_text):
                 #pass
 
     #return None
-    return flask.make_response('', 200)
+    return flask.make_response('Success', 200)
 
 @api.route('/api/v1/tts/send_text', methods=['GET'])
 def tts_send_text():
