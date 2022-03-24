@@ -70,7 +70,7 @@ class Function_IsRecording(AbstractCommandFunction, metaclass=ABCMeta):
             if output.responseData.get("outputActive", None) == None:
                 return "[Is OBS Running?]"
             else:
-                return str(output.responseData.get("outputActive"))
+                return str(output.responseData.get("outputActive", ""))
 
         except Exception as e:
             # todo handle exceptions

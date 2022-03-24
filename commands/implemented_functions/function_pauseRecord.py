@@ -70,7 +70,7 @@ class Function_pauseRecording(AbstractCommandFunction, metaclass=ABCMeta):
             if output.responseData.get("waitForResult", None) == None:
                 return "[Is OBS Running?]"
             else:
-                return str(output.responseData.get("waitForResult"))
+                return str(output.responseData.get("waitForResult", ""))
 
         except Exception as e:
             # todo handle exceptions

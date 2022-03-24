@@ -39,20 +39,20 @@ from bot_functions import utilities_script as utility
 import simpleobsws
 import config
 
-class Function_stopStream(AbstractCommandFunction, metaclass=ABCMeta):
+class Function_SetScene(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "stopStream"
+    functionName = "setScene"
     helpText = ["This is a v0 function.",
         "\nExample:","testFunction"]
 
     def __init__(self):
         super().__init__(
-            functionName = Function_stopStream.functionName,
+            functionName = Function_SetScene.functionName,
             n_args = 0,
             functionType = AbstractCommandFunction.FunctionType.ver0,
-            helpText = Function_stopStream.helpText,
+            helpText = Function_SetScene.helpText,
             bonusFunctionData = None
             )
 
@@ -64,13 +64,17 @@ class Function_stopStream(AbstractCommandFunction, metaclass=ABCMeta):
     def do_work(self, user, functionName, args, bonusData):
 
         try:
+            sceneName = " ".join(args)
+            data = {"sceneName": sceneName}
+
             from bot_functions import obsWebSocket as obsWebSocket
-            output:simpleobsws.RequestResponse = obsWebSocket.makeRequest("StopStream", {})
+            output:simpleobsws.RequestResponse = obsWebSocket.makeRequest("SetCurrentProgramScene", data)
             print(output)
-            if output.responseData.get("waitForResult", None) == None:
-                return "[Is OBS Running?]"
+            if output.responseData is not None:
+                if output.responseData.get("test", None) == None:
+                    return "[Is OBS Running?]"
             else:
-                return str(output.responseData.get("waitForResult", ""))
+                return ""
 
         except Exception as e:
             # todo handle exceptions
