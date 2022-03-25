@@ -21,3 +21,4 @@ numexpr
 paramiko
 youtube_dl
 simpleobsws
+python-dateutil

@@ -15,3 +15,4 @@ gTTS
 playsound
 simpleeval==0.9.12
 simpleobsws
+python-dateutil
