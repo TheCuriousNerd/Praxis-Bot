@@ -37,7 +37,7 @@ from bot_functions import utilities_script as utility
 from bot_functions import utilities_db
 
 
-class Function_VarSet(AbstractCommandFunction, metaclass=ABCMeta):
+class Function_SetVar(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
@@ -47,10 +47,10 @@ class Function_VarSet(AbstractCommandFunction, metaclass=ABCMeta):
 
     def __init__(self):
         super().__init__(
-            functionName = Function_VarSet.functionName,
+            functionName = Function_SetVar.functionName,
             n_args = 0,
             functionType = AbstractCommandFunction.FunctionType.ver0,
-            helpText = Function_VarSet.helpText,
+            helpText = Function_SetVar.helpText,
             bonusFunctionData = None
             )
 
