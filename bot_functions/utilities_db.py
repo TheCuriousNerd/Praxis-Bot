@@ -116,7 +116,9 @@ class Praxis_DB_Connection():
     def insertItem(self, tableName, columnName, item):
         try:
             self.selfAutoStart()
-            query = "INSERT INTO %s (%s) VALUES (%s);" % (tableName, columnName, item)
+            columns = ", ".join(columnName)
+            items = ", ".join(item)
+            query = "INSERT INTO %s (%s) VALUES (%s);" % (tableName, columns, items)
             self.dbConnection.execute(query)
             self.closeConnection()
             return True

@@ -69,8 +69,11 @@ class Function_VarSet(AbstractCommandFunction, metaclass=ABCMeta):
             newData = " ".join(newData)
             db = utilities_db.Praxis_DB_Connection(autoConnect=True)
             #db.startLocalConnection()
-            results = str(db.updateItems(tableName, "name", targetVar, "data", newData))
+            if db.doesItemExist(tableName, "name", targetVar):
+                results = str(db.updateItems(tableName, "name", targetVar, "data", newData))
+            else:
+                results = str(db.insertItem(tableName, ["name", "data"], [targetVar, newData]))
         except:
-            results = "[Error updating variable]"
+            return "[Error updating variable]"
 
-        return results
+        return ""
