@@ -23,6 +23,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from abc import ABCMeta
+from ast import arg
 
 from json import loads
 from urllib.parse import urlencode
@@ -35,26 +36,23 @@ from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
 
-from datetime import datetime
+import simpleobsws
+import config
 
-from dateutil import tz
-from dateutil import zoneinfo
-from dateutil.parser import parse as parse_date
-
-class Function_GetUnixTime(AbstractCommandFunction, metaclass=ABCMeta):
+class Function_GetBitrate(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "getUnixTime"
+    functionName = "getAverageBitrate"
     helpText = ["This is a v0 function.",
         "\nExample:","testFunction"]
 
     def __init__(self):
         super().__init__(
-            functionName = Function_GetUnixTime.functionName,
+            functionName = Function_GetBitrate.functionName,
             n_args = 0,
             functionType = AbstractCommandFunction.FunctionType.ver0,
-            helpText = Function_GetUnixTime.helpText,
+            helpText = Function_GetBitrate.helpText,
             bonusFunctionData = None
             )
 
@@ -64,6 +62,35 @@ class Function_GetUnixTime(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
-        inputArgs = " ".join(args)
 
-        return str(int(parse_date(inputArgs, ignoretz=False).timestamp()))
+        try:
+            from bot_functions import obsWebSocket as obsWebSocket
+            output:simpleobsws.RequestResponse = obsWebSocket.makeRequest("GetStreamStatus", {})
+            print(output)
+            if output.responseData.get("outputBytes", None) == None:
+                return "[Is OBS Running?]"
+            if output.responseData.get("outputDuration", None) == None:
+                return "[Is OBS Running?]"
+            if output.responseData.get("outputReconnecting", None) == None:
+                return "[Is OBS Running?]"
+
+            if output.responseData.get("outputReconnecting", None) == True:
+                return " OBS is Reconnecting"
+
+            total_duration_miliseconds = output.responseData.get("outputDuration", 0)
+            total_bytes = output.responseData.get("outputBytes", 0)
+            selected_interval = 30
+
+            if total_duration_miliseconds != 0:
+                # Calculate the bitrate
+                bitrate = (total_bytes*8) / (total_duration_miliseconds/1000)
+                bitrate_kbs = bitrate / 1000
+                return "Average Bitrate: %s kbs" % (int(bitrate_kbs))
+
+
+
+        except Exception as e:
+            # todo handle exceptions
+            return str(e)
+
+        return ""

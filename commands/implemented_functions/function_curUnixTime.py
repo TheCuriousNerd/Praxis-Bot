@@ -35,17 +35,13 @@ from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
 
-from datetime import datetime
-
-from dateutil import tz
-from dateutil import zoneinfo
-from dateutil.parser import parse as parse_date
+import time
 
 class Function_GetUnixTime(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "getUnixTime"
+    functionName = "curUnixTime"
     helpText = ["This is a v0 function.",
         "\nExample:","testFunction"]
 
@@ -64,6 +60,5 @@ class Function_GetUnixTime(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
-        inputArgs = " ".join(args)
 
-        return str(int(parse_date(inputArgs, ignoretz=False).timestamp()))
+        return str(int(time.time()))
