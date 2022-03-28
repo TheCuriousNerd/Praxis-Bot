@@ -6,6 +6,13 @@ The bot provides and assists with several things like custom commands, channel r
 
 <br>
 
+Table of Contents:
+* [Requirements](/#Requirements)
+* [Docker](/#Docker)
+* [User TTS Speaker](/#User-TTS-Speaker)
+* [Dashboard](/#Dashboard)
+* [Credentials](/#Credentials)
+
 ___
 
 # Requirements:
