@@ -37,6 +37,8 @@ from bot_functions import utilities_script as utility
 
 from datetime import datetime
 
+from dateutil import tz
+from dateutil import zoneinfo
 from dateutil.parser import parse as parse_date
 
 class Function_GetUnixTime(AbstractCommandFunction, metaclass=ABCMeta):
@@ -64,4 +66,4 @@ class Function_GetUnixTime(AbstractCommandFunction, metaclass=ABCMeta):
     def do_work(self, user, functionName, args, bonusData):
         inputArgs = " ".join(args)
 
-        return str(int(parse_date(inputArgs).timestamp()))
+        return str(int(parse_date(inputArgs, ignoretz=False).timestamp()))
