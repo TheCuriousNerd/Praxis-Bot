@@ -23,7 +23,6 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from abc import ABCMeta
-from ast import arg
 
 from json import loads
 from urllib.parse import urlencode
@@ -35,24 +34,23 @@ from commands.command_functions import AbstractCommandFunction
 from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
+from bot_functions import utilities_db
 
-import simpleobsws
-import config
 
-class Function_SetTransition(AbstractCommandFunction, metaclass=ABCMeta):
+class Function_SetVar(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "setTransition"
+    functionName = "setVar"
     helpText = ["This is a v0 function.",
         "\nExample:","testFunction"]
 
     def __init__(self):
         super().__init__(
-            functionName = Function_SetTransition.functionName,
+            functionName = Function_SetVar.functionName,
             n_args = 0,
             functionType = AbstractCommandFunction.FunctionType.ver0,
-            helpText = Function_SetTransition.helpText,
+            helpText = Function_SetVar.helpText,
             bonusFunctionData = None
             )
 
@@ -62,22 +60,20 @@ class Function_SetTransition(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
+        tableName = "home_praxisbot_commands_v0_savedvariables"
 
         try:
-            sceneName = " ".join(args)
-            data = {"transitionName": sceneName}
-
-            from bot_functions import obsWebSocket as obsWebSocket
-            output:simpleobsws.RequestResponse = obsWebSocket.makeRequest("SetCurrentSceneTransition", data)
-            print(output)
-            if output.responseData is not None:
-                if output.responseData.get("test", None) == None:
-                    return "[Is OBS Running?]"
+            targetVar = args[0]
+            newData = args
+            newData.pop(0)
+            newData = " ".join(newData)
+            db = utilities_db.Praxis_DB_Connection(autoConnect=True)
+            #db.startLocalConnection()
+            if db.doesItemExist(tableName, "name", targetVar):
+                results = str(db.updateItems(tableName, "name", targetVar, "data", newData))
             else:
-                return ""
-
-        except Exception as e:
-            # todo handle exceptions
-            return str(e)
+                results = str(db.insertItem(tableName, ["name", "data"], [targetVar, newData]))
+        except:
+            return "[Error updating variable]"
 
         return ""

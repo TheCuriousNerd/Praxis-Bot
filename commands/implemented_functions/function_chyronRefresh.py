@@ -23,7 +23,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from abc import ABCMeta
-from ast import arg
+from distutils.command.config import config
 
 from json import loads
 from urllib.parse import urlencode
@@ -35,24 +35,24 @@ from commands.command_functions import AbstractCommandFunction
 from commands.command_functions import Abstract_Function_Helpers
 
 from bot_functions import utilities_script as utility
+from bot_functions import utilities_db
 
-import simpleobsws
-import config
+import config as praxis_config
 
-class Function_SetTransition(AbstractCommandFunction, metaclass=ABCMeta):
+class Function_ChyronRefresh(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "setTransition"
+    functionName = "refreshChyron"
     helpText = ["This is a v0 function.",
         "\nExample:","testFunction"]
 
     def __init__(self):
         super().__init__(
-            functionName = Function_SetTransition.functionName,
+            functionName = Function_ChyronRefresh.functionName,
             n_args = 0,
             functionType = AbstractCommandFunction.FunctionType.ver0,
-            helpText = Function_SetTransition.helpText,
+            helpText = Function_ChyronRefresh.helpText,
             bonusFunctionData = None
             )
 
@@ -62,22 +62,20 @@ class Function_SetTransition(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
+        tableName = "home_praxisbot_chyron_entry"
 
         try:
-            sceneName = " ".join(args)
-            data = {"transitionName": sceneName}
+            targetVar = args[0]
+            newData = args
+            newData.pop(0)
+            newData = " ".join(newData)
 
-            from bot_functions import obsWebSocket as obsWebSocket
-            output:simpleobsws.RequestResponse = obsWebSocket.makeRequest("SetCurrentSceneTransition", data)
-            print(output)
-            if output.responseData is not None:
-                if output.responseData.get("test", None) == None:
-                    return "[Is OBS Running?]"
-            else:
-                return ""
+            db = utilities_db.Praxis_DB_Connection(autoConnect=True)
 
-        except Exception as e:
-            # todo handle exceptions
-            return str(e)
+            if db.doesItemExist(tableName, "tag", targetVar):
+                url="http://%s:%s/api/v1/chyron/update_file" % (praxis_config.standalone_command_address[0].get("ip"), praxis_config.standalone_command_address[0].get("port"))
+                resp = requests.get(url)
+        except:
+            return "[Error refreshing Chyron]"
 
         return ""

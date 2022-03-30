@@ -37,20 +37,20 @@ from bot_functions import utilities_script as utility
 from bot_functions import utilities_db
 
 
-class Function_VarSet(AbstractCommandFunction, metaclass=ABCMeta):
+class Function_SetCounter(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "setVar"
+    functionName = "setCounter"
     helpText = ["This is a v0 function.",
         "\nExample:","testFunction"]
 
     def __init__(self):
         super().__init__(
-            functionName = Function_VarSet.functionName,
+            functionName = Function_SetCounter.functionName,
             n_args = 0,
             functionType = AbstractCommandFunction.FunctionType.ver0,
-            helpText = Function_VarSet.helpText,
+            helpText = Function_SetCounter.helpText,
             bonusFunctionData = None
             )
 
@@ -66,11 +66,19 @@ class Function_VarSet(AbstractCommandFunction, metaclass=ABCMeta):
             targetVar = args[0]
             newData = args
             newData.pop(0)
-            newData = " ".join(newData)
+            newData = "".join(newData)
+            try:
+                int(newData)
+            except:
+                return "Error: The data you entered is not a number."
             db = utilities_db.Praxis_DB_Connection(autoConnect=True)
             #db.startLocalConnection()
-            results = str(db.updateItems(tableName, "name", targetVar, "data", newData))
+            if db.doesItemExist(tableName, "name", targetVar):
+                getItemRow = db.getItemRow(tableName, "name", targetVar)
+                results = str(db.updateItems(tableName, "name", targetVar, "data", newData))
+            else:
+                results = str(db.insertItem(tableName, ["name", "data"], [targetVar, newData]))
         except:
-            results = "[Error updating variable]"
+            return "[Error updating variable]"
 
-        return results
+        return ""

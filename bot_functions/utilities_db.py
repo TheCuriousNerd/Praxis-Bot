@@ -29,6 +29,7 @@ import sqlalchemy as db
 
 import credentials
 import config
+import os
 class Praxis_DB_Connection():
     def __init__(self, autoConnect:bool=False):
         super().__init__()
@@ -41,7 +42,10 @@ class Praxis_DB_Connection():
 
         self.dbConnection:db.engine.base.Engine = None
         if autoConnect == True:
-            self.startConnection()
+            if not os.getenv("ISDOCKER"):
+                self.startLocalConnection()
+            else:
+                self.startConnection()
 
     def startConnection(self):
         print("starting engine with: \n" + self.connectionString)
@@ -116,7 +120,10 @@ class Praxis_DB_Connection():
     def insertItem(self, tableName, columnName, item):
         try:
             self.selfAutoStart()
-            query = "INSERT INTO %s (%s) VALUES (%s);" % (tableName, columnName, item)
+            columns = ", ".join(columnName)
+            items = "', '".join(item)
+            items = "'%s'" % items
+            query = "INSERT INTO %s (%s) VALUES (%s);" % (tableName, columns, items)
             self.dbConnection.execute(query)
             self.closeConnection()
             return True
