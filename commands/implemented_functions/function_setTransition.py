@@ -43,7 +43,7 @@ class Function_SetTransition(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "setScene"
+    functionName = "setTransition"
     helpText = ["This is a v0 function.",
         "\nExample:","testFunction"]
 
