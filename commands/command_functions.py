@@ -30,6 +30,7 @@ from json import loads
 from urllib.parse import urlencode
 import requests
 from bot_functions import utilities_db as db_utility
+import time
 
 class AbstractCommandFunction(metaclass=ABCMeta):
     class FunctionType(Enum):
@@ -72,7 +73,39 @@ class AbstractCommandFunction(metaclass=ABCMeta):
         pass
 
 import bot_functions.praxis_logging as praxis_logging
+from sqlalchemy.engine.cursor import LegacyCursorResult
 class Abstract_Function_Helpers():
+
+    def update_lastUsed(self, command):
+        try:
+            db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+            cur_time = int(time.time())
+            query = "UPDATE home_praxisbot_commands_v0 SET lastUsed = %s WHERE command = %s" % (cur_time, command)
+            db_obj.execQuery(query)
+            return True
+        except Exception as e:
+            print("UNABLE TO UPDATE LAST USED")
+            print(e)
+            praxis_logging.praxis_logger().log("UNABLE TO UPDATE LAST USED")
+            praxis_logging.praxis_logger().log(e)
+            return e
+        except:
+            return False
+
+    def get_command(self, commandName):
+        # Get command from DB
+        # Return command
+        try:
+            db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
+            query = "SELECT * FROM home_praxisbot_commands_v0 WHERE command = \'%s\';" % (commandName)
+            dbResults:LegacyCursorResult = db_obj.execQuery(query)
+            return dbResults.first()
+        except Exception as e:
+            print("UNABLE TO GET COMMAND")
+            print(e)
+            praxis_logging.praxis_logger().log("UNABLE TO GET COMMAND")
+            praxis_logging.praxis_logger().log(e)
+            return None
 
     def get_Command_returnString(self, command, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
         try:
@@ -82,7 +115,7 @@ class Abstract_Function_Helpers():
 
             query = "SELECT * FROM home_praxisbot_commands_v0 WHERE command = \'%s\';" % (command)
             #praxis_logger_obj.log(query)
-            dbResults = db_obj.execQuery(query, praxis_logger_obj)
+            dbResults = db_obj.execQuery_old(query, praxis_logger_obj)
             #praxis_logger_obj.log("dbResults:")
             #praxis_logger_obj.log(str(dbResults))
             if str(dbResults[3]) == "True":

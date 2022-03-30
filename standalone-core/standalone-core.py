@@ -69,14 +69,14 @@ def test_init():
     db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
 
     # try:
-    #     db_obj.execQuery(
+    #     db_obj.execQuery_old(
     #         'DROP TABLE users'
     #     )
     # except:
     #     praxis_logger_obj.log("Couldn't Drop it")
 
     # try:
-    #     db_obj.execQuery(
+    #     db_obj.execQuery_old(
     #     'CREATE TABLE users ('
     #     'id SERIAL, '
     #     'name TEXT);'
@@ -85,7 +85,7 @@ def test_init():
     #     praxis_logger_obj.log("Couldn't Make it")
 
     # try:
-    #     db_obj.execQuery(
+    #     db_obj.execQuery_old(
     #         'DELETE FROM users WHERE id = 1;'
     #     )
     # except:
@@ -94,7 +94,7 @@ def test_init():
 
     # try:
     #     for x in range(10):
-    #         db_obj.execQuery(
+    #         db_obj.execQuery_old(
     #         'INSERT INTO users '
     #         '(name) '
     #         'VALUES (\'Test Name\');'
@@ -103,7 +103,7 @@ def test_init():
     #     pass
 
     # try:
-    #     results = db_obj.execQuery(
+    #     results = db_obj.execQuery_old(
     #         'SELECT * FROM '
     #         'users;'
     #     )
@@ -144,7 +144,7 @@ def delete_django_related_data():
             'home_praxisbot_eventlog',
             'home_praxisbot_settings']
         for table in tablesToDrop:
-            db_obj.execQuery('DROP TABLE ' + table)
+            db_obj.execQuery_old('DROP TABLE ' + table)
         return "Dropped"
     except:
         praxis_logger_obj.log("Couldn't Drop it")
@@ -155,7 +155,7 @@ def delete_django_related_data():
 def setup_basic_data():
     #global db_obj
     try:
-        #db_obj.execQuery('DROP TABLE basic_key_vars')
+        #db_obj.execQuery_old('DROP TABLE basic_key_vars')
         if db_obj.doesTableExist("basic_key_vars") == False:
             query = (
                 'CREATE TABLE basic_key_vars ('
@@ -164,7 +164,7 @@ def setup_basic_data():
                 'var TEXT);'
                 )
             print(query)
-            db_obj.execQuery(query)
+            db_obj.execQuery_old(query)
             praxis_logger_obj.log("[Table Created]: (basic_key_vars)")
     except:
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (basic_key_vars)")
@@ -179,7 +179,7 @@ def get_basic_data(key):
             'WHERE key = \'%s\';' % (key)
             )
         print(query)
-        results = db_obj.execQuery(query)
+        results = db_obj.execQuery_old(query)
         for item in results:
             returns = returns + str(item) + " "
             praxis_logger_obj.log(item)
@@ -196,7 +196,7 @@ def set_basic_data(key, var):
             'VALUES (\'%s\',\'%s\');' % (key, var)
             )
         print(query)
-        db_obj.execQuery(query)
+        db_obj.execQuery_old(query)
         return 'Insertion Done'
     except:
         return 'Insertion Failed'
@@ -208,7 +208,7 @@ def set_basic_data(key, var):
 #     #global db_obj
 #     #db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
 #     try:
-#         #db_obj.execQuery('DROP TABLE command_responses_v0')
+#         #db_obj.execQuery_old('DROP TABLE command_responses_v0')
 #         if db_obj.doesTableExist("command_responses_v0") == False:
 #             print("Making setup_basicCommands Table")
 #             query = (
@@ -218,7 +218,7 @@ def set_basic_data(key, var):
 #                 'response TEXT);'
 #                 )
 #             #print(query)
-#             results = db_obj.execQuery(query)
+#             results = db_obj.execQuery_old(query)
 #             praxis_logger_obj.log("[Table Created]: (command_responses_v0)")
 #     except exception:
 #         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (command_responses_v0)")
@@ -256,7 +256,7 @@ def set_basic_data(key, var):
 #                 'VALUES (\'%s\',\'%s\');' % (commandName, commandReponse)
 #                 )
 #         #print(query)
-#         results = db_obj.execQuery(query)
+#         results = db_obj.execQuery_old(query)
 #         #print(str(results))
 
 # External Api Functions
@@ -276,7 +276,7 @@ def createExternalAPI_Tables():
                 'time TEXT);'
                 )
             print(query)
-            db_obj.execQuery(query)
+            db_obj.execQuery_old(query)
             praxis_logger_obj.log("[Table Created]: (external_api_v0)")
     except:
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (external_api_v0)")
@@ -298,7 +298,7 @@ def setup_taskQueue():
                 'bonus_data TEXT);'
                 )
             print(query)
-            db_obj.execQuery(query)
+            db_obj.execQuery_old(query)
             praxis_logger_obj.log("[Table Created]: (task_queue_v0)")
     except:
         praxis_logger_obj.log("[Table Creation Failed or Already Exists]: (task_queue_v0)")
@@ -313,7 +313,7 @@ def add_taskToQueue(target_standalone_system:str, name:str, time:str, command:st
             'VALUES (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');' % (target_standalone_system, name, time, command, parameters, bonus_data)
             )
         print(query)
-        db_obj.execQuery(query)
+        db_obj.execQuery_old(query)
         return 'Insertion Done'
     except:
         return 'Insertion Failed'

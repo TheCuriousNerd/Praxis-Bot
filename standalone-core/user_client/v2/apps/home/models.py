@@ -56,6 +56,15 @@ class PraxisBot_Commands_v0(models.Model):
     response = models.CharField(max_length=500)
     isEnabled = models.BooleanField(default=False)
 
+    lastUsed = models.IntegerField(default=0) # This will be Unix Time
+
+    allowedServices = models.CharField(max_length=500, blank=True, null=False, default="")
+    coolDownLength = models.IntegerField(default=0)
+
+    isRestricted = models.BooleanField(default=False)
+    allowedUsers = models.CharField(max_length=500, blank=True, null=False, default="")
+    allowedGroups = models.CharField(max_length=500, blank=True, null=False, default="")
+
     def __str__(self):
         return self.command + " " + self.response + " " + str(self.isEnabled)
 
@@ -66,9 +75,42 @@ class PraxisBot_Commands_v0_SavedVariables(models.Model):
     """
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=300)
-    data = models.TextField(max_length=1000)
+    data = models.TextField(max_length=1000, blank=True, default="")
     lastUpdated = models.DateTimeField(auto_now_add=True)
     isEnabled = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name + " " + self.data + " " + self.lastUpdated + " " + str(self.isEnabled)
+
+
+class PraxisBot_Users(models.Model):
+    """
+    This model will define Praxis-Bot Users
+    """
+    id = models.AutoField(primary_key=True)
+    randID = models.CharField(max_length=300)
+    nickname = models.CharField(max_length=300)
+    pin = models.CharField(max_length=300, blank=True, default="")
+    isAdmin = models.BooleanField(default=False)
+    isMod = models.BooleanField(default=False)
+    groups = models.CharField(max_length=500, blank=True, default="")
+    isBanned = models.BooleanField(default=False)
+    isMuted = models.BooleanField(default=False)
+    isSubscriber = models.BooleanField(default=False)
+    isDonator = models.BooleanField(default=False)
+    isVIP = models.BooleanField(default=False)
+    discordID = models.CharField(max_length=300, blank=True, default="")
+    twitchID = models.CharField(max_length=300, blank=True, default="")
+    twitterID = models.CharField(max_length=300, blank=True, default="")
+    pgpPublicKey = models.TextField(max_length=16384, blank=True, default="")
+
+    def __str__(self):
+        return ""
+
+class PraxisBot_UserGroups(models.Model):
+    """
+    This model will define Praxis-Bot UserGroups
+    """
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=300)
+    description = models.CharField(max_length=500)
