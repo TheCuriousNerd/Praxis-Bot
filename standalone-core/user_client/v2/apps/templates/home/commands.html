@@ -23,7 +23,7 @@
               <tr>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">command<br>{{ commands_form.command }}</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">response<br>{{ commands_form.response }}</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled<br>{{ commands_form.isEnabled }}</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled<br>{{ commands_form.is_enabled }}</th>
                 <th class="text-secondary opacity-7 bg"><input type="submit" value="New Entry" name="newCommandEntry_Btn" class="btn btn-primary bg-gradient-faded-info"></input></th>
               </tr>
             </form>
@@ -60,11 +60,11 @@
             <input type="text" name="response" class="w-100" value="{{ command_.response }}">
             </td>
             <td>
-              {% if command_.isEnabled == True %}
-              <input type="checkbox" name="isEnabled" value="True" checked>
+              {% if command_.is_enabled == True %}
+              <input type="checkbox" name="is_enabled" value="True" checked>
               {% endif %}
-              {% if command_.isEnabled != True %}
-              <input type="checkbox" name="isEnabled" value="True">
+              {% if command_.is_enabled != True %}
+              <input type="checkbox" name="is_enabled" value="True">
               {% endif %}
 
 

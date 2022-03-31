@@ -121,16 +121,16 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         if v3cmd is None:
             return False
         else:
-            if v3cmd.__getattribute__("isEnabled") == True:
+            if v3cmd.__getattribute__("is_enabled") == True:
                 return True
-            elif v3cmd.__getattribute__("isEnabled") == False:
+            elif v3cmd.__getattribute__("is_enabled") == False:
                 return False
-            if v3cmd.__getattribute__("isRestricted") == True:
-                if user in v3cmd.__getattribute__("allowedUsers"):
+            if v3cmd.__getattribute__("is_restricted") == True:
+                if user in v3cmd.__getattribute__("allowed_users"):
                     return True
-                if userID in v3cmd.__getattribute__("allowedUsers"):
+                if userID in v3cmd.__getattribute__("allowed_users"):
                     return True
-                if source in v3cmd.__getattribute__("allowedSources"):
+                if source in v3cmd.__getattribute__("allowed_sources"):
                     return True
             else:
                 return True
@@ -138,8 +138,8 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
 
 
     def isOffCooldown(self, v3cmd):
-        lastUsed = v3cmd.__getattribute__("lastUsed")
-        coolDownLength = v3cmd.__getattribute__("coolDownLength")
+        lastUsed = v3cmd.__getattribute__("last_used")
+        coolDownLength = v3cmd.__getattribute__("cooldown_length")
         curTime = int(time.time())
         if curTime - lastUsed > coolDownLength:
             return True

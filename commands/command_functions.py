@@ -80,7 +80,7 @@ class Abstract_Function_Helpers():
         try:
             db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
             cur_time = int(time.time())
-            query = "UPDATE home_praxisbot_commands_v0 SET lastUsed = %s WHERE command = %s" % (cur_time, command)
+            query = "UPDATE home_praxisbot_commands_v0 SET last_used = %s WHERE command = \'%s\';" % (str(cur_time), command)
             db_obj.execQuery(query)
             return True
         except Exception as e:

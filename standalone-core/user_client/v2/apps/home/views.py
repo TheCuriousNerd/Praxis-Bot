@@ -171,7 +171,7 @@ def chyron(request:WSGIRequest, context, load_template):
     if 'chyron' in load_template:
         try:
             chyron_list = Chyron_Entry.objects.all().order_by('id')
-            context['chyron_list'] = chyron_list
+            #context['chyron_list'] = chyron_list
         except:
             context['chyron_list'] = " No chyron entries found "
 
@@ -232,7 +232,7 @@ def chyron(request:WSGIRequest, context, load_template):
                     print(request)
                     print(request.POST)
 
-                    isItEnabled = request.POST.get('isEnabled')
+                    isItEnabled = request.POST.get('is_enabled')
                     prefix = request.POST.get('prefix')
                     text = request.POST.get('text')
                     tag = request.POST.get('tag')
@@ -246,7 +246,7 @@ def chyron(request:WSGIRequest, context, load_template):
                         isItEnabled = True
                     else:
                         isItEnabled = False
-                    Chyron_Entry.objects.filter(id=targetID).update(prefix=prefix, text=text, tag=tag, isEnabled=isItEnabled)
+                    Chyron_Entry.objects.filter(id=targetID).update(prefix=prefix, text=text, tag=tag, is_enabled=isItEnabled)
 
 
             except Exception as e:
@@ -307,7 +307,7 @@ def commands(request:WSGIRequest, context, load_template):
                     print(request)
                     print(request.POST)
 
-                    isItEnabled = request.POST.get('isEnabled')
+                    isItEnabled = request.POST.get('is_enabled')
                     command = request.POST.get('command')
                     response = request.POST.get('response')
                     id = request.POST.get('hidden_id')
@@ -320,7 +320,7 @@ def commands(request:WSGIRequest, context, load_template):
                         isItEnabled = True
                     else:
                         isItEnabled = False
-                    PraxisBot_Commands_v0.objects.filter(id=targetID).update(command=command, response=response, isEnabled=isItEnabled)
+                    PraxisBot_Commands_v0.objects.filter(id=targetID).update(command=command, response=response, is_enabled=isItEnabled)
 
 
             except Exception as e:
