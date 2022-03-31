@@ -171,7 +171,7 @@ def chyron(request:WSGIRequest, context, load_template):
     if 'chyron' in load_template:
         try:
             chyron_list = Chyron_Entry.objects.all().order_by('id')
-            #context['chyron_list'] = chyron_list
+            context['chyron_list'] = chyron_list
         except:
             context['chyron_list'] = " No chyron entries found "
 
