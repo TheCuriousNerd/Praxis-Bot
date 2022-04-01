@@ -43,8 +43,9 @@ class Function_Lights(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "lights"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will change the state of the lights in the specified group.",
+        "\nExample:","($lights (group)(command))"]
 
     def __init__(self):
         super().__init__(

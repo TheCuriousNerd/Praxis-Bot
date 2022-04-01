@@ -42,8 +42,9 @@ class Function_Math(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "math"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will evaluate a math equation.",
+        "\nExample:","($math (2+2*3))"]
 
     def __init__(self):
         super().__init__(

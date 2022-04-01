@@ -44,9 +44,10 @@ class Function_discordVoice_play(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "play"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoicePlay"
+    warningText = ["CAUTION: This function is not yet fully implemented."]
+    helpText = ["This will cause the bot to play a file or text to the voice channel.",
+        "\nExample:","($discordVoicePlay (Hello World!))"]
 
     def __init__(self):
         super().__init__(

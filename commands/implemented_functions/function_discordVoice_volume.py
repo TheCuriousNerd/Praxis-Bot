@@ -45,9 +45,10 @@ class Function_discordVoice_volume(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "volume"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoiceVolume"
+    warningText = ["This function is not yet fully implemented."]
+    helpText = ["This will change the bot's volume.",
+        "\nExample:","($discordVoiceVolume (volume))"]
 
     def __init__(self):
         super().__init__(

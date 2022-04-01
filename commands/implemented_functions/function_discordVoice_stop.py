@@ -45,9 +45,10 @@ class Function_discordVoice_stop(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "stop"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoiceStop"
+    warningText = ["This function is not yet fully implemented."]
+    helpText = ["This will cause the bot to stop it's voice.",
+        "\nExample:","($discordVoiceStop)"]
 
     def __init__(self):
         super().__init__(

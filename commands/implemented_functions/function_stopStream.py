@@ -44,8 +44,9 @@ class Function_stopStream(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "stopStream"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will tell OBS to stop streaming.",
+        "\nExample:","($stopStream)"]
 
     def __init__(self):
         super().__init__(

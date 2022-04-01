@@ -40,8 +40,9 @@ class Function_v0(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "testFunction"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will echo your input.",
+        "\nExample:","($testFunction (input))"]
 
     def __init__(self):
         super().__init__(

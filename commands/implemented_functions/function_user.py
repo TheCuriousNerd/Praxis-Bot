@@ -41,8 +41,9 @@ class Function_User(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "user"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will return the user's name.",
+        "\nExample:","($user)"]
 
     def __init__(self):
         super().__init__(

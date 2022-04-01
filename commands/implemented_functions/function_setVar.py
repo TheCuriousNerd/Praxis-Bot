@@ -42,8 +42,9 @@ class Function_SetVar(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "setVar"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This sets a variable to the given data.",
+        "\nExample:","($setVar (var)(data))"]
 
     def __init__(self):
         super().__init__(

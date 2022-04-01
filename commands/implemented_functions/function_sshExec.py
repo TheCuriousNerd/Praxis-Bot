@@ -41,9 +41,10 @@ class Function_sshExec(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "superExec"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "superExec_ssh"
+    warningText = []
+    helpText = ["This is non functional and might be worked on in the future depending on need.",
+        "\nExample:","($superExec_ssh)"]
 
     def __init__(self):
         super().__init__(
@@ -60,13 +61,13 @@ class Function_sshExec(AbstractCommandFunction, metaclass=ABCMeta):
         return output
 
     def do_work(self, user, functionName, args, bonusData):
-        isFileTransfer = False
-        isContainerCommand = False
+        # isFileTransfer = False
+        # isContainerCommand = False
 
-        if args[0] == "file":
-            isFileTransfer = True
-        if (args[0] == "stop") or (args[0] == "start") or (args[0] == "restart"):
-            isContainerCommand = True
+        # if args[0] == "file":
+        #     isFileTransfer = True
+        # if (args[0] == "stop") or (args[0] == "start") or (args[0] == "restart"):
+        #     isContainerCommand = True
 
 
         return "work"

@@ -45,9 +45,10 @@ class Function_discordVoice_clear(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "clear"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoiceClear"
+    warningText = ["This function is not yet implemented."]
+    helpText = ["This will clear the voice queue for the discord service.",
+        "\nExample:","($discordVoiceClear)"]
 
     def __init__(self):
         super().__init__(

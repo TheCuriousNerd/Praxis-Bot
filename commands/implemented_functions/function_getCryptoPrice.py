@@ -42,8 +42,9 @@ class Function_getCryptoPrice(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "getCryptoPrice"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will use an api to fetch results and using the data compare your selected tokens.",
+        "\nExample:","($getCryptoPrice (selected token)(token to compare against))"]
 
     def __init__(self):
         super().__init__(

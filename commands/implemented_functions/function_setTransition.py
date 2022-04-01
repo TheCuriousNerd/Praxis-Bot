@@ -44,8 +44,9 @@ class Function_SetTransition(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "setTransition"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will tell OBS to set the current scene transition to the specified transition.",
+        "\nExample:","($setTransition (transitionName))"]
 
     def __init__(self):
         super().__init__(

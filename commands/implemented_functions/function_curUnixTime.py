@@ -42,8 +42,10 @@ class Function_GetUnixTime(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "curUnixTime"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will get the current unix time as an integer.",
+        "This is based on the machine's time.",
+        "\nExample:","($curUnixTime)"]
 
     def __init__(self):
         super().__init__(

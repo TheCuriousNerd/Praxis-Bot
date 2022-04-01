@@ -42,8 +42,9 @@ class Function_obsWebSocket(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "obsWebSocket"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will send a request to the OBS WebSocket.",
+        "\nExample:","($obsWebSocket (requestType)(data))"]
 
     def __init__(self):
         super().__init__(

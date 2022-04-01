@@ -44,8 +44,12 @@ class Function_GetBitrate(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "getAverageBitrate"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will return the average bitrate of the stream.",
+        "NOTE: This is not the bitrate of the stream, but the average bitrate of the stream.",
+        "This is calculated by the total bytes sent over the last 30 seconds, divided by the total duration of the stream in seconds.",
+        "OBS currently does not provide the actual current bitrate of the stream, so this is a best guess.",
+        "\nExample:","($getAverageBitrate)"]
 
     def __init__(self):
         super().__init__(

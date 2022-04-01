@@ -45,9 +45,10 @@ class Function_discordVoice_resume(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "resume"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoiceResume"
+    warningText = ["This function is not yet implemented."]
+    helpText = ["This will cause the bot to resume playing in the current voice channel.",
+        "\nExample:","($discordVoiceResume)"]
 
     def __init__(self):
         super().__init__(

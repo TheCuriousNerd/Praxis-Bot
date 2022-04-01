@@ -42,8 +42,9 @@ class Function_Math_unitConversion(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "math_unitConversion"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This is will convert a value between two different units.",
+        "\nExample:","($math_unitConversion (value)(from)(to))"]
 
     def __init__(self):
         super().__init__(
