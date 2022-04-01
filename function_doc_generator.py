@@ -15,9 +15,11 @@ if __name__ == "__main__":
     for f in functionList:
         print("\n## Function Name: <br>&#160;&#160;&#160; $"+ type(loadedFunctions[f]).functionName)
         try:
-            print("Warnings: <br>")
-            for line__ in type(loadedFunctions[f]).warningText:
-                print(line__ + "<br>")
+            if len(loadedFunctions[f].warningText) != 0:
+                print("Warnings: <br>")
+                for line__ in type(loadedFunctions[f]).warningText:
+                    print(line__ + "<br>")
+                print("<br>")
         except:
             pass
         print("Description: <br>")
