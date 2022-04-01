@@ -27,12 +27,32 @@ import simpleobsws
 import json
 import config
 
-loop = asyncio.get_event_loop()
-#loop = asyncio.new_event_loop()
+# import os
+# from bot_functions import praxis_logging
+# praxis_logger_obj = praxis_logging.praxis_logger()
+# praxis_logger_obj.init(os.path.basename(__file__))
+# praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
+
+# startedUp = False
+# altMode = False
+loop:asyncio.AbstractEventLoop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
+
 idParams = simpleobsws.IdentificationParameters(ignoreNonFatalRequestChecks=False)
 targetURL = "ws://%s:%s" % (config.obsWebSocket_address[0].get("ip"), config.obsWebSocket_address[0].get("port"))
 ws = simpleobsws.WebSocketClient(url=targetURL, password=config.obsWebSocket_address[0].get("password")) # Every possible argument has been passed, but none are required. See lib code for defaults.
+
+# def init():
+#     global startedUp
+#     global altMode
+#     if startedUp == False:
+#         if altMode:
+#             loop = asyncio.get_event_loop()
+#         else:
+#             loop = asyncio.new_event_loop()
+#         startedUp = True
+#         asyncio.set_event_loop(loop)
+
 
 async def default_request():
     await ws.connect() # Make the connection to OBS-Websocket
@@ -63,13 +83,18 @@ async def make_custom_request(request, data=None):
         return e
 
 
+    # praxis_logger_obj.log("\n -Making Request: " + request)
+    # praxis_logger_obj.log("\n -Data: " + str(data))
+
     print('Making request:')
     try:
         if data!=None:
             #data = {'source':'tinycam', 'volume':0.5}
-            print("data for OBS")
+            # print("data for OBS")
+            # print(request)
+            # print(data)
+            # print(type(data))
 
-            print(request)
             if request == "SetSceneItemEnabled":
                 if data.get("sceneItemId") == None:
                     sceneItemList = ("GetSceneItemList",{'sceneName':data.get('sceneName')})

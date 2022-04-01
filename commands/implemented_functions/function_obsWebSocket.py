@@ -69,11 +69,30 @@ class Function_obsWebSocket(AbstractCommandFunction, metaclass=ABCMeta):
         #return str(type(return_stuff))
         try:
             from bot_functions import obsWebSocket as obsWebSocket
+            #obsWebSocket.altMode = True
+            #obsWebSocket.init()
 
             newData:list = args
             requestType = newData.pop(0)
-            newData = " ".join(newData)
-            newDataDict = json.loads(newData)
+            joinedData = " ".join(newData)
+            #
+            # add a \ before the "
+            #joinedData = joinedData.replace("\"", "\\\"")
+            #joinedData = "\"%s\"" % joinedData
+            try:
+                newDataDict = json.loads(joinedData)
+                # try:
+                #     newDataDict = json.loads(newDataDict)
+                # except:
+                #     return "inner json error: " + joinedData
+            except Exception as e:
+                #return "[json error][Error: %s]" % e
+                return "[json error]"
+            print(newDataDict)
+            print(type(newDataDict))
+            #return str(joinedData)
+            #newDataDict = json.loads("{\"sceneName\":\"Cam feed [Main] INFOBOX\"}")
+
             output = obsWebSocket.makeRequest(requestType, newDataDict)
             print(output)
             return ""
