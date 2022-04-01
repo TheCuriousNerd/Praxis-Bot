@@ -42,8 +42,9 @@ class Function_CounterAdd(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "addCounter"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This adds to a counter variable.",
+        "\nExample:","($addCounter (var)(data))"]
 
     def __init__(self):
         super().__init__(

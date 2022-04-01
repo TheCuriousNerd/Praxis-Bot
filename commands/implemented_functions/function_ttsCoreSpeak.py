@@ -42,8 +42,10 @@ class Function_TTSCoreSpeak(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "ttsCoreSpeak"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will cause the TTS Core to send a message to the selected TTS Speakers.",
+        "\nExample:","($ttsCoreSpeak (Hello World!))"
+        "\nTTS Says:","User says, Hello World!"]
 
     def __init__(self):
         super().__init__(

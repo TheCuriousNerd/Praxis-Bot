@@ -45,9 +45,10 @@ class Function_discordVoice_playnext(AbstractCommandFunction, metaclass=ABCMeta)
     """
     This is v0 of Functions
     """
-    functionName = "playnext"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoicePlayNext"
+    warningText = ["CAUTION: This function is not yet implemented."]
+    helpText = ["This will cause the bot to play a file or text to the voice channel after the current one is finished.",
+        "\nExample:","($discordVoicePlayNext (Thing to play next))"]
 
     def __init__(self):
         super().__init__(

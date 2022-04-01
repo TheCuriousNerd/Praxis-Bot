@@ -11,3 +11,4 @@ event_logs/logs/
 logs/event_logs/
 standalone-core/db_data/
 standalone-core/pgadmin_data/
+standalone-core/user_client/v2/apps/home/migrations/

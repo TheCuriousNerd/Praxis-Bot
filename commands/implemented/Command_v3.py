@@ -28,6 +28,7 @@ from abc import ABCMeta
 from json import loads
 from urllib.parse import urlencode
 import requests
+from bot_functions.praxis_logging import praxis_logger
 
 from commands import loader_functions as function_loader
 from commands.command_base import AbstractCommand
@@ -39,6 +40,8 @@ from bot_functions import token_processor
 import credentials
 
 import pyparsing
+import time
+from sqlalchemy.engine.cursor import LegacyCursorResult
 
 class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
     """
@@ -67,10 +70,17 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         # Look up command in DB and get return strings.
         commandName = command
         v3helper = Abstract_Function_Helpers()
+        v3cmd = v3helper.get_command(commandName)
         v3cmd_response = v3helper.get_Command_returnString(commandName)
         #if v3cmd_response is None:
         #    return "not none"
         enoughArgs = self.enoughArgs(rest, v3cmd_response)
+        allowedToRun = self.allowedToRun(user, userID, source, v3cmd)
+        if allowedToRun == False:
+            return "You are not allowed to run this command."
+        offCooldown = self.isOffCooldown(v3cmd)
+        if offCooldown == False:
+            return "This command is on cooldown."
 
         # Proccess strings
         commandRawInput = commandName + " " + rest # This creates the full command string.
@@ -83,6 +93,7 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         tokenWorker = token_processor.Token_Processor()
         #tokenWorker.loadedFunctions = function_loader.load_functions(AbstractCommandFunction.FunctionType.ver0)
         tokenWorker_Results = tokenWorker.parseTokenResponse(user, userID, commandRawInput, v3cmd_response, source)
+        self.update_lastUsed(commandName)
         returnString = tokenWorker_Results
 
         return returnString
@@ -104,6 +115,41 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
             return True
         else:
             return False
+
+
+    def allowedToRun(self, user, userID, source, v3cmd):
+        if v3cmd is None:
+            return False
+        else:
+            if v3cmd.__getattribute__("is_enabled") == True:
+                return True
+            elif v3cmd.__getattribute__("is_enabled") == False:
+                return False
+            if v3cmd.__getattribute__("is_restricted") == True:
+                if user in v3cmd.__getattribute__("allowed_users"):
+                    return True
+                if userID in v3cmd.__getattribute__("allowed_users"):
+                    return True
+                if source in v3cmd.__getattribute__("allowed_sources"):
+                    return True
+            else:
+                return True
+            return True
+
+
+    def isOffCooldown(self, v3cmd):
+        lastUsed = v3cmd.__getattribute__("last_used")
+        coolDownLength = v3cmd.__getattribute__("cooldown_length")
+        curTime = int(time.time())
+        if curTime - lastUsed > coolDownLength:
+            return True
+        else:
+            return False
+
+    def update_lastUsed(self, commandName):
+        helper = Abstract_Function_Helpers()
+        helper.update_lastUsed(commandName)
+        return None
 
 
     def get_help(self):

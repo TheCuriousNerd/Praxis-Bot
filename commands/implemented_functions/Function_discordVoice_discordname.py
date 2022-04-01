@@ -46,8 +46,10 @@ class Function_discordVoice_discordName(AbstractCommandFunction, metaclass=ABCMe
     This is v0 of Functions
     """
     functionName = "discordName"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = ["This function is not yet implemented."]
+    helpText = ["This will fetch the discord name of a user",
+        "\nExample:","($discordName (TheCuriousNerd))"
+        "\nExample:","($discordName (Discord ID Here))"]
 
     def __init__(self):
         super().__init__(

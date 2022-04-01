@@ -45,9 +45,10 @@ class Function_discordVoice_loop(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "loop"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoiceLoop"
+    warningText = ["This function is not yet implemented."]
+    helpText = ["This will cause the bot's discord voice to loop.",
+        "\nExample:","($discordVoiceLoop (true))"]
 
     def __init__(self):
         super().__init__(

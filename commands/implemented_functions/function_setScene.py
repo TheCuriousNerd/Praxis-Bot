@@ -44,8 +44,9 @@ class Function_SetScene(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "setScene"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will tell OBS to set the current scene to the scene you specify.",
+        "\nExample:","($setScene (sceneName))"]
 
     def __init__(self):
         super().__init__(

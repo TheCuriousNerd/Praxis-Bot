@@ -42,8 +42,9 @@ class Function_Range(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "range"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will generate a random number between two numbers.",
+        "\nExample:","($range (1) (10))"]
 
     def __init__(self):
         super().__init__(

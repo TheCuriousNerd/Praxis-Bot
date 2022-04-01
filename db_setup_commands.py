@@ -44,7 +44,7 @@ def create_basicCommands():
 def create_basicCommand(commandName:str, commandReponse:str):
     db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
     if db_obj.doesTableExist("command_responses_v0") == True:
-        results = db_obj.execQuery(
+        results = db_obj.execQuery_old(
             'INSERT INTO command_responses_v0 '
             '(command, response) '
             'VALUES (\'%s\',\'%s\');' % (commandName, commandReponse)

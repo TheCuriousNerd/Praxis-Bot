@@ -24,7 +24,7 @@
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">prefix<br>{{ chyron_form.prefix }}</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">text<br>{{ chyron_form.text }}</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">tag<br>{{ chyron_form.tag }}</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled<br>{{ chyron_form.isEnabled }}</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled<br>{{ chyron_form.is_enabled }}</th>
                 <th class="text-secondary opacity-7 bg"><input type="submit" value="New Entry" name="newChyronEntry_Btn" class="btn btn-primary bg-gradient-faded-info"></input></th>
               </tr>
             </form>
@@ -80,11 +80,11 @@
             <input type="text" name="tag" class="w-100" value="{{ ch.tag }}">
             </td>
             <td>
-              {% if ch.isEnabled == True %}
-              <input type="checkbox" name="isEnabled" value="True" checked>
+              {% if ch.is_enabled == True %}
+              <input type="checkbox" name="is_enabled" value="True" checked>
               {% endif %}
-              {% if ch.isEnabled != True %}
-              <input type="checkbox" name="isEnabled" value="True">
+              {% if ch.is_enabled != True %}
+              <input type="checkbox" name="is_enabled" value="True">
               {% endif %}
 
 

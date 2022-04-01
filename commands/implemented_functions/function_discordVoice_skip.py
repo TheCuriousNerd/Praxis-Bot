@@ -45,9 +45,10 @@ class Function_discordVoice_skip(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "skip"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoiceSkip"
+    warningText = ["This function is not yet implemented."]
+    helpText = ["This will cause the bot to skip to the next entry in the queue.",
+        "\nExample:","($discordVoiceSkip)"]
 
     def __init__(self):
         super().__init__(

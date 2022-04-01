@@ -42,8 +42,12 @@ class Function_Date(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "datetime"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will return the current date and time based on your provided format.",
+        "If no format is provided, it will default to the following:",
+        "    %Y-%m-%d %H:%M:%S",
+        "\nExample:","($datetime (format))",
+        "\nExample:","($datetime)"]
 
     def __init__(self):
         super().__init__(

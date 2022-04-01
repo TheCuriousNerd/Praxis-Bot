@@ -44,8 +44,9 @@ class Function_resumeRecording(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "resumeRecording"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This will tell OBS to resume recording.",
+        "\nExample:","($resumeRecording)"]
 
     def __init__(self):
         super().__init__(

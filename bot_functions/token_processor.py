@@ -389,12 +389,22 @@ class Token_Processor():
                     #targetLogicPoint, isEnd = utility.nextGreaterElementInList(keyList, targetLogicPoint)
                     print("Target Logic Point: ")
                     print(targetLogicPoint)
-                    targetResultsPoint, isEnd = utility.nextGreaterElementInList(keyList, targetLogicPoint)
+                    #targetResultsPoint, isEnd = utility.nextGreaterElementInList(keyList, targetLogicPoint)
+
+                    for lvl in parsedInputMap:
+                        if targetLogicPoint in parsedInputMap[lvl]:
+                            targetResultsPoint, bonus = utility.nextGreaterElementInList(parsedInputMap[lvl], targetLogicPoint)
+
                     print("Target Results Point: ")
                     print(targetResultsPoint)
 
+                    logicToCompile = []
+                    for key in keyList:
+                        if key >= targetLogicPoint:
+                            if key < targetResultsPoint:
+                                logicToCompile.append(workToDo[key])
+                    logicToEval = "".join(filter(None, logicToCompile))
 
-                    logicToEval = workToDo[targetLogicPoint]
                     print(workToDo)
                     print("Logic To Eval: ")
                     print(logicToEval)
@@ -560,11 +570,18 @@ if __name__ == '__main__':
     #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
     #stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
     #stringToParse = "(#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000))"
-    #stringToParse = "($if (True)(($math (#*)) ($math (#*))))" # If Statement example
+    stringToParse = "($if (10==($math (10)))($math (#*)))" # If Statement example
     #stringToParse = "(@test) ($math($math(#*)*2+1000))"
     #stringToParse = "(@test) ($setVar(test)(varData)) (@test)"
-    stringToParse = "test ($obsWebSocket ((SetSceneItemEnabled)({\"sourceName\":\"Color Callibration\", \"sceneItemEnabled\": true, \"sceneName\":\"Cam feed [Main] INFOBOX\"})))"
+    #stringToParse = "test ($obsWebSocket ((SetSceneItemEnabled)({\"sourceName\":\"Color Callibration\", \"sceneItemEnabled\": true, \"sceneName\":\"Cam feed [Main] INFOBOX\"})))"
     #stringToParse = "test ($obsWebSocket ((GetVersion)({})))"
+    #stringToParse = "test ($obsWebSocket ((SetCurrentProgramScene)({\"sceneName\":\"Cam feed [Main] INFOBOX\"})))"
+    #stringToParse = "($ttsCoreSpeak (Hello World))"
+    #stringToParse = "($lights (downstairs)(red))"
+    #stringToParse = "($setScene (Cam feed [Main] INFOBOX))"
+    #stringToParse = "($getAverageBitrate)"
+    #stringToParse = "($getUnixTime (July 1, 2018 2:00:00 PM GMT))"
+    #stringToParse = "($addCounter(testing)(4))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
     parsedMapKeys = parseMap.keys()

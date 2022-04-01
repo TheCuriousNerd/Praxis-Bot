@@ -45,9 +45,10 @@ class Function_discordVoice_join(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "join"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoiceJoin"
+    warningText = ["This function is not yet implemented."]
+    helpText = ["This will cause the bot to join a voice channel.",
+        "\nExample:","($discordVoiceJoin (channel_id))"]
 
     def __init__(self):
         super().__init__(

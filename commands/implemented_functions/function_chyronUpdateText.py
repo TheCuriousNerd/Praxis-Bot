@@ -42,8 +42,9 @@ class Function_ChyronTextUpdate(AbstractCommandFunction, metaclass=ABCMeta):
     This is v0 of Functions
     """
     functionName = "updateChyronText"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    warningText = []
+    helpText = ["This is will update the text of a Chyron entry based on the selected tag.",
+        "\nExample:","($updateChyronText (tag)(new text))"]
 
     def __init__(self):
         super().__init__(

@@ -242,8 +242,20 @@ class Praxis_DB_Connection():
             return "None"
 
 
+    def execQuery(self, query):
+        try:
+            self.selfAutoStart()
+            result = self.dbConnection.execute(query)
+            self.closeConnection()
+            return result
+        except Exception as e:
+            print("[Praxis_DB_Connection] query error")
+            return e
+
+
+    # OLD DO NOT USE FURTHER it returns the oldest row
     import bot_functions.praxis_logging as praxis_logging
-    def execQuery(self, query, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
+    def execQuery_old(self, query, praxis_logger_obj:praxis_logging.praxis_logger = praxis_logging.praxis_logger()):
         try:
             self.selfAutoStart()
             #praxis_logger_obj.log("query:")

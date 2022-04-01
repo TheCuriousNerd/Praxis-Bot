@@ -45,9 +45,10 @@ class Function_discordVoice_shuffle(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "shuffle"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoiceShuffle"
+    warningText = ["This function is not yet implemented."]
+    helpText = ["This will cause the bot to shuffle the current queue.",
+        "\nExample:","($discordVoiceShuffle (true))"]
 
     def __init__(self):
         super().__init__(

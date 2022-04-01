@@ -45,9 +45,10 @@ class Function_discordVoice_repeat(AbstractCommandFunction, metaclass=ABCMeta):
     """
     This is v0 of Functions
     """
-    functionName = "repeat"
-    helpText = ["This is a v0 function.",
-        "\nExample:","testFunction"]
+    functionName = "discordVoiceRepeat"
+    warningText = ["This function is not yet implemented."]
+    helpText = ["This will cause the bot to repeat the current voice queue.",
+        "\nExample:","($discordVoiceRepeat (true))"]
 
     def __init__(self):
         super().__init__(
