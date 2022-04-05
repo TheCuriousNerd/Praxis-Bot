@@ -23,8 +23,15 @@
               <tr>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">command<br>{{ commands_form.command }}</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">response<br>{{ commands_form.response }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">cooldown length<br>{{ commands_form.cooldown_length }}</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled<br>{{ commands_form.is_enabled }}</th>
                 <th class="text-secondary opacity-7 bg"><input type="submit" value="New Entry" name="newCommandEntry_Btn" class="btn btn-primary bg-gradient-faded-info"></input></th>
+              </tr>
+              <tr>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">is restricted<br>{{ commands_form.is_restricted }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">allowed services<br>{{ commands_form.allowed_services }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">allowed users<br>{{ commands_form.allowed_users }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">allowed groups<br>{{ commands_form.allowed_groups }}</th>
               </tr>
             </form>
             </thead>
@@ -39,6 +46,7 @@
           <tr>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">command</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">response</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">cooldown length</th>
             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled</th>
             <th class="text-secondary opacity-7"></th>
           </tr>
@@ -49,16 +57,19 @@
 
 
 
-
-          <tr class="align-middle text-center">
-            <form method="post" action="/commands.html">
+          <form method="post" action="/commands.html">
             {% csrf_token %}
+          <tr class="align-middle text-center">
             <td>
             <input type="text" name="command" class="w-100" value="{{ command_.command }}">
             </td>
             <td>
             <input type="text" name="response" class="w-100" value="{{ command_.response }}">
             </td>
+
+            <td>
+              <input type="number" name="cooldown_length" class="w-100" value="{{ command_.cooldown_length }}">
+              </td>
             <td>
               {% if command_.is_enabled == True %}
               <input type="checkbox" name="is_enabled" value="True" checked>
@@ -66,25 +77,51 @@
               {% if command_.is_enabled != True %}
               <input type="checkbox" name="is_enabled" value="True">
               {% endif %}
-
-
             </td>
-            <td>
+
             <input type="hidden" name="hidden_id" value="{{ command_.id }}">
-            <input type="submit" value="Update" name="UpdateCommand_Btn" class="btn btn-primary bg-gradient-faded-warning"></input>
-            </form>
+            <td><input type="submit" value="Update" name="UpdateCommand_Btn" class="btn btn-primary bg-gradient-faded-warning"></input></td>
 
             <td class="align-middle text-center">
-              <a href="#" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Delete item">
-                <form action="" method="get">
-                  {% csrf_token %}
-                  <input type="hidden" name="hidden_id" value="{{ command_.id }}">
-                  <input type="submit" value="Delete" name="Deletebtn" class="btn btn-outline-danger"></input>
-                </form>
-              </a>
+                  <p>More</p>
             </td>
 
           </tr>
+
+          <div class="bg-gradient-light">
+          <tr>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Is Restricted</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Allowed Services</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Allowed Users</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Allowed Groups</th>
+          </tr>
+          <tr>
+            <td>
+              {% if command_.is_restricted == True %}
+              <input type="checkbox" name="is_restricted" value="True" checked>
+              {% endif %}
+              {% if command_.is_restricted != True %}
+              <input type="checkbox" name="is_restricted" value="True">
+              {% endif %}
+            <td>
+              <input type="text" name="allowed_services" class="w-100" value="{{ command_.allowed_services }}"></td>
+            <td>
+              <input type="text" name="allowed_users" class="w-100" value="{{ command_.allowed_users }}"></td>
+            <td>
+              <input type="text" name="allowed_groups" class="w-100" value="{{ command_.allowed_groups }}"></td>
+
+            </form>
+              <td class="align-middle text-center">
+                <a href="#" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Delete item">
+                  <form action="" method="get">
+                    {% csrf_token %}
+                    <input type="hidden" name="hidden_id" value="{{ command_.id }}">
+                    <input type="submit" value="Delete" name="Deletebtn" class="btn btn-outline-danger"></input>
+                  </form>
+                </a>
+              </td>
+          </tr>
+          </div>
 
 
           {% endfor %}

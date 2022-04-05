@@ -59,7 +59,7 @@ class PraxisBot_Commands_v0(models.Model):
     last_used = models.IntegerField(default=0) # This will be Unix Time
 
     allowed_services = models.CharField(max_length=500, blank=True, null=False, default="")
-    cooldown_length = models.IntegerField(default=0)
+    cooldown_length = models.IntegerField(default=0, null=False)
 
     is_restricted = models.BooleanField(default=False)
     allowed_users = models.CharField(max_length=500, blank=True, null=False, default="")

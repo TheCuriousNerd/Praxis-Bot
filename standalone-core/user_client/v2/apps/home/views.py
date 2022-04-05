@@ -311,6 +311,14 @@ def commands(request:WSGIRequest, context, load_template):
                     command = request.POST.get('command')
                     response = request.POST.get('response')
                     id = request.POST.get('hidden_id')
+
+                    cooldown_length = request.POST.get('cooldown_length')
+                    is_restricted = request.POST.get('is_restricted')
+                    allowed_services = request.POST.get('allowed_services')
+                    allowed_users = request.POST.get('allowed_users')
+                    allowed_groups = request.POST.get('allowed_groups')
+
+
                     print(command)
                     print(response)
                     print(isItEnabled)
@@ -320,11 +328,25 @@ def commands(request:WSGIRequest, context, load_template):
                         isItEnabled = True
                     else:
                         isItEnabled = False
-                    PraxisBot_Commands_v0.objects.filter(id=targetID).update(command=command, response=response, is_enabled=isItEnabled)
+                    if is_restricted:
+                        is_restricted = True
+                    else:
+                        is_restricted = False
+                    PraxisBot_Commands_v0.objects.filter(id=targetID).update(
+                        command=command,
+                        response=response,
+                        is_enabled=isItEnabled,
+                        cooldown_length=cooldown_length,
+                        is_restricted=is_restricted,
+                        allowed_services=allowed_services,
+                        allowed_users=allowed_users,
+                        allowed_groups=allowed_groups
+                        )
 
 
             except Exception as e:
                 print("commands_page error")
+                print(e)
                 context['commands_form'] = e
 
     return context
