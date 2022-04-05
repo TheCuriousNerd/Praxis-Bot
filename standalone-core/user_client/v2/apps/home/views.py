@@ -319,9 +319,13 @@ def commands(request:WSGIRequest, context, load_template):
                     allowed_groups = request.POST.get('allowed_groups')
 
 
+                    print("command")
                     print(command)
+                    print("response")
                     print(response)
+                    print("isItEnabled")
                     print(isItEnabled)
+                    print("id")
                     print(id)
                     targetID = int(id)
                     if isItEnabled:
@@ -332,6 +336,26 @@ def commands(request:WSGIRequest, context, load_template):
                         is_restricted = True
                     else:
                         is_restricted = False
+
+                    if allowed_services == None:
+                        allowed_services = ""
+                    if allowed_users == None:
+                        allowed_users = ""
+                    if allowed_groups == None:
+                        allowed_groups = ""
+
+                    print("cooldown_length")
+                    print(cooldown_length)
+                    print("is_restricted")
+                    print(is_restricted)
+                    print("allowed_services")
+                    print(allowed_services)
+                    print("allowed_users")
+                    print(allowed_users)
+                    print("allowed_groups")
+                    print(allowed_groups)
+
+                   
                     PraxisBot_Commands_v0.objects.filter(id=targetID).update(
                         command=command,
                         response=response,
