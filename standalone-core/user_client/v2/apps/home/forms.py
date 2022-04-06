@@ -22,4 +22,4 @@ class Chyron_EntryForm(ModelForm):
 class PraxisBot_Commands_v0_Form(ModelForm):
     class Meta:
         model = PraxisBot_Commands_v0
-        fields = ('command', 'response', 'is_enabled')
+        fields = ('command', 'response', 'is_enabled', 'cooldown_length', 'is_restricted', 'allowed_services', 'allowed_users', 'allowed_groups')

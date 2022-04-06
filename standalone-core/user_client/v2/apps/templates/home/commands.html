@@ -6,6 +6,12 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+<script>
+  var collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
+  var collapseList = collapseElementList.map(function (collapseEl) {
+    return new bootstrap.Collapse(collapseEl)
+  })
+  </script>
 
   <div class="container-fluid py-4">
     <div class="row">
@@ -20,11 +26,18 @@
               <form method="post" action="/commands.html">
                 {% csrf_token %}
                 <h4 class="card-header">New Command Entry</h4>
-              <tr>
+              <tr class="align-middle text-center">
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">command<br>{{ commands_form.command }}</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">response<br>{{ commands_form.response }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">cooldown length<br>{{ commands_form.cooldown_length }}</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled<br>{{ commands_form.is_enabled }}</th>
                 <th class="text-secondary opacity-7 bg"><input type="submit" value="New Entry" name="newCommandEntry_Btn" class="btn btn-primary bg-gradient-faded-info"></input></th>
+              </tr>
+              <tr class="align-middle text-center">
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">is restricted<br>{{ commands_form.is_restricted }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">allowed services<br>{{ commands_form.allowed_services }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">allowed users<br>{{ commands_form.allowed_users }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">allowed groups<br>{{ commands_form.allowed_groups }}</th>
               </tr>
             </form>
             </thead>
@@ -36,9 +49,10 @@
       <table class="table align-items-center overflow-scroll">
         <thead>
           <h4 class="card-header">Command Entries</h4>
-          <tr>
+          <tr class="align-middle text-center">
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">command</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">response</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">cooldown length</th>
             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Enabled / Disabled</th>
             <th class="text-secondary opacity-7"></th>
           </tr>
@@ -49,16 +63,19 @@
 
 
 
-
-          <tr class="align-middle text-center">
-            <form method="post" action="/commands.html">
+          <form method="post" action="/commands.html">
             {% csrf_token %}
+          <tr class="align-middle text-center">
             <td>
             <input type="text" name="command" class="w-100" value="{{ command_.command }}">
             </td>
             <td>
             <input type="text" name="response" class="w-100" value="{{ command_.response }}">
             </td>
+
+            <td>
+              <input type="number" name="cooldown_length" class="w-100" value="{{ command_.cooldown_length }}">
+              </td>
             <td>
               {% if command_.is_enabled == True %}
               <input type="checkbox" name="is_enabled" value="True" checked>
@@ -66,13 +83,43 @@
               {% if command_.is_enabled != True %}
               <input type="checkbox" name="is_enabled" value="True">
               {% endif %}
-
-
             </td>
-            <td>
+
+            <td class="align-middle text-center">
+              <button class="btn btn-primary bg-gradient-faded-info" type="button" data-bs-toggle="collapse" data-bs-target=".bonus_row_{{ command_.id }}" aria-expanded="false" aria-controls="bonus_row_head_{{ command_.id }} bonus_row_data_{{ command_.id }}">
+                More
+              </button>
+            </td>
+
             <input type="hidden" name="hidden_id" value="{{ command_.id }}">
-            <input type="submit" value="Update" name="UpdateCommand_Btn" class="btn btn-primary bg-gradient-faded-warning"></input>
-            </form>
+            <td><input type="submit" value="Update" name="UpdateCommand_Btn" class="btn btn-primary bg-gradient-faded-warning"></input></td>
+
+
+          </tr>
+
+
+          <tr class="align-middle text-center collapse bonus_row_{{ command_.id }}" id="bonus_row_head_{{ command_.id }}">
+              <td></td>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Is Restricted</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Allowed Services</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Allowed Users</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Allowed Groups</th>
+          </tr>
+          <tr class="align-middle text-center collapse bonus_row_{{ command_.id }}" id="bonus_row_data_{{ command_.id }}">
+            <td></td>
+            <td>
+              {% if command_.is_restricted == True %}
+              <input type="checkbox" name="is_restricted" value="True" checked>
+              {% endif %}
+              {% if command_.is_restricted != True %}
+              <input type="checkbox" name="is_restricted" value="True">
+              {% endif %}
+            <td>
+              <input type="text" name="allowed_services" class="w-100" value="{{ command_.allowed_services }}"></td>
+            <td>
+              <input type="text" name="allowed_users" class="w-100" value="{{ command_.allowed_users }}"></td>
+            <td>
+              <input type="text" name="allowed_groups" class="w-100" value="{{ command_.allowed_groups }}"></td>
 
             <td class="align-middle text-center">
               <a href="#" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Delete item">
@@ -83,9 +130,8 @@
                 </form>
               </a>
             </td>
-
           </tr>
-
+          </form>
 
           {% endfor %}
         </tbody>
@@ -97,8 +143,6 @@
 <div>
 
 
-
-
     </div>
 
     {% include "includes/footer.html" %}
@@ -108,4 +152,5 @@
 {% endblock content %}
 
 <!-- Specific JS goes HERE --> 
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+{% endblock javascripts %}
