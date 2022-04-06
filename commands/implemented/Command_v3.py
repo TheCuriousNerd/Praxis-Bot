@@ -29,6 +29,8 @@ from json import loads
 from urllib.parse import urlencode
 import requests
 from bot_functions.praxis_logging import praxis_logger
+import bot_functions.praxis_logging
+import os
 
 from commands import loader_functions as function_loader
 from commands.command_base import AbstractCommand
@@ -42,6 +44,10 @@ import credentials
 import pyparsing
 import time
 from sqlalchemy.engine.cursor import LegacyCursorResult
+
+praxis_logger_obj = praxis_logger()
+praxis_logger_obj.init(os.path.basename(__file__))
+praxis_logger_obj.log("\n -Starting Logs: " + os.path.basename(__file__))
 
 class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
     """
@@ -116,25 +122,125 @@ class Command_v3(AbstractCommand, AbstractCommandFunction, metaclass=ABCMeta):
         else:
             return False
 
-
-    def allowedToRun(self, user, userID, source, v3cmd):
-        if v3cmd is None:
-            return False
-        else:
-            if v3cmd.__getattribute__("is_enabled") == True:
-                return True
-            elif v3cmd.__getattribute__("is_enabled") == False:
+    def allowedToRun(self, user:str, userID:str, source:str, v3cmd):
+        try:
+            if v3cmd is None:
                 return False
-            if v3cmd.__getattribute__("is_restricted") == True:
-                if user in v3cmd.__getattribute__("allowed_users"):
-                    return True
-                if userID in v3cmd.__getattribute__("allowed_users"):
-                    return True
-                if source in v3cmd.__getattribute__("allowed_sources"):
-                    return True
             else:
-                return True
-            return True
+                if v3cmd.__getattribute__("is_enabled") == True:
+                    if v3cmd.__getattribute__("is_restricted") == True:
+                        allowed_services = v3cmd.__getattribute__("allowed_services")
+                        allowed_services_list = allowed_services.split(",")
+                        allowed_users = v3cmd.__getattribute__("allowed_users")
+                        allowed_users_list = allowed_users.split(",")
+                        i = 0
+                        for s in allowed_services_list:
+                            allowed_services_list[i] = allowed_services_list[i].lower()
+                            i+=1
+                        i = 0
+                        for a in allowed_users_list:
+                            allowed_users_list[i] = allowed_users_list[i].lower()
+                            i+=1
+                        is_allowed_to_run = False
+                        is_allowed_services_blank = False
+                        is_allowed_users_blank = False
+
+                        if (allowed_services == "") or (allowed_services is None):
+                            is_allowed_services_blank = True
+                        if (allowed_users == "") or (allowed_users is None):
+                            is_allowed_users_blank = True
+
+                        if is_allowed_services_blank == True:
+                            if user.lower() in allowed_users_list:
+                                is_allowed_to_run = True
+                        else:
+                            if source.lower() in allowed_services_list:
+                                if is_allowed_users_blank == True:
+                                    is_allowed_to_run = True
+                                else:
+                                    if user.lower() in allowed_users_list:
+                                        is_allowed_to_run = True
+
+                        return is_allowed_to_run
+
+                    else:
+                        return True
+                else:
+                    return False
+        except Exception as e:
+            praxis_logger.log(praxis_logger,"Error in allowedToRun: %s" % e)
+            return False
+
+
+    # def allowedToRun_old(self, user:str, userID:str, source:str, v3cmd):
+    #     try:
+    #         if v3cmd is None:
+    #             return False
+    #         else:
+    #             # praxis_logger.log(praxis_logger, "Source Type:")
+    #             # praxis_logger.log(praxis_logger, str(type(source)))
+    #             if v3cmd.__getattribute__("is_enabled") == True:
+    #                 if v3cmd.__getattribute__("is_restricted") == True:
+    #                     allowed_services = v3cmd.__getattribute__("allowed_services")
+    #                     allowed_services_list = allowed_services.split(",")
+    #                     allowed_users = v3cmd.__getattribute__("allowed_users")
+    #                     allowed_users_list = allowed_users.split(",")
+    #                     i = 0
+    #                     for s in allowed_services_list:
+    #                         allowed_services_list[i] = allowed_services_list[i].lower()
+    #                         i+=1
+    #                     i = 0
+    #                     for a in allowed_users_list:
+    #                         allowed_users_list[i] = allowed_users_list[i].lower()
+    #                         i+=1
+
+    #                     if (allowed_services != "") or (allowed_services is not None):
+    #                         if source.lower() in allowed_services_list:
+    #                             if (allowed_users != "") or (allowed_users is not None):
+    #                                 if (user.lower() in allowed_users_list) or (userID.lower() in allowed_users_list):
+    #                                     return True
+    #                                 else:
+    #                                     return False
+    #                             else:
+    #                                 return True
+    #                         else:
+    #                             return False
+    #                     else:
+    #                         if (allowed_users != "") or (allowed_users is not None):
+    #                             if (user.lower() in allowed_users_list) or (userID.lower() in allowed_users_list):
+    #                                 return True
+    #                             else:
+    #                                 return False
+    #                         else:
+    #                             return True
+    #                 else:
+    #                     return True
+
+    #                     # if source in v3cmd.__getattribute__("allowed_sources"):
+    #                     #     if user in v3cmd.__getattribute__("allowed_users"):
+    #                     #         return True
+    #                     #     else:
+    #                     #         if v3cmd.__getattribute__("allowed_users") == "":
+    #                     #             return True
+
+    #                     #     if userID in v3cmd.__getattribute__("allowed_users"):
+    #                     #         return True
+    #                     #     else:
+    #                     #         if v3cmd.__getattribute__("allowed_users") == "":
+    #                     #             return True
+    #                     #     return False
+    #                     # else:
+    #                     #     if v3cmd.__getattribute__("allowed_sources") == "":
+    #                     #         return True
+    #                     #     return False
+
+    #                 # else:
+    #                 #     return True
+    #             elif v3cmd.__getattribute__("is_enabled") == False:
+    #                 return False
+    #     except Exception as e:
+    #         praxis_logger.log(praxis_logger,"Error in allowedToRun: %s" % e)
+    #         return False
 
 
     def isOffCooldown(self, v3cmd):

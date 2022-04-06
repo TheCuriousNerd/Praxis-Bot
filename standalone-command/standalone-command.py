@@ -145,13 +145,21 @@ def handle_command(source, username, userID, command, rest, bonusData):
     if v3Flag is True:
         if cmd_v3 is not None:
             cmd_v3.loadedFunctions = loadedFunctions
-            cmd_results_v3 = cmd_v3.do_command(source, username, userID, command, rest, bonusData)
+            # praxis_logger_obj.log("RUNNING COMMAND...")
+            # praxis_logger_obj.log(tempSource)
+            # praxis_logger_obj.log(username)
+            # praxis_logger_obj.log(userID)
+            # praxis_logger_obj.log(command)
+            # praxis_logger_obj.log(rest)
+            # praxis_logger_obj.log(bonusData)
+
+            cmd_results_v3 = cmd_v3.do_command(tempSource, username, userID, command, rest, bonusData)
             praxis_logger_obj.log("COMMAND RESULTS V3:")
             praxis_logger_obj.log(cmd_results_v3)
             return flask.make_response("{\"message\":\"%s\"}" % cmd_results_v3, 200, {"Content-Type": "application/json"})
     else:
         if cmd is not None:
-            cmd_response = cmd.do_command(source, username, userID, command, rest, bonusData)
+            cmd_response = cmd.do_command(tempSource, username, userID, command, rest, bonusData)
             praxis_logger_obj.log("COMMAND RESULTS:")
             praxis_logger_obj.log(cmd_response)
             return flask.make_response("{\"message\":\"%s\"}" % cmd_response, 200, {"Content-Type": "application/json"})
