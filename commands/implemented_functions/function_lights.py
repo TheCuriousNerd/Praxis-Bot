@@ -72,7 +72,10 @@ class Function_Lights(AbstractCommandFunction, metaclass=ABCMeta):
             # todo need to url-escape command and rest
             params = urlencode({'user_name': user["userName"], 'light_group': lightGroup, 'command': lightCommand, 'rest':""})
             #standalone-lights
-            url = "http://%s:%s/api/v1/exec_lights?%s" % (config.standalone_lights_address[0].get("ip"), config.standalone_lights_address[0].get("port"), params)
+            if utility.isRunningInDocker():
+                url = "http://%s:%s/api/v1/exec_lights?%s" % (config.standalone_lights_address[0].get("ip"), config.standalone_lights_address[0].get("port"), params)
+            else:
+                url = "http://%s:%s/api/v1/exec_lights?%s" % ("127.0.0.1", config.standalone_lights_address[0].get("port"), params)
             resp = requests.get(url)
             if resp.status_code == 200:
                 print("Got the following message: %s" % resp.text)
