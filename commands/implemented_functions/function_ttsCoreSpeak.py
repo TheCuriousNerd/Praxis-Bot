@@ -67,6 +67,7 @@ class Function_TTSCoreSpeak(AbstractCommandFunction, metaclass=ABCMeta):
             params = urlencode({'tts_sender': user.get("userName", "some nerd"), 'tts_text': message})
             #standalone-tts-core
             url = "http://%s:%s/api/v1/tts/send_text?%s" % (config.standalone_tts_core_address[0].get("ip"), config.standalone_tts_core_address[0].get("port"), params)
+            #url = "http://%s:%s/api/v1/tts/send_text?%s" % ("127.0.0.1", config.standalone_tts_core_address[0].get("port"), params)
             resp = requests.get(url)
             if resp.status_code == 200:
                 # print("Got the following message: %s" % resp.text)

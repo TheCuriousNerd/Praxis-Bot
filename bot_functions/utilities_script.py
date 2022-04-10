@@ -170,7 +170,18 @@ def miniParser(stringToParse: str):
         charPosition += 1
     return level_dict, level_map
 
-def miniParserReverser(parseToReverse: dict, parseMap: dict, keep_parenthesis: bool = False):
+def cleanup_points(parse_inputs, parsedInputMap, points_to_clear):
+    tempData = dict(parse_inputs)
+    if len(points_to_clear) != 0:
+        for key_ in points_to_clear:
+                    level, levelEntry = parserEntryCoordLookup(parsedInputMap, key_)
+                    tempData[level][levelEntry] = ""
+    return tempData
+
+def miniParserReverser(parseToReverse: dict, parseMap: dict, keep_parenthesis: bool = False, clear_points = None):
+    if clear_points != None:
+        parseToReverse = cleanup_points(parseToReverse, parseMap, clear_points)
+
     #This reverses the miniparser results
     reversedResults = []
     reversedResultsString = ""

@@ -254,7 +254,8 @@ class Token_Processor():
             print("\n")
 
             thread_points = []
-            thread_startTime = (time.time()+0.3)
+            thread_all_points = []
+            thread_startTime = (time.time()+0.02)
             for fCount in range(len(compiledFunctionsToRun)):
                 print("\n Work Loop Start")
                 print(fCount)
@@ -333,19 +334,20 @@ class Token_Processor():
                                 if point not in thread_points:
                                     thread_points.append(point)
 
-                        thread_all_points = []
+                        #thread_all_points = []
                         for cf in compiledFunctionsToRun:
                             found_key = False
                             for key in cf:
                                 found_key = True
                             if found_key:
                                 for key in cf:
+                                    print("Point Found: " + str(key))
                                     thread_all_points.append(key)
                         thread_all_points.sort()
 
 
                         #parsedInput[thread_layer][thread_position] = ""
-                        thread_points.remove(work_)
+                        #thread_points.remove(work_)
                         thread_points.sort()
 
 
@@ -379,7 +381,7 @@ class Token_Processor():
 
                 def worker(key, keyList, workToDo, parsedInput, parsedInputMap, specialFunctionList, compiledFunctionsToRun, userData, startTime=0):
                     while int(time.time()) < startTime:
-                        time.sleep(0.01)
+                        time.sleep(0.001)
                     targetCommand = ""
                     targetCommandKey = 0
                     targetCommandParams = ""
@@ -483,7 +485,9 @@ class Token_Processor():
                     print("\nThreading Function Found")
                     print("Threading Function: " + str(keyList[0]))
                     #parsedInput = worker(key, keyList, workToDo, parsedInput, parsedInputMap, specialFunctionList, compiledFunctionsToRun)
-                    parsedInputCopy = dict(parsedInput)
+                    parsedInputCopy = {}
+                    for k in parsedInput:
+                        parsedInputCopy[k] = parsedInput[k]
 
                     thread_ = threading.Thread(target=worker, args=(key, keyList, workToDo, parsedInputCopy, parsedInputMap, specialFunctionList, compiledFunctionsToRun, userData, thread_startTime))
                     threadsToRunLast.append(thread_)
@@ -494,16 +498,42 @@ class Token_Processor():
                 for thread_ in threadsToRunLast:
                     thread_.daemon = True
                     thread_.start()
-                    #thread_.join()
+
+                # for thread_ in threadsToRunLast:
+                #     thread_.join()
 
 
-            # if len(thread_all_points) != 0:
-            #     for key_ in thread_all_points:
-            #                 level, levelEntry = utility.parserEntryCoordLookup(parsedInputMap, key_)
-            #                 parsedInput[level][levelEntry] = ""
+                # for th in threadsToRunLast:
+                #     while th.is_alive():
+                #         time.sleep(0.001)
 
 
-            output = utility.miniParserReverser(parsedInput, parsedInputMap, False)
+                # if len(threadsToRunLast) > 0:
+                #     thread_waiter = True
+                #     while thread_waiter == True:
+                #         for thread_ in threadsToRunLast:
+                #             if thread_.is_alive() == False:
+                #                 thread_waiter = False
+                #         time.sleep(0.01)
+
+
+                # def cleanup_points(collected_inputs, points_to_clear):
+                #     tempData = dict(collected_inputs)
+                #     if len(points_to_clear) != 0:
+                #         for key_ in points_to_clear:
+                #                     level, levelEntry = utility.parserEntryCoordLookup(parsedInputMap, key_)
+                #                     tempData[level][levelEntry] = ""
+                #     return tempData
+                # parsedInput = cleanup_points(parsedInput, thread_all_points)
+                time.sleep(0.35)
+
+            points_to_clear = []
+            points_to_clear.extend(thread_all_points)
+            # Remove duplicates
+            points_to_clear = list(dict.fromkeys(points_to_clear))
+            print("\nPoints to Clear: " + str(points_to_clear))
+
+            output = utility.miniParserReverser(parsedInput, parsedInputMap, False, points_to_clear)
 
 
 
@@ -646,7 +676,7 @@ if __name__ == '__main__':
     #stringToParse = "($lights (downstairs)(red))($lights (downstairs)(blue))($lights (downstairs)(green))"
     #stringToParse = "($setScene (Cam feed [Main] INFOBOX))"
     #stringToParse = "($getAverageBitrate)"
-    stringToParse = "($thread ($lights (downstairs)(red)) ($ttsCoreSpeak (This is a token processor threading test))"
+    stringToParse = "Pre-test ($thread ($lights (downstairs)(stream)) ($ttsCoreSpeak (This is a token processor threading test)) Post-test"
     #stringToParse = "($addCounter(testing)(4))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
@@ -672,4 +702,3 @@ if __name__ == '__main__':
     commandResponse = testModule.parseTokenResponse("TestUser_Alex", None, commandRawInput, stringToParse, "Test_Source")
     print("\n\ncommandResponse")
     print(commandResponse)
-    print("\n\n")
