@@ -73,7 +73,7 @@ class Function_Lights(AbstractCommandFunction, metaclass=ABCMeta):
             params = urlencode({'user_name': user["userName"], 'light_group': lightGroup, 'command': lightCommand, 'rest':""})
 
             url = "http://%s:%s/api/v1/exec_lights?%s" % (config.standalone_lights_address[0].get("ip"), config.standalone_lights_address[0].get("port"), params)
-            #url = "http://%s:%s/api/v1/exec_lights?%s" % ("127.0.0.1", config.standalone_lights_address[0].get("port"), params)
+            url = "http://%s:%s/api/v1/exec_lights?%s" % ("127.0.0.1", config.standalone_lights_address[0].get("port"), params)
             #standalone-lights
             # if utility.isRunningInDocker():
             #     url = "http://%s:%s/api/v1/exec_lights?%s" % (config.standalone_lights_address[0].get("ip"), config.standalone_lights_address[0].get("port"), params)
