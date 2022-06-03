@@ -25,6 +25,7 @@
 from concurrent.futures import thread
 from enum import Enum, auto
 import enum
+from random import randint
 import pyparsing
 import shlex
 
@@ -255,131 +256,112 @@ class Token_Processor():
 
             thread_points = []
             thread_all_points = []
-            thread_startTime = (time.time()+0.02)
+            threadsToRunLast = []
+            specialFunctionList = []
+            specialFunctionTypes = ["if", "random", "thread"]
+            thread_startTime = (time.time()+0.25)
+
+            for fCount in range(len(compiledFunctionsToRun)):
+                for comp_ in compiledFunctionsToRun[fCount]:
+                    # print(comp_)
+                    # print(compiledFunctionsToRun[fCount][comp_])
+                    if "thread" in compiledFunctionsToRun[fCount][comp_]:
+                        thread_points.append(comp_)
+
+            for compiled_ in compiledFunctionsToRun:
+                for c_ in compiled_:
+                    if "thread" in compiled_[c_]:
+                        for key in compiled_:
+                            thread_points.append(key)
+            thread_points = list(dict.fromkeys(thread_points))
+
             for fCount in range(len(compiledFunctionsToRun)):
                 print("\n Work Loop Start")
-                print(fCount)
-                specialFunctionFound = False
-                specialFunction = {"name":"", "startPoint":0}
-                specialFunctionList = []
-                compiledWork = compiledFunctionsToRun[0]
-                specialFunctionTypes = ["if", "random", "thread"]
-                for work_ in compiledWork:
-                    print("found work")
-                    #print(compiledWork[work_])
-                    # If statement function handling
-                    # This will check for an if statement and if it is true it will allow the inner functions to run and be returned.
-                    if "if" in compiledWork[work_]:
-                        # print("This is an if statement: ")
-                        # print(compiledWork[work_])
-                        # print(str(work_))
-                        specialFunctionFound = True
-                        specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
-                        specialFunction["startPoint"] = work_
-                        specialFunctionList.append(specialFunction)
+                if len(compiledFunctionsToRun) >= fCount:
+                    specialFunctionFound = False
+                    specialFunction = {"name":"", "startPoint":0}
+                    compiledWork = compiledFunctionsToRun[fCount - 1]
+                    for work_ in compiledWork:
+                        print("found work")
+                        #print(compiledWork[work_])
+                        # If statement function handling
+                        # This will check for an if statement and if it is true it will allow the inner functions to run and be returned.
+                        if "if" in compiledWork[work_]:
+                            # print("This is an if statement: ")
+                            # print(compiledWork[work_])
+                            # print(str(work_))
+                            specialFunctionFound = True
+                            specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
+                            specialFunction["startPoint"] = work_
+                            specialFunctionList.append(specialFunction)
 
 
-                    # Random function handling
-                    # This will check for the random function and if it has one, it will randomly clear all the inputs, except for one.
-                    if "random" in compiledWork[work_]:
-                        # print("This is a random statement: ")
-                        # print(compiledWork[work_])
-                        # print(str(work_))
-                        specialFunctionFound = True
-                        specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
-                        specialFunction["startPoint"] = work_
-                        specialFunctionList.append(specialFunction)
+                        # Random function handling
+                        # This will check for the random function and if it has one, it will randomly clear all the inputs, except for one.
+                        if "random" in compiledWork[work_]:
+                            # print("This is a random statement: ")
+                            # print(compiledWork[work_])
+                            # print(str(work_))
+                            specialFunctionFound = True
+                            if "$" in compiledWork[work_]:
+                                specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
+                            else:
+                                specialFunction["name"] = compiledWork[work_]
+                            specialFunction["startPoint"] = work_
+                            specialFunctionList.append(specialFunction)
 
-                    # Threading function handling
-                    # This will check for the threading function and if it has one, it will create threads for each input it receives.
-                    if "thread" in compiledWork[work_]:
-                        print("This is a thread statement: ")
-                        print(compiledWork[work_])
-                        print(str(work_))
-                        specialFunctionFound = True
-                        specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
-                        dict_lowest_points = []
-                        for dict_ in compiledFunctionsToRun:
-                            print("the Dict:")
-                            print(dict_)
-                            # This gets the lowest point of the dictionary and adds it to a list.
-                            dict_lowest_points_temp = []
-                            for key in dict_:
-                                dict_lowest_points_temp.append(key)
-                            dict_lowest_points_temp.sort()
-                            dict_lowest_points.append(dict_lowest_points_temp[0])
+                        # Threading function handling
+                        # This will check for the threading function and if it has one, it will create threads for each input it receives.
+                        if "thread" in compiledWork[work_]:
+                            print("This is a thread statement: ")
+                            print(compiledWork[work_])
+                            print(str(work_))
+                            specialFunctionFound = True
+                            specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
+                            dict_lowest_points = []
+                            thread_root_points = []
 
-                            # if min(dict_, key=dict_.get) > work_:
-                            #     print(min(dict_, key=dict_.get))
-                            #     dict_lowest_points.append(min(dict_, key=dict_.get))
-                        print(dict_lowest_points)
-                        #thread_points = []
-                        # Get the layer of the threading function
-                        thread_layer, thread_position = utility.parserEntryCoordLookup(parsedInputMap, work_)
-                        layer_entry_count = 0
-                        foundNextEnd = False
-                        for layer_entry in parsedInputMap[thread_layer]:
-                            if foundNextEnd == True:
-                                break
-                            if work_ != parsedInputMap[thread_layer][layer_entry_count]:
-                                if "$" in parsedInput[thread_layer][layer_entry_count]:
-                                    foundNextEnd = True
+                            for dict_ in compiledFunctionsToRun:
+                                dict_lowest_points_temp = []
+                                for key in dict_:
+                                    dict_lowest_points_temp.append(key)
+                                dict_lowest_points_temp.sort()
+                                dict_lowest_points.append(dict_lowest_points_temp[0])
+                            print(dict_lowest_points)
 
+                            # def shouldBeThreaded(key_to_test, thread_root_points):
+                            #     isThreaded = False
+                            #     for th_r in thread_root_points:
+                            #         for dict_ in compiledFunctionsToRun:
+                            #             if dict_.get(key_to_test, 0) == th_r:
+                            #                 # This is a thread root
+                            #                 for key in dict_:
+                            #                     if key == key_to_test:
+                            #                         isThreaded = True
+                            #     return isThreaded
 
-                            layer_entry_count += 1
-                        theStopPoint = parsedInputMap[thread_layer][layer_entry_count -1]
+                            for compiled_ in compiledFunctionsToRun:
+                                for c_ in compiled_:
+                                    if "thread" in compiled_[c_]:
+                                        for key in compiled_:
+                                            thread_root_points.append(key)
 
-                        for point in dict_lowest_points:
-                            if point < theStopPoint:
-                                if point not in thread_points:
-                                    thread_points.append(point)
+                            thread_root_points = list(dict.fromkeys(thread_root_points))
 
-                        #thread_all_points = []
-                        for cf in compiledFunctionsToRun:
-                            found_key = False
-                            for key in cf:
-                                found_key = True
-                            if found_key:
-                                for key in cf:
-                                    print("Point Found: " + str(key))
-                                    thread_all_points.append(key)
-                        thread_all_points.sort()
+                            print(thread_root_points)
+                            thread_points.extend(thread_root_points)
+                            thread_points = list(dict.fromkeys(thread_points))
+                            thread_all_points.extend(thread_root_points)
+                            thread_all_points = list(dict.fromkeys(thread_all_points))
 
-
-                        #parsedInput[thread_layer][thread_position] = ""
-                        #thread_points.remove(work_)
-                        thread_points.sort()
-
-
-                        # work_keys = work_
-                        # work_keylist = []
-                        # for key in work_keys:
-                        #     work_keylist.append(key)
-                        # work_keylist.sort()
-                        # print(work_keylist)
-                        specialFunction["startPoint"] = work_
-                        specialFunction["thread_points"] = thread_points
-                        print(thread_points)
-                        specialFunctionList.append(specialFunction)
-
-
-
-                workToDo:dict = compiledFunctionsToRun.pop(-1)
-                print("\nworkToDo: ")
-                print(workToDo)
-                print(workToDo.keys())
-                keyList = []
-                for key in workToDo:
-                    keyList.append(key)
-                keyList.sort()
-                print("\nkeyList: ")
-                print(keyList)
-                print("\nThread Points: ")
-                print(thread_points)
-
+                            specialFunction["startPoint"] = work_
+                            specialFunction["thread_points"] = thread_points # This should contain the keys of the functions that need to be threaded.
+                            print(thread_points)
+                            specialFunctionList.append(specialFunction)
 
 
                 def worker(key, keyList, workToDo, parsedInput, parsedInputMap, specialFunctionList, compiledFunctionsToRun, userData, startTime=0):
+                    print("\n WORKER STARTED")
                     while int(time.time()) < startTime:
                         time.sleep(0.001)
                     targetCommand = ""
@@ -409,6 +391,7 @@ class Token_Processor():
                     reResultsPrepped_arg = re.split("( )", targetCommandParams)
                     preppedParams = self.cleanupTempArgs(reResultsPrepped_arg)
 
+                    print("\nTarget Key: " + str(key))
                     print("\nTarget Command: " + targetCommand)
                     targetCommand = targetCommand[1:].strip() # Removes the $
                     print("Target Command: " + targetCommand)
@@ -417,6 +400,8 @@ class Token_Processor():
                     if self.does_function_exist(targetCommand) == True:
                         print("\nFunction Exists")
                         functionResults = ""
+                        print("!!!EXECUTING FUNCTION!!!")
+                        print("Function: " + targetCommand)
                         functionResults = self.run_function(userData, targetCommand, preppedParams, tokenSource)
                         print("Function Results: " + str(functionResults))
                         #functionResults = "[FUNCTION COMPLETE]"
@@ -479,7 +464,25 @@ class Token_Processor():
                             print(workToDo_)
                     return parsedInput
 
-                threadsToRunLast = []
+
+                print("\n Special Function List: ")
+                print(specialFunctionList)
+
+                workToDo:dict = compiledFunctionsToRun.pop(-1)
+                print("\nworkToDo: ")
+                print(workToDo)
+                print(workToDo.keys())
+                keyList = []
+                for key in workToDo:
+                    keyList.append(key)
+                keyList.sort()
+                print("\nkeyList: ")
+                print(keyList)
+                print("\nThread Points: ")
+                print(thread_points)
+
+
+                print("LAST CALL BEFORE RUNNING FUNCTIONS")
 
                 if keyList[0] in thread_points:
                     print("\nThreading Function Found")
@@ -491,13 +494,24 @@ class Token_Processor():
 
                     thread_ = threading.Thread(target=worker, args=(key, keyList, workToDo, parsedInputCopy, parsedInputMap, specialFunctionList, compiledFunctionsToRun, userData, thread_startTime))
                     threadsToRunLast.append(thread_)
-                    thread_points.remove(keyList[0])
+                    #thread_points.remove(keyList[0])
                 else:
-                    parsedInput = worker(key, keyList, workToDo, parsedInput, parsedInputMap, specialFunctionList, compiledFunctionsToRun, userData)
+                    if key not in thread_all_points:
+                        parsedInput = worker(key, keyList, workToDo, parsedInput, parsedInputMap, specialFunctionList, compiledFunctionsToRun, userData)
 
+            for thread_ in threadsToRunLast:
+                thread_.daemon = True
+                thread_.start()
+
+            def thread_checker(threadsToRunLast):
                 for thread_ in threadsToRunLast:
-                    thread_.daemon = True
-                    thread_.start()
+                    if thread_.is_alive():
+                        return True
+                return False
+
+            while thread_checker(threadsToRunLast):
+                time.sleep(0.1)
+                print("\nTHREADS still running...")
 
                 # for thread_ in threadsToRunLast:
                 #     thread_.join()
@@ -525,7 +539,7 @@ class Token_Processor():
                 #                     tempData[level][levelEntry] = ""
                 #     return tempData
                 # parsedInput = cleanup_points(parsedInput, thread_all_points)
-                time.sleep(0.35)
+                #time.sleep(0.55)
 
             points_to_clear = []
             points_to_clear.extend(thread_all_points)
@@ -536,7 +550,7 @@ class Token_Processor():
             output = utility.miniParserReverser(parsedInput, parsedInputMap, False, points_to_clear)
 
 
-
+        #time.sleep(15)
 
 
 
@@ -676,7 +690,8 @@ if __name__ == '__main__':
     #stringToParse = "($lights (downstairs)(red))($lights (downstairs)(blue))($lights (downstairs)(green))"
     #stringToParse = "($setScene (Cam feed [Main] INFOBOX))"
     #stringToParse = "($getAverageBitrate)"
-    stringToParse = "Pre-test ($thread ($lights (downstairs)(stream)) ($ttsCoreSpeak (This is a token processor threading test)) Post-test"
+    #stringToParse = "Pre-test ($thread ($lights (downstairs)(stream)) ($ttsCoreSpeak (This is a token processor threading test))) Post-test"
+    stringToParse = "a ($math (2+2)) ($thread ($ttsCoreSpeak (this is a random number "+str(randint(111,999))+"))) ($thread (($lights(downstairs)(stream)) ($lights(downstairs)(blue))) ) a"
     #stringToParse = "($addCounter(testing)(4))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
@@ -699,6 +714,6 @@ if __name__ == '__main__':
     print("\n")
     commandName = "!test"
     commandRawInput = "%s 5+10" % (commandName)
-    commandResponse = testModule.parseTokenResponse("TestUser_Alex", None, commandRawInput, stringToParse, "Test_Source")
+    commandResponse = testModule.parseTokenResponse("Alex", None, commandRawInput, stringToParse, "Test_Source")
     print("\n\ncommandResponse")
     print(commandResponse)
