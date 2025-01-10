@@ -1,4 +1,4 @@
-version: '3.7'
+
 services:
   standalone-user-client:
     image: standalone-user-client

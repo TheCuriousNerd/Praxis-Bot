@@ -43,7 +43,7 @@ import credentials
 
 import pyparsing
 import time
-from sqlalchemy.engine.cursor import LegacyCursorResult
+from sqlalchemy.engine.cursor import Result
 
 praxis_logger_obj = praxis_logger()
 praxis_logger_obj.init(os.path.basename(__file__))

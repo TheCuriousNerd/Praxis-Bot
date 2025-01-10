@@ -1,4 +1,4 @@
-version: '3.7'
+
 services:
   standalone-channelrewards:
     image: standalone-channelrewards

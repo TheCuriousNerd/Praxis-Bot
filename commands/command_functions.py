@@ -73,7 +73,7 @@ class AbstractCommandFunction(metaclass=ABCMeta):
         pass
 
 import bot_functions.praxis_logging as praxis_logging
-from sqlalchemy.engine.cursor import LegacyCursorResult
+from sqlalchemy.engine.cursor import Result
 class Abstract_Function_Helpers():
 
     def update_lastUsed(self, command):
@@ -98,7 +98,7 @@ class Abstract_Function_Helpers():
         try:
             db_obj = db_utility.Praxis_DB_Connection(autoConnect=True)
             query = "SELECT * FROM home_praxisbot_commands_v0 WHERE command = \'%s\';" % (commandName)
-            dbResults:LegacyCursorResult = db_obj.execQuery(query)
+            dbResults:Result = db_obj.execQuery(query)
             return dbResults.first()
         except Exception as e:
             print("UNABLE TO GET COMMAND")
