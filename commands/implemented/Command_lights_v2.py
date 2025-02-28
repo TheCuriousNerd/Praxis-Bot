@@ -78,7 +78,7 @@ class Command_lights_v2(AbstractCommand, metaclass=ABCMeta):
             data = loads(resp.text)
             msg = data['message']
             if msg is not None:
-                return msg
+                return username + " changed the lights"
                 # todo send to logger and other relevent services
         else:
             # todo handle failed requests
