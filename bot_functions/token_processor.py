@@ -22,6 +22,7 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from concurrent.futures import thread
 from enum import Enum, auto
 import enum
 import pyparsing
@@ -35,6 +36,9 @@ from commands.command_functions import AbstractCommandFunction, Abstract_Functio
 import re
 
 from simpleeval import simple_eval
+
+import threading
+import time
 
 class TokenType(Enum):
     NONE = auto()
@@ -159,6 +163,7 @@ class Token_Processor():
             # The part that handles the functions ie ($function)
             print("Function Parsing...")
             compiledFunctionsToRun = []
+            compiledThreadsToRun = []
             for curMapLevel in parsedInput:
                 parsedInputEntryCount = 0
                 if curMapLevel > 1:
@@ -230,6 +235,8 @@ class Token_Processor():
                             print("Function Strings Dict: " + str(functionStringsDict))
                             compiledFunctionsToRun.append(functionStringsDict)
                             collectedStringKeys = functionStringsDict.keys()
+
+
                             # innerFunctions = {}
                             # for key in collectedStringKeys:
                             #     if "$" in functionStringsDict[key]:
@@ -246,9 +253,12 @@ class Token_Processor():
             print(compiledFunctionsToRun)
             print("\n")
 
+            thread_points = []
+            thread_all_points = []
+            thread_startTime = (time.time()+0.02)
             for fCount in range(len(compiledFunctionsToRun)):
                 print("\n Work Loop Start")
-
+                print(fCount)
                 specialFunctionFound = False
                 specialFunction = {"name":"", "startPoint":0}
                 specialFunctionList = []
@@ -283,12 +293,73 @@ class Token_Processor():
                     # Threading function handling
                     # This will check for the threading function and if it has one, it will create threads for each input it receives.
                     if "thread" in compiledWork[work_]:
-                        # print("This is a thread statement: ")
-                        # print(compiledWork[work_])
-                        # print(str(work_))
+                        print("This is a thread statement: ")
+                        print(compiledWork[work_])
+                        print(str(work_))
                         specialFunctionFound = True
                         specialFunction["name"] = compiledWork[work_][1:] # This will remove the $ from the function name
+                        dict_lowest_points = []
+                        for dict_ in compiledFunctionsToRun:
+                            print("the Dict:")
+                            print(dict_)
+                            # This gets the lowest point of the dictionary and adds it to a list.
+                            dict_lowest_points_temp = []
+                            for key in dict_:
+                                dict_lowest_points_temp.append(key)
+                            dict_lowest_points_temp.sort()
+                            dict_lowest_points.append(dict_lowest_points_temp[0])
+
+                            # if min(dict_, key=dict_.get) > work_:
+                            #     print(min(dict_, key=dict_.get))
+                            #     dict_lowest_points.append(min(dict_, key=dict_.get))
+                        print(dict_lowest_points)
+                        #thread_points = []
+                        # Get the layer of the threading function
+                        thread_layer, thread_position = utility.parserEntryCoordLookup(parsedInputMap, work_)
+                        layer_entry_count = 0
+                        foundNextEnd = False
+                        for layer_entry in parsedInputMap[thread_layer]:
+                            if foundNextEnd == True:
+                                break
+                            if work_ != parsedInputMap[thread_layer][layer_entry_count]:
+                                if "$" in parsedInput[thread_layer][layer_entry_count]:
+                                    foundNextEnd = True
+
+
+                            layer_entry_count += 1
+                        theStopPoint = parsedInputMap[thread_layer][layer_entry_count -1]
+
+                        for point in dict_lowest_points:
+                            if point < theStopPoint:
+                                if point not in thread_points:
+                                    thread_points.append(point)
+
+                        #thread_all_points = []
+                        for cf in compiledFunctionsToRun:
+                            found_key = False
+                            for key in cf:
+                                found_key = True
+                            if found_key:
+                                for key in cf:
+                                    print("Point Found: " + str(key))
+                                    thread_all_points.append(key)
+                        thread_all_points.sort()
+
+
+                        #parsedInput[thread_layer][thread_position] = ""
+                        #thread_points.remove(work_)
+                        thread_points.sort()
+
+
+                        # work_keys = work_
+                        # work_keylist = []
+                        # for key in work_keys:
+                        #     work_keylist.append(key)
+                        # work_keylist.sort()
+                        # print(work_keylist)
                         specialFunction["startPoint"] = work_
+                        specialFunction["thread_points"] = thread_points
+                        print(thread_points)
                         specialFunctionList.append(specialFunction)
 
 
@@ -303,141 +374,166 @@ class Token_Processor():
                 keyList.sort()
                 print("\nkeyList: ")
                 print(keyList)
+                print("\nThread Points: ")
+                print(thread_points)
 
 
 
+                def worker(key, keyList, workToDo, parsedInput, parsedInputMap, specialFunctionList, compiledFunctionsToRun, userData, startTime=0):
+                    while int(time.time()) < startTime:
+                        time.sleep(0.001)
+                    targetCommand = ""
+                    targetCommandKey = 0
+                    targetCommandParams = ""
+                    resultDestination = (0,0)
 
-                # if specialFunctionFound:
-                    # print("Special Function Found: ")
-                    # print(specialFunction["name"])
-                    # print("Starting Point: ")
-                    # print(specialFunction["startPoint"])
-                    # print("\n")
-                    # This will run the special function and return the results.
-                    # This will also run the inner functions.
-                    # for specialFunctionWork in specialFunctionList:
-                    #     pass
-                        # if "if" in specialFunctionWork["name"]:
-                        #     print("\nHandling the if statement: ")
-                        #     print("Starting Point: ")
-                        #     print(specialFunctionWork["startPoint"])
-                        #     targetLogicPoint = utility.nextGreaterElementInList(keyList, specialFunctionWork["startPoint"])
-                        #     targetLogicPoint = utility.nextGreaterElementInList(keyList, targetLogicPoint)
-                        #     print("Target Logic Point: ")
-                        #     print(targetLogicPoint)
-                        #     targetResultsPoint = utility.nextGreaterElementInList(keyList, targetLogicPoint)
-                        #     print("Target Results Point: ")
-                        #     print(targetResultsPoint)
-
-
-                        #     logicToEval = workToDo[targetLogicPoint]
-                        #     print("Logic To Eval: ")
-                        #     print(logicToEval)
-                        #     if str(logicToEval).lower() == "true":
-                        #         pass
-
-
-
-
-                targetCommand = ""
-                targetCommandKey = 0
-                targetCommandParams = ""
-                resultDestination = (0,0)
-
-                targetCommandParamsPrep = []
-                grabbedFunction = False
-                for key in keyList:
-                    if grabbedFunction == False:
-                        resultDestination = utility.parserEntryCoordLookup(parsedInputMap, key)
-                        targetCommand = workToDo[key]
-                        targetCommandKey = key
-                        #workToDo[key] = "resultsNotSet"
-                        grabbedFunction = True
-                    else:
-                        if targetCommand[1:].strip() not in specialFunctionTypes:
-                            key_location = utility.parserEntryCoordLookup(parsedInputMap, key)
-                            targetCommandParamsPrep.append(parsedInput[key_location[0]][key_location[1]])
-                            parsedInput[key_location[0]][key_location[1]] = "" # This will clear the entry in the dict so that the results can be displayed.
-                            workToDo[key] = ""
-                    #print(key)
-                    #print(workToDo[key])
-                    #print(utility.parserEntryCoordLookup(parsedInputMap, key))
-                targetCommandParams = " ".join(filter(None, targetCommandParamsPrep))
-                reResultsPrepped_arg = re.split("( )", targetCommandParams)
-                preppedParams = self.cleanupTempArgs(reResultsPrepped_arg)
-
-                print("\nTarget Command: " + targetCommand)
-                targetCommand = targetCommand[1:].strip() # Removes the $
-                print("Target Command: " + targetCommand)
-                print("Target Command Params::" + str(preppedParams) + "::")
-
-                if self.does_function_exist(targetCommand) == True:
-                    print("\nFunction Exists")
-                    functionResults = ""
-                    functionResults = self.run_function(userData, targetCommand, preppedParams, tokenSource)
-                    print("Function Results: " + str(functionResults))
-                    #functionResults = "[FUNCTION COMPLETE]"
-                    parsedInput[resultDestination[0]][resultDestination[1]] = str(functionResults)
-                    workToDo[targetCommandKey] = str(functionResults)
-
-                if "if" in targetCommand:
-                    specialFunctionWork = specialFunctionList[0]
-                    print("\nHandling the if statement: ")
-                    print("Starting Point: ")
-                    print(specialFunctionWork["startPoint"])
-                    targetLogicPoint, isEnd  = utility.nextGreaterElementInList(keyList, specialFunctionWork["startPoint"])
-                    #targetLogicPoint, isEnd = utility.nextGreaterElementInList(keyList, targetLogicPoint)
-                    print("Target Logic Point: ")
-                    print(targetLogicPoint)
-                    #targetResultsPoint, isEnd = utility.nextGreaterElementInList(keyList, targetLogicPoint)
-
-                    for lvl in parsedInputMap:
-                        if targetLogicPoint in parsedInputMap[lvl]:
-                            targetResultsPoint, bonus = utility.nextGreaterElementInList(parsedInputMap[lvl], targetLogicPoint)
-
-                    print("Target Results Point: ")
-                    print(targetResultsPoint)
-
-                    logicToCompile = []
+                    targetCommandParamsPrep = []
+                    grabbedFunction = False
                     for key in keyList:
-                        if key >= targetLogicPoint:
-                            if key < targetResultsPoint:
-                                logicToCompile.append(workToDo[key])
-                    logicToEval = "".join(filter(None, logicToCompile))
+                        if grabbedFunction == False:
+                            resultDestination = utility.parserEntryCoordLookup(parsedInputMap, key)
+                            targetCommand = workToDo[key]
+                            targetCommandKey = key
+                            #workToDo[key] = "resultsNotSet"
+                            grabbedFunction = True
+                        else:
+                            if targetCommand[1:].strip() not in specialFunctionTypes:
+                                key_location = utility.parserEntryCoordLookup(parsedInputMap, key)
+                                targetCommandParamsPrep.append(parsedInput[key_location[0]][key_location[1]])
+                                parsedInput[key_location[0]][key_location[1]] = "" # This will clear the entry in the dict so that the results can be displayed.
+                                workToDo[key] = ""
+                        #print(key)
+                        #print(workToDo[key])
+                        #print(utility.parserEntryCoordLookup(parsedInputMap, key))
+                    targetCommandParams = " ".join(filter(None, targetCommandParamsPrep))
+                    reResultsPrepped_arg = re.split("( )", targetCommandParams)
+                    preppedParams = self.cleanupTempArgs(reResultsPrepped_arg)
 
-                    print(workToDo)
-                    print("Logic To Eval: ")
-                    print(logicToEval)
-                    print("Result:")
-                    print(simple_eval(str(logicToEval)))
-                    if str(simple_eval(str(logicToEval))).lower() == "true":
-                        thingsToAdd = []
+                    print("\nTarget Command: " + targetCommand)
+                    targetCommand = targetCommand[1:].strip() # Removes the $
+                    print("Target Command: " + targetCommand)
+                    print("Target Command Params::" + str(preppedParams) + "::")
 
+                    if self.does_function_exist(targetCommand) == True:
+                        print("\nFunction Exists")
+                        functionResults = ""
+                        functionResults = self.run_function(userData, targetCommand, preppedParams, tokenSource)
+                        print("Function Results: " + str(functionResults))
+                        #functionResults = "[FUNCTION COMPLETE]"
+                        parsedInput[resultDestination[0]][resultDestination[1]] = str(functionResults)
+                        workToDo[targetCommandKey] = str(functionResults)
+
+                    if "if" in targetCommand:
+                        specialFunctionWork = specialFunctionList[0]
+                        print("\nHandling the if statement: ")
+                        print("Starting Point: ")
+                        print(specialFunctionWork["startPoint"])
+                        targetLogicPoint, isEnd  = utility.nextGreaterElementInList(keyList, specialFunctionWork["startPoint"])
+                        #targetLogicPoint, isEnd = utility.nextGreaterElementInList(keyList, targetLogicPoint)
+                        print("Target Logic Point: ")
+                        print(targetLogicPoint)
+                        #targetResultsPoint, isEnd = utility.nextGreaterElementInList(keyList, targetLogicPoint)
+
+                        for lvl in parsedInputMap:
+                            if targetLogicPoint in parsedInputMap[lvl]:
+                                targetResultsPoint, bonus = utility.nextGreaterElementInList(parsedInputMap[lvl], targetLogicPoint)
+
+                        print("Target Results Point: ")
+                        print(targetResultsPoint)
+
+                        logicToCompile = []
                         for key in keyList:
-                            if key >= targetResultsPoint:
-                                thingsToAdd.append(workToDo[key])
                             if key >= targetLogicPoint:
-                                targetDestination = utility.parserEntryCoordLookup(parsedInputMap, key)
-                                parsedInput[targetDestination[0]][targetDestination[1]] = "" # This will clear the entry in the dict so that the results can be displayed.
+                                if key < targetResultsPoint:
+                                    logicToCompile.append(workToDo[key])
+                        logicToEval = "".join(filter(None, logicToCompile))
 
-                        print("Function Results: " + str(thingsToAdd))
-                        parsedInput[resultDestination[0]][resultDestination[1]] = "".join(filter(None, thingsToAdd))
+                        print(workToDo)
+                        print("Logic To Eval: ")
+                        print(logicToEval)
+                        print("Result:")
+                        print(simple_eval(str(logicToEval)))
+                        if str(simple_eval(str(logicToEval))).lower() == "true":
+                            thingsToAdd = []
 
-                # This forwards the data to the next function.
-                for key in keyList:
-                    funcCounter = 0
-                    for workToDo_ in compiledFunctionsToRun:
-                        for w_ in workToDo_:
-                            if w_ == key:
-                                print("\nForwarding data to next function: ")
-                                print("target key: " + str(key))
-                                workToDo_[w_] = workToDo[w_]
-                        funcCounter += 1
-                        print(workToDo_)
+                            for key in keyList:
+                                if key >= targetResultsPoint:
+                                    thingsToAdd.append(workToDo[key])
+                                if key >= targetLogicPoint:
+                                    targetDestination = utility.parserEntryCoordLookup(parsedInputMap, key)
+                                    parsedInput[targetDestination[0]][targetDestination[1]] = "" # This will clear the entry in the dict so that the results can be displayed.
+
+                            print("Function Results: " + str(thingsToAdd))
+                            parsedInput[resultDestination[0]][resultDestination[1]] = "".join(filter(None, thingsToAdd))
+
+                    # This forwards the data to the next function.
+                    for key in keyList:
+                        funcCounter = 0
+                        for workToDo_ in compiledFunctionsToRun:
+                            for w_ in workToDo_:
+                                if w_ == key:
+                                    print("\nForwarding data to next function: ")
+                                    print("target key: " + str(key))
+                                    workToDo_[w_] = workToDo[w_]
+                            funcCounter += 1
+                            print(workToDo_)
+                    return parsedInput
+
+                threadsToRunLast = []
+
+                if keyList[0] in thread_points:
+                    print("\nThreading Function Found")
+                    print("Threading Function: " + str(keyList[0]))
+                    #parsedInput = worker(key, keyList, workToDo, parsedInput, parsedInputMap, specialFunctionList, compiledFunctionsToRun)
+                    parsedInputCopy = {}
+                    for k in parsedInput:
+                        parsedInputCopy[k] = parsedInput[k]
+
+                    thread_ = threading.Thread(target=worker, args=(key, keyList, workToDo, parsedInputCopy, parsedInputMap, specialFunctionList, compiledFunctionsToRun, userData, thread_startTime))
+                    threadsToRunLast.append(thread_)
+                    thread_points.remove(keyList[0])
+                else:
+                    parsedInput = worker(key, keyList, workToDo, parsedInput, parsedInputMap, specialFunctionList, compiledFunctionsToRun, userData)
+
+                for thread_ in threadsToRunLast:
+                    thread_.daemon = True
+                    thread_.start()
+
+                # for thread_ in threadsToRunLast:
+                #     thread_.join()
 
 
+                # for th in threadsToRunLast:
+                #     while th.is_alive():
+                #         time.sleep(0.001)
 
-            output = utility.miniParserReverser(parsedInput, parsedInputMap, False)
+
+                # if len(threadsToRunLast) > 0:
+                #     thread_waiter = True
+                #     while thread_waiter == True:
+                #         for thread_ in threadsToRunLast:
+                #             if thread_.is_alive() == False:
+                #                 thread_waiter = False
+                #         time.sleep(0.01)
+
+
+                # def cleanup_points(collected_inputs, points_to_clear):
+                #     tempData = dict(collected_inputs)
+                #     if len(points_to_clear) != 0:
+                #         for key_ in points_to_clear:
+                #                     level, levelEntry = utility.parserEntryCoordLookup(parsedInputMap, key_)
+                #                     tempData[level][levelEntry] = ""
+                #     return tempData
+                # parsedInput = cleanup_points(parsedInput, thread_all_points)
+                time.sleep(0.35)
+
+            points_to_clear = []
+            points_to_clear.extend(thread_all_points)
+            # Remove duplicates
+            points_to_clear = list(dict.fromkeys(points_to_clear))
+            print("\nPoints to Clear: " + str(points_to_clear))
+
+            output = utility.miniParserReverser(parsedInput, parsedInputMap, False, points_to_clear)
 
 
 
@@ -570,17 +666,17 @@ if __name__ == '__main__':
     #stringToParse = "(DOOK(testA(123))((4525)testB)(testC(2362))POOF)"
     #stringToParse = "(you rolled a ($echo ($roll #*) with) with (#0))"
     #stringToParse = "(#*) = ($math(9+9+(#*)*1+1000)) (@test) ($math($math(#*)*2+1000))"
-    stringToParse = "($if (10==($math (10)))($math (#*)))" # If Statement example
+    #stringToParse = "($if (10==($math (10)))($math (#*)))" # If Statement example
     #stringToParse = "(@test) ($math($math(#*)*2+1000))"
     #stringToParse = "(@test) ($setVar(test)(varData)) (@test)"
     #stringToParse = "test ($obsWebSocket ((SetSceneItemEnabled)({\"sourceName\":\"Color Callibration\", \"sceneItemEnabled\": true, \"sceneName\":\"Cam feed [Main] INFOBOX\"})))"
     #stringToParse = "test ($obsWebSocket ((GetVersion)({})))"
-    #stringToParse = "test ($obsWebSocket ((SetCurrentProgramScene)({\"sceneName\":\"Cam feed [Main] INFOBOX\"})))"
+    #stringToParse = "test ($obsWebSocket (SetCurrentProgramScene)({\"sceneName\":\"Cam feed [Main] INFOBOX\"}))"
     #stringToParse = "($ttsCoreSpeak (Hello World))"
-    #stringToParse = "($lights (downstairs)(red))"
+    #stringToParse = "($lights (downstairs)(red))($lights (downstairs)(blue))($lights (downstairs)(green))"
     #stringToParse = "($setScene (Cam feed [Main] INFOBOX))"
     #stringToParse = "($getAverageBitrate)"
-    #stringToParse = "($getUnixTime (July 1, 2018 2:00:00 PM GMT))"
+    stringToParse = "Pre-test ($thread ($lights (downstairs)(stream)) ($ttsCoreSpeak (This is a token processor threading test)) Post-test"
     #stringToParse = "($addCounter(testing)(4))"
     parsed, parseMap = utility.miniParser(stringToParse)
     parsedKeys = parsed.keys()
@@ -606,4 +702,3 @@ if __name__ == '__main__':
     commandResponse = testModule.parseTokenResponse("TestUser_Alex", None, commandRawInput, stringToParse, "Test_Source")
     print("\n\ncommandResponse")
     print(commandResponse)
-    print("\n\n")
